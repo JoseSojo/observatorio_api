@@ -1,0 +1,322 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                      String              @id                 @default(uuid())
+
+  email                   String
+  username                String
+  password                String
+
+  name                    String?
+  lastname                String?
+
+  passwordRequetsAt       DateTime?
+  passwordRequetsToken    String?
+
+  token                   String?
+
+  isDelete                Boolean             @default(false)
+  createAt                DateTime            @default(now())
+  updateAt                DateTime?           @updatedAt()      @default(now())
+
+  // relation user unique
+  rolId                   String?
+  rolReference            Permits?            @relation("userRef", fields: [rolId], references: [id])
+
+  languajeId              String?
+  languajeReference       ConfigLanguaje?     @relation("userRef", fields: [languajeId], references: [id])
+
+  cityId                  String?
+  cityReference           ConfigCity?         @relation("address", fields: [cityId], references: [id])
+
+  subscriptionId          String?
+  subscriptionReference   Subscription?       @relation("userInSubscirption", fields: [subscriptionId], references: [id])
+
+  // MANY TO MANY
+
+  // relations (user is MANY)
+  permissions             Permits[]           @relation("create")       // reference to permissions create for user
+  sessions                Session[]           // reference to many sessions
+  countrys                ConfigCountry[]
+  states                  ConfigState[]
+  citys                   ConfigCity[]        @relation("create")
+  languaje                ConfigLanguaje[]    @relation("create")
+  coins                   Coin[]
+  paymentMethod           PaymentMethod[]
+  subscription            Subscription[]        @relation("create")
+  subscriptionDetail      SubscriptionDetail[]  @relation("create")
+}
+
+model Subscription {
+  id                      String            @id                   @default(uuid())
+  name                    String?
+
+  countMonth              Int
+  defaultMount            Float             @default(9.99) // defaul for month
+
+  discount                Int               @default(0)
+
+  details                 SubscriptionDetail[]
+  
+  userReference           User[]            @relation("userInSubscirption")
+
+  createById              String?
+  createByReference       User?             @relation("create", fields: [createById], references: [id])
+
+  isDelete                        Boolean           @default(false)
+  createAt                        DateTime          @default(now())
+  updateAt                        DateTime          @default(now())       @updatedAt
+}
+
+model SubscriptionDetail {
+  id                              String            @id                   @default(uuid())
+
+  name                            String
+
+  subscriptionId                  String
+  subscriptionReference           Subscription      @relation(fields: [subscriptionId], references: [id])
+
+  createById              String?
+  createByReference       User?               @relation("create", fields: [createById], references: [id])
+
+  isDelete                        Boolean           @default(false)
+  createAt                        DateTime          @default(now())
+  updateAt                        DateTime          @default(now())       @updatedAt
+}
+
+model ConfigLanguaje {
+  id                String            @id                 @default(uuid())
+  payload           String
+  label             String
+
+  users             User[]            @relation("userRef")
+
+  createById              String?
+  createByReference       User?               @relation("create", fields: [createById], references: [id])
+
+  isDelete                Boolean             @default(false)
+  createAt                DateTime            @default(now())
+  updateAt                DateTime            @updatedAt()      @default(now())
+}
+
+model Permits {
+  id                      String              @id                 @default(uuid())
+  name                    String              @unique
+  roles                   Json
+
+  users                   User[]              @relation("userRef")
+
+  createById              String?
+  createByReference       User?               @relation("create", fields: [createById], references: [id])
+
+  isDelete                Boolean             @default(false)
+  createAt                DateTime            @default(now())
+  updateAt                DateTime            @updatedAt()      @default(now())
+}
+
+model Session {
+  id              String              @id
+  
+  token           String
+
+  userId          String
+  userReference   User                @relation(fields: [userId], references: [id])         // reference to unique user
+
+  startDate       DateTime            @default(now())
+  endDate         DateTime            @default(now())   @updatedAt
+
+  isDelte         Boolean             @default(false)
+  updateAt        DateTime            @updatedAt()      @default(now())
+  createAt        DateTime            @default(now())
+}
+
+model PaymentMethod {
+  id                      String                @id                 @default(uuid())
+
+  name                    String
+  description             String
+
+  moneyId                 String
+  moneyReference          Coin                @relation(fields: [moneyId], references: [id])
+
+  createById              String
+  createByReference       User                @relation(fields: [createById], references: [id])  
+
+  isDelete                Boolean             @default(false)
+  createAt                DateTime            @default(now())
+  updateAt                DateTime?           @updatedAt()      @default(now())
+}
+
+model Coin {
+  id                      String                @id                 @default(uuid())
+
+  prefix                  String
+  name                    String
+  description             String
+
+  country                 ConfigCountry?
+  paymentMethods          PaymentMethod[]
+
+  createById              String
+  createByReference       User                @relation(fields: [createById], references: [id])
+
+  isDelete                Boolean             @default(false)
+  createAt                DateTime            @default(now())
+  updateAt                DateTime?           @updatedAt()      @default(now())
+}
+
+model ConfigCountry {
+  id                      String              @id                 @default(uuid())
+
+  coinId                  String              @unique
+  coinReference           Coin                @relation(fields: [coinId], references: [id])
+  prefixPhone             String
+
+  name                    String
+
+  states                  ConfigState[]
+
+  createById              String
+  createByReference       User                @relation(fields: [createById], references: [id])
+
+  isDelete                Boolean             @default(false)
+  createAt                DateTime            @default(now())
+  updateAt                DateTime            @updatedAt()      @default(now())
+}
+
+model ConfigState {
+  id                      String              @id                 @default(uuid())
+
+  name                    String
+  countryId               String
+  countryReference        ConfigCountry       @relation(fields: [countryId], references: [id])
+
+  citys                   ConfigCity[]
+
+  createById              String
+  createByReference       User                @relation(fields: [createById], references: [id])
+
+  isDelete                Boolean             @default(false)
+  createAt                DateTime            @default(now())
+  updateAt                DateTime            @updatedAt()      @default(now())
+}
+
+model ConfigCity {
+  id                      String              @id                 @default(uuid())
+
+  name                    String
+  stateId                 String
+  stateReference          ConfigState       @relation(fields: [stateId], references: [id])
+
+  createById              String
+  createByReference       User                @relation("create", fields: [createById], references: [id])
+
+  users                   User[]              @relation("address")
+
+  isDelete                Boolean             @default(false)
+  createAt                DateTime            @default(now())
+  updateAt                DateTime            @updatedAt()      @default(now())
+}
+
+// history and statictics for month and year
+
+model History {
+  id                      String              @id                 @default(uuid())
+
+  eventName               String?
+
+  objectName              String?
+  objectReferenceId       String?
+
+  createAt                DateTime            @default(now())
+}
+
+model StaticticsForMonth {
+  id                      String              @id                 @default(uuid())
+
+  objectName              String?             // ob
+  objectReferenceId       String              @default("application")             // is id => model throw is global
+
+  year                    Int
+
+  monthName               String
+  monthNumber             Int     
+
+  totalMonth              Int                 @default(0)
+
+  totalDay1               Int                 @default(0)
+  totalDay2               Int                 @default(0)
+  totalDay3               Int                 @default(0)
+  totalDay4               Int                 @default(0)
+  totalDay5               Int                 @default(0)
+  totalDay6               Int                 @default(0)
+  totalDay7               Int                 @default(0)
+  totalDay8               Int                 @default(0)
+  totalDay9               Int                 @default(0)
+  totalDay10              Int                 @default(0)
+  totalDay11              Int                 @default(0)
+  totalDay12              Int                 @default(0)
+  totalDay13              Int                 @default(0)
+  totalDay14              Int                 @default(0)
+  totalDay15              Int                 @default(0)
+  totalDay16              Int                 @default(0)
+  totalDay17              Int                 @default(0)
+  totalDay18              Int                 @default(0)
+  totalDay19              Int                 @default(0)
+  totalDay20              Int                 @default(0)
+  totalDay21              Int                 @default(0)
+  totalDay22              Int                 @default(0)
+  totalDay23              Int                 @default(0)
+  totalDay24              Int                 @default(0)
+  totalDay25              Int                 @default(0)
+  totalDay26              Int                 @default(0)
+  totalDay27              Int                 @default(0)
+  totalDay28              Int                 @default(0)
+  totalDay29              Int                 @default(0)
+  totalDay30              Int                 @default(0)
+  totalDay31              Int                 @default(0)
+
+  updateAt                DateTime            @default(now())         @updatedAt
+  createAt                DateTime            @default(now())
+}
+
+model StaticticsForYear {
+  id                      String              @id                 @default(uuid())
+
+  objectName              String?             // ob
+  objectReferenceId       String              @default("global.app")             // is id => model throw is global
+
+  year                    Int  
+
+  totalYear              Int                  @default(0)
+
+  totalMonth1            Int                  @default(0)
+  totalMonth2            Int                  @default(0)
+  totalMonth3            Int                  @default(0)
+  totalMonth4            Int                  @default(0)
+  totalMonth5            Int                  @default(0)
+  totalMonth6            Int                  @default(0)
+  totalMonth7            Int                  @default(0)
+  totalMonth8            Int                  @default(0)
+  totalMonth9            Int                  @default(0)
+  totalMonth10           Int                  @default(0)
+  totalMonth11           Int                  @default(0)
+  totalMonth12           Int                  @default(0)
+  
+  updateAt                DateTime            @default(now())         @updatedAt
+  createAt                DateTime            @default(now())
+}
+
