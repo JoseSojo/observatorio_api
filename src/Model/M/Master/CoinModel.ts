@@ -17,6 +17,10 @@ export class CoinModel {
     public async findBy({filter}:{filter: Prisma.CoinWhereInput[]}): Promise<Coin | null> {
         return this.prisma.coin.findFirst({ 
             where: { AND:[...filter, {isDelete:false}] },
+            include: {
+                _count: true,
+                createByReference: true,
+            }
         })
     }
 
@@ -34,6 +38,11 @@ export class CoinModel {
             where:{ AND:[...filter, { isDelete:false }], },
             skip,
             take,
+            include: {
+                _count: true,
+                country: true,
+                createByReference: true
+            },
             orderBy: order ? order : { createAt:'desc' },
         });
     }

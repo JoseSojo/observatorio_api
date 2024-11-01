@@ -1,10 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { currentSuperAdmin, currentAdmin } from "src/Factory/PermitsFactory";
-import { ConfigCityModel } from "src/Model/M/Master/CityModel";
-import { CoinModel } from "src/Model/M/Master/CoinModel";
-import { ConfigCountryModel } from "src/Model/M/Master/CountryModel";
-import { PaymentMethodModel } from "src/Model/M/Master/PaymentMethodModel";
-import { ConfigStateModel } from "src/Model/M/Master/StateModel";
+import { currentSuperAdmin } from "src/Factory/PermitsFactory";
 import { PermitsModel } from "src/Model/M/Permits/PermitsModel";
 import { UserModel } from "src/Model/M/User/UserModel";
 import { CityService } from "src/Service/Master/CityService";
@@ -19,16 +14,12 @@ const dataPermit = {
     roles: currentSuperAdmin
 }
 
-const dataPermitAdmin = {
-    name: `ADMIN`,
-    roles: currentAdmin
-}
-
 const dataUser = {
     email: `superadmin@example.com`,
     password: `12345678`,
     username: `superadmin`,
-
+    name: `super`,
+    lastname: `admin`
 }
 
 @Injectable()
@@ -73,49 +64,12 @@ export class StartFixtures {
         if (coin3.body.coin) return `city ya creado`;
 
         const superadmin = await this.permit.create(dataPermit);
-        const admin = await this.permit.create(dataPermitAdmin);
 
         const usersuperadmin = await this.user.CreateNewUser({
             ...dataUser,
             rolReference: {
                 connect: {
                     id: superadmin.id
-                }
-            }
-        });
-
-        const useradmin = await this.user.CreateNewUser({
-            email: `admin@example.com`,
-            password: `12345678`,
-            username: `admin`,
-            rolReference: {
-                connect: {
-                    id: admin.id
-                }
-            }
-        });
-        const useradmin1 = await this.user.CreateNewUser({
-            email: `admin1@example.com`,
-            password: `12345678`,
-            username: `admin1`,
-            rolReference: {
-                connect: {
-                    id: admin.id
-                }
-            }
-        });
-
-        await this.permit.update({
-            id: superadmin.id, data: {
-                createByReference: {
-                    connect: { id: usersuperadmin.body.user.id }
-                }
-            }
-        });
-        await this.permit.update({
-            id: admin.id, data: {
-                createByReference: {
-                    connect: { id: usersuperadmin.body.user.id }
                 }
             }
         });
@@ -127,24 +81,20 @@ export class StartFixtures {
         const vzla = await this.country.CreateCountry({ createByReference: { connect: { id: usersuperadmin.body.user.id } }, name: `VEnezuela`, coinReference: { connect: { id: bolivar.body.coin.id } }, prefixPhone: `58` } );
         const gua = await this.state.CreateState({ createByReference: { connect: { id: usersuperadmin.body.user.id } }, countryReference: { connect: { id: vzla.body.country.id } }, name: `Guarico` } );
         const arg = await this.state.CreateState({ createByReference: { connect: { id: usersuperadmin.body.user.id } }, countryReference: { connect: { id: vzla.body.country.id } }, name: `Aragua` } );
-        const crb = await this.state.CreateState({ createByReference: { connect: { id: usersuperadmin.body.user.id } }, countryReference: { connect: { id: vzla.body.country.id } }, name: `Valencia` } );
+        const crb = await this.state.CreateState({ createByReference: { connect: { id: usersuperadmin.body.user.id } }, countryReference: { connect: { id: vzla.body.country.id } }, name: `Carabobo` } );
         const sjm = await this.city.CreateCity({ createByReference: { connect: { id: usersuperadmin.body.user.id } }, stateReference: { connect: { id: gua.body.state.id } }, name: `San juan de los morros` } );
-        const mrc = await this.city.CreateCity({ createByReference: { connect: { id: usersuperadmin.body.user.id } }, stateReference: { connect: { id: gua.body.state.id } }, name: `Maracay` } );
-        const vln = await this.city.CreateCity({ createByReference: { connect: { id: usersuperadmin.body.user.id } }, stateReference: { connect: { id: gua.body.state.id } }, name: `valenciA` } );
+        const mrc = await this.city.CreateCity({ createByReference: { connect: { id: usersuperadmin.body.user.id } }, stateReference: { connect: { id: arg.body.state.id } }, name: `Maracay` } );
+        const vln = await this.city.CreateCity({ createByReference: { connect: { id: usersuperadmin.body.user.id } }, stateReference: { connect: { id: crb.body.state.id } }, name: `valenciA` } );
 
         const binance = await this.payment.CreatePaymentMethod({ createByReference: { connect: { id: usersuperadmin.body.user.id } },moneyReference:{connect:{id:usdt.body.coin.id}}, name:`Binance`, description:`Cuenta en bitcoin`  });
         const divisa = await this.payment.CreatePaymentMethod({ createByReference: { connect: { id: usersuperadmin.body.user.id } },moneyReference:{connect:{id:dolar.body.coin.id}}, name:`Divisa`, description:`Pago en divisa (dolares)`  });
         const paymobil = await this.payment.CreatePaymentMethod({ createByReference: { connect: { id: usersuperadmin.body.user.id } },moneyReference:{connect:{id:bolivar.body.coin.id}}, name:`Pagomovil`, description:`Pago a la cuenta bancaria`  });
         const efectivo = await this.payment.CreatePaymentMethod({ createByReference: { connect: { id: usersuperadmin.body.user.id } },moneyReference:{connect:{id:bolivar.body.coin.id}}, name:`Efectivo`, description:`Pago en bolivares en efectivo`  });
 
-        // await this.userModel.update({ id:superadmin.id, cityReference:{ connect:{id:sjm.id} } } });
-
         return {
-            rol: [superadmin.name, admin.name],
+            rol: [superadmin.name],
             user: [
                 usersuperadmin.body.user.username,
-                useradmin.body.user.username,
-                useradmin1.body.user.username
             ],
             moneda: [
                 dolar.body,

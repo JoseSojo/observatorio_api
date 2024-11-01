@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ReponseServiceDto } from 'src/Validation/GlobalType';
-import { Prisma } from '@prisma/client';
+import { Prisma, Subscription } from '@prisma/client';
 import { SubscriptionModel } from 'src/Model/M/Master/SubscriptionModel';
 import { ListenerService } from '../ListenerService';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
@@ -8,6 +8,8 @@ import { ListenerPayloadHistory } from 'src/Validation/Listener/ListenerEvent';
 import { AbstractListenerEvent } from 'src/Validation/Listener/AbstractListenerEvent';
 import { TranslateType } from 'src/Validation/Translate';
 import { LanguajeService } from '../Translate/LanguajeService';
+import { FORM } from 'src/Validation/UI/Form/GenericForm';
+import { BaseStaticticsPie } from 'src/Validation/Event';
 
 @Injectable()
 export class SubscriptionService {
@@ -23,6 +25,10 @@ export class SubscriptionService {
         this.lang = this.translate.GetTranslate()
     }
 
+    public async CountSubscription ({filter}: {filter:Prisma.SubscriptionWhereInput[]}) {
+        return this.subscription.count({ filter });
+    }
+
     public async CreateSubscription(body: Prisma.SubscriptionCreateInput, detail?: Prisma.SubscriptionDetailCreateInput[]): Promise<ReponseServiceDto>  {
         // validations
         const SubscriptionFoundPromise = this.subscription.findBy({ filter:[{ name:body.name }] });
@@ -34,7 +40,6 @@ export class SubscriptionService {
         }
 
         const resultPromise = this.subscription.create({ data:body });
-
         const result = await resultPromise;
         
         const currentEvent: AbstractListenerEvent = {
@@ -149,11 +154,75 @@ export class SubscriptionService {
             message: this.lang.Action.RECOVERY,
             error: false,
         }
-    }   
+    } 
+    
+    public getFormCreate() {
+        const form: FORM = {
+            method: `POST`,
+            path: `/subscription/create`,
+            name: this.lang.Titles.Form.create,
+            fields: [
+                {
+                    id: `from.create.subscription.name`,
+                    key: `from.create.subscription.name`,
+                    label: this.lang.Input.name,
+                    name: `name`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`
+                }, {
+                    id: `from.create.subscription.free_month`,
+                    key: `from.create.subscription.free_month`,
+                    label: this.lang.Input.free_month,
+                    name: `countMonth`,
+                    placeholder: ``,
+                    required: true,
+                    type: `number`
+                }
+            ]
+        }
+        return form;
+    }
+
+    public getFormUpdate(data: Subscription) {
+        const form: FORM = {
+            method: `PUT`,
+            path: `/subscription/${data.id}/update`,
+            name: this.lang.Titles.Form.update,
+            fields: [
+                {
+                    id: `from.create.subscription.name`,
+                    key: `from.create.subscription.name`,
+                    label: this.lang.Input.name,
+                    name: `name`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`
+                }
+            ]
+        }
+        return form;
+    }
+
+    public getFromDelete(id: string) {
+        const form: FORM = {
+            method: `PUT`,
+            path: `/subscription/${id}/delete`,
+            name: this.lang.Titles.Form.delete,
+            fields: [],
+            delete: true
+        }
+        return form;
+    }
+
     
     // event for recovery user
     @OnEvent(`action.subscription`)
     private async ListenerEvent(event: AbstractListenerEvent) {
         this.listener.Distpatch(event);
+    }
+
+    private staticticsPie(): BaseStaticticsPie[] {
+        return [{name:`user_in_subscription`}];
     }
 }

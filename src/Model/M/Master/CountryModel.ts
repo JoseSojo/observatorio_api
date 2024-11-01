@@ -34,6 +34,11 @@ export class ConfigCountryModel {
             where:{ AND:[...filter, { isDelete:false }], },
             skip,
             take,
+            include: {
+                _count: true,
+                coinReference: true,
+                createByReference: true
+            },
             orderBy: order ? order : { createAt:'desc' },
         });
     }

@@ -40,6 +40,29 @@ import { CoinApiController } from './Controller/A/Master/CoinApiController';
 import { SubscriptionApiController } from './Controller/A/Master/SubscriptionApiController';
 import { SubscriptionModel } from './Model/M/Master/SubscriptionModel';
 import { SubscriptionService } from './Service/Master/SubscriptionService';
+import { LoginFactory } from './Factory/AuthFactory/LoginFactory';
+import { AuthApiController } from './Controller/A/AuthApiController';
+import { AuthApiGuiController } from './Controller/A/GUI/AuthApiGuiController';
+import { RegisterFactory } from './Factory/AuthFactory/RegisterFactory';
+import { DashboardFactory } from './Factory/DashboardFactory/DashboardFactory';
+import { DashboardApiGuiController } from './Controller/A/GUI/DashboardFactory';
+import { ProfileApiGuiController } from './Controller/A/GUI/ProfileFactory';
+import { UpdateDataApiController } from './Controller/A/GUI/Form/UpdateData';
+import { PassowordDataApiController } from './Controller/A/GUI/Form/UpdatePassword';
+import { CrudApiController } from './Controller/A/GUI/CRUD/CrudApiController';
+import { SelectApiController } from './Controller/A/GUI/Form/SelectField';
+import { PermitApiController } from './Controller/A/Master/PermitApiController';
+import { PermitService } from './Service/Master/PermitService';
+import { HistoryApiController } from './Controller/A/HistoryApiController';
+import { HistoryService } from './Service/HistoryService';
+import { ValidationService } from './Service/ValidationService';
+import { NotificationService } from './Service/User/NotificationService';
+import { NotificationModel } from './Model/M/User/NotificationModel';
+import { NotificationApiController } from './Controller/A/NotificationApiController';
+import { EventFactory } from './Factory/EventFactory';
+import { StatisticsApiGuiController } from './Controller/A/GUI/StatisticsApiGuiController';
+import { StaticticsService } from './Service/StaticticsService';
+import { StaticticsModel } from './Model/S/StaticticsModel';
 
 @Module({
   imports: [
@@ -62,7 +85,25 @@ import { SubscriptionService } from './Service/Master/SubscriptionService';
     CountryApiController,
     StateApiController,
     CityApiController,
-    SubscriptionApiController
+    SubscriptionApiController,
+    AuthApiController,
+    PermitApiController,
+    HistoryApiController,
+    NotificationApiController,
+
+    // GUI
+    AuthApiGuiController,
+    DashboardApiGuiController,
+    ProfileApiGuiController,
+    StatisticsApiGuiController,
+
+    // Forms
+    UpdateDataApiController,
+    PassowordDataApiController,
+    SelectApiController,
+
+    // CRUD
+    CrudApiController
   ],
   providers: [
     // globals
@@ -82,6 +123,8 @@ import { SubscriptionService } from './Service/Master/SubscriptionService';
     SessionModel,
     LanguajeModel,
     SubscriptionModel,
+    NotificationModel,
+    StaticticsModel,
 
     // history
     HistoryModel,
@@ -102,10 +145,18 @@ import { SubscriptionService } from './Service/Master/SubscriptionService';
     PaymentMethodService,
     LanguajeService,
     SubscriptionService,
+    PermitService,
+    HistoryService,
+    ValidationService,
+    NotificationService,
+    StaticticsService,
 
     // Factory
     PermitsFactory,
-
+    LoginFactory,
+    RegisterFactory,
+    DashboardFactory,
+    EventFactory,
 
     // listener
     HistoryEventListener,

@@ -17,6 +17,11 @@ export class ConfigStateModel {
     public async findBy({filter}:{filter: Prisma.ConfigStateWhereInput[]}): Promise<ConfigState | null> {
         return this.prisma.configState.findFirst({ 
             where: { AND:[...filter, {isDelete:false}] },
+            include: {
+                _count: true,
+                countryReference: true,
+                createByReference: true,
+            }
         })
     }
 
@@ -34,6 +39,11 @@ export class ConfigStateModel {
             where:{ AND:[...filter, { isDelete:false }], },
             skip,
             take,
+            include: {
+                _count: true,
+                countryReference: true,
+                createByReference: true
+            },
             orderBy: order ? order : { createAt:'desc' },
         });
     }

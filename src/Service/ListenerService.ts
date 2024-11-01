@@ -15,8 +15,6 @@ import { StaticticsYearModel } from "src/Model/S/StaticticsYearModel";
 @Injectable()
 export class ListenerService {
 
-    private date = new Date();
-
     constructor(
         private history: HistoryEventListener,
         private month: StaticticsMonthModel,
@@ -29,6 +27,7 @@ export class ListenerService {
         // MESUALES
         await this.month.Execute({ name:`application` });                   // aplicación
         await this.month.Execute({ name:`application.${objectName}` });     // global de interacción por objeto
+        if(id) await this.month.Execute({ name:`${objectName}`, id });     // objecto unico
         if(user) await this.month.Execute({ name:`user`,id:user });
         if(country) await this.month.Execute({ name:`country`,id:country });
 
@@ -36,7 +35,7 @@ export class ListenerService {
         await this.year.Execute({ name:`application` });                   // aplicación
         await this.year.Execute({ name:`application.${objectName}` });     // global de interacción por objeto
         if(user) await this.year.Execute({ name:`user`,id:user });
+        if(id) await this.year.Execute({ name:`${objectName}`, id });     // objecto unico
         if(country) await this.year.Execute({ name:`country`,id:country });
-
     }
 }

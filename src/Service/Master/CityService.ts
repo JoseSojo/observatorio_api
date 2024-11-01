@@ -1,21 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { LoginDto } from 'src/Validation/Auth/LoginDto';
 import { ReponseServiceDto } from 'src/Validation/GlobalType';
-import { GlobalService } from '../GlobalService';
-import { Prisma } from '@prisma/client';
-import { currentSuperAdmin } from 'src/Factory/PermitsFactory';
-import { PermitsModel } from 'src/Model/M/Permits/PermitsModel';
-import { CoinModel } from 'src/Model/M/Master/CoinModel';
+import { ConfigCity, Prisma } from '@prisma/client';
 import { ConfigCityModel } from 'src/Model/M/Master/CityModel';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
-import { HistoryEventListener } from 'src/EventListener/HistoryEvent';
-import { StaticticsForMonthEventListener } from 'src/EventListener/StaticticsForMonthEvent';
-import { StaticticsForYearEventListener } from 'src/EventListener/StaticticsForYearEvent';
-import { ListenerPayloadHistory } from 'src/Validation/Listener/ListenerEvent';
 import { ListenerService } from '../ListenerService';
 import { AbstractListenerEvent } from 'src/Validation/Listener/AbstractListenerEvent';
 import { TranslateType } from 'src/Validation/Translate';
 import { LanguajeService } from '../Translate/LanguajeService';
+import { FORM } from 'src/Validation/UI/Form/GenericForm';
+import { NotificationService } from '../User/NotificationService';
+import { BaseStaticticsPie } from 'src/Validation/Event';
 
 @Injectable()
 export class CityService {
@@ -26,7 +20,7 @@ export class CityService {
         private city: ConfigCityModel,
         private event: EventEmitter2,
         private listener: ListenerService,
-        private translate: LanguajeService
+        private translate: LanguajeService,
     ) {
         this.lang = this.translate.GetTranslate()
     }
@@ -42,7 +36,6 @@ export class CityService {
         }
 
         const resultPromise = this.city.create({ data:body });
-
         const result = await resultPromise;
         
         const currentEvent: AbstractListenerEvent = {
@@ -154,9 +147,75 @@ export class CityService {
         }
     }
 
+    public getFormCreate() {
+        const form: FORM = {
+            method: `POST`,
+            path: `/city/create`,
+            name: this.lang.Titles.Form.create,
+            fields: [
+                {
+                    id: `from.create.city.name`,
+                    key: `from.create.city.name`,
+                    label: this.lang.Input.name,
+                    name: `name`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`
+                },{
+                    id: `from.create.city.state`,
+                    key: `from.create.city.state`,
+                    label: this.lang.Input.state,
+                    name: `stateId`,
+                    placeholder: `seleccionar estado`,
+                    required: true,
+                    type: `text`,
+                    select: true,
+                    selectIn: `state`
+                }
+            ]
+        }
+        return form;
+    }
+
+    public getFormUpdate(data: ConfigCity) {
+        const form: FORM = {
+            method: `PUT`,
+            path: `/city/${data.id}/update`,
+            name: this.lang.Titles.Form.update,
+            fields: [
+                {
+                    id: `from.create.city.name`,
+                    key: `from.create.city.name`,
+                    label: this.lang.Input.name,
+                    name: `name`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`,
+                    value: data.name
+                }
+            ]
+        }
+        return form;
+    }
+
+    public getFromDelete(id: string) {
+        const form: FORM = {
+            method: `PUT`,
+            path: `/city/${id}/delete`,
+            name: this.lang.Titles.Form.delete,
+            fields: [],
+            delete: true
+        }
+        return form;
+    }
+
     // event for recovery user
     @OnEvent(`action.city`)
     private async ListenerEvent(event: AbstractListenerEvent) {
         this.listener.Distpatch(event);
+    }
+
+    private staticticsPie(): BaseStaticticsPie[] {
+        return [{name:`user_in_city`}];
     }
 }

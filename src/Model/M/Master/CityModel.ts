@@ -17,6 +17,11 @@ export class ConfigCityModel {
     public async findBy({filter}:{filter: Prisma.ConfigCityWhereInput[]}): Promise<ConfigCity | null> {
         return this.prisma.configCity.findFirst({ 
             where: { AND:[...filter, {isDelete:false}] },
+            include: {
+                _count: true,
+                createByReference: true,
+                stateReference: true
+            }
         })
     }
 
@@ -34,6 +39,11 @@ export class ConfigCityModel {
             where:{ AND:[...filter, { isDelete:false }], },
             skip,
             take,
+            include: {
+                _count: true,
+                createByReference: true,
+                stateReference: true,
+            },
             orderBy: order ? order : { createAt:'desc' },
         });
     }

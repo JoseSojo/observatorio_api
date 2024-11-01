@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/Service/PrismaService';
 import { History } from 'src/Validation/Listener/HistoryEvent';
 
@@ -18,6 +19,20 @@ export class HistoryModel {
                 objectReferenceId:data.id
             }
         });
+    }
+
+    public async findAll({filter,skip,take}: {filter:Prisma.HistoryWhereInput, skip:number,take:number}) {
+        return this.prisma.history.findMany({
+            where: filter,
+            skip,
+            take
+        })
+    }
+
+    public async count({filter}: {filter:Prisma.HistoryWhereInput}) {
+        return this.prisma.history.count({
+            where: filter,
+        })
     }
 
 }

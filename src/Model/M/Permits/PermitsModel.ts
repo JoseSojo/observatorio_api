@@ -11,13 +11,14 @@ export class PermitsModel {
         private global: GlobalService
     ) {}
 
-    public async create({name, roles,userid}: {name:string, roles:any,userid?:string}): Promise<Permits | null> {
-        if(userid) return this.prisma.permits.create({ 
+    public async create({name, roles,userId}: {name:string, roles:string[],userId?:string}): Promise<Permits | null> {
+
+        if(userId) return this.prisma.permits.create({ 
             data: {
                 name,
                 roles,
                 createByReference: {
-                    connect: { id:userid }
+                    connect: { id:userId }
                 }
             }
         });
@@ -33,7 +34,11 @@ export class PermitsModel {
 
     public async findBy({filter}:{filter: Prisma.PermitsWhereInput[]}): Promise<Permits | null> {
         return this.prisma.permits.findFirst({ 
-            where: { AND:[...filter, {isDelete:false}] }
+            where: { AND:[...filter, {isDelete:false}] },
+            include: {
+                _count: true,
+                createByReference: true,
+            }
         })
     }
 
@@ -44,9 +49,17 @@ export class PermitsModel {
         return this.prisma.permits.findMany({ 
             where:{ AND:[...filter, { isDelete:false }], },
             skip,
+            include: {
+                _count: true,
+                createByReference: true,
+            },
             take,
             orderBy: order ? order : { createAt:'desc' },
         });
+    }
+
+    public async count({filter}: {filter:Prisma.PermitsWhereInput[]}) {
+        return this.prisma.permits.count({ where:{AND:[...filter,{isDelete:false}]} });
     }
 
     public async update({ id, data }: { id:string, data:Prisma.PermitsUpdateInput }): Promise<Permits | null> {

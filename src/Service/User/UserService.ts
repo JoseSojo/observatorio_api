@@ -1,20 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { UserModel } from 'src/Model/M/User/UserModel';
-import { LoginDto } from 'src/Validation/Auth/LoginDto';
 import { ReponseServiceDto } from 'src/Validation/GlobalType';
-import { GlobalService } from '../GlobalService';
 import { Prisma } from '@prisma/client';
-import { currentSuperAdmin } from 'src/Factory/PermitsFactory';
-import { PermitsModel } from 'src/Model/M/Permits/PermitsModel';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
-import { HistoryEventListener } from 'src/EventListener/HistoryEvent';
-import { StaticticsForMonthEventListener } from 'src/EventListener/StaticticsForMonthEvent';
-import { StaticticsForYearEventListener } from 'src/EventListener/StaticticsForYearEvent';
-import { ListenerPayloadHistory } from 'src/Validation/Listener/ListenerEvent';
 import { ListenerService } from '../ListenerService';
 import { AbstractListenerEvent } from 'src/Validation/Listener/AbstractListenerEvent';
 import { LanguajeService } from '../Translate/LanguajeService';
 import { TranslateType } from 'src/Validation/Translate';
+import { FORM } from 'src/Validation/UI/Form/GenericForm';
+import { GlobalService } from '../GlobalService';
 
 @Injectable()
 export class UserService {
@@ -25,11 +19,37 @@ export class UserService {
         private user: UserModel,
         private event: EventEmitter2,
         private listener: ListenerService,
-        private translate: LanguajeService
+        private translate: LanguajeService,
+        private global: GlobalService
     ) {
         this.lang = this.translate.GetTranslate()
     }
 
+    public async CountUser ({filter}: {filter:Prisma.UserWhereInput[]}) {
+        return this.user.count({ filter });
+    }
+
+    public async UpdatePassword({id,password}:{id:string,password:string}): Promise<ReponseServiceDto> {
+        const result = this.user.update({
+            data: { password:await this.global.Hash({ password }) },
+            id
+        });
+
+        return { body:result, error:false,message:this.lang.Action.PASSWORD_CHANGE };
+    }
+
+    public async GenerateRestorePassword({id}:{id:string}): Promise<ReponseServiceDto> {
+        const date = new Date();
+        const token = await this.global.Hash({ password:id });
+        const result = await this.UpdateUser(id, { passwordRequetsAt:date, passwordRequetsToken:token });
+
+        return {
+            body: await result,
+            error: false,
+            message: this.lang.Action.PASSWORD_REQUETS
+        }
+    }
+    
     public async CreateNewUser(body: Prisma.UserCreateInput): Promise<ReponseServiceDto>  {
         // validations
         const emailFoundPromise = this.user.findBy({ filter:[{ email:body.email }] });
@@ -66,7 +86,7 @@ export class UserService {
 
     public async UpdateUser(id: string, body:Prisma.UserUpdateInput): Promise<ReponseServiceDto> {
         if(body.email) {
-            const found = await this.user.findBy({ filter:[{ email:`${body.email}` },{id:{notIn:[id]}}] });
+            const found = await this.user.findBy({ filter:[{ email:`${body.email}` },{ NOT:{id} }] });
             if(found) return { body:null,error:true,message:this.lang.User.EMAIL_FOUND }
         }
 
@@ -81,6 +101,7 @@ export class UserService {
             event:`update.user`,
             id:result.id,
             objectName:`user`,
+            user: id
         }
         this.event.emit(`action.user`, currentEvent);
 
@@ -91,8 +112,8 @@ export class UserService {
         }
     }
 
-    public async FindUser(id: string): Promise<ReponseServiceDto> {
-        const found = await this.user.findBy({ filter:[{id}] });
+    public async FindUser({filter}: {filter: Prisma.UserWhereInput[]}): Promise<ReponseServiceDto> {
+        const found = await this.user.findBy({ filter });
 
         return {
             body: found ? found : null,
@@ -158,6 +179,111 @@ export class UserService {
             message: this.lang.Action.RECOVERY,
             error: false,
         }
+    }
+
+    public getFormCreate() {
+        const form: FORM = {
+            method: `POST`,
+            path: `/user/create`,
+            name: this.lang.Titles.Form.create,
+            fields: [
+                {
+                    id: `from.create.user.name`,
+                    key: `from.create.user.name`,
+                    label: this.lang.Input.name,
+                    name: `name`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`
+                }, {
+                    id: `from.create.user.lastname`,
+                    key: `from.create.user.lastname`,
+                    label: this.lang.Input.lastname,
+                    name: `lastname`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`
+                }, {
+                    id: `from.create.user.username`,
+                    key: `from.create.user.username`,
+                    label: this.lang.Input.username,
+                    name: `username`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`
+                }, {
+                    id: `from.create.user.email`,
+                    key: `from.create.user.email`,
+                    label: this.lang.Input.email,
+                    name: `email`,
+                    placeholder: ``,
+                    required: true,
+                    type: `email`
+                }, {
+                    id: `from.create.user.password`,
+                    key: `from.create.user.password`,
+                    label: this.lang.Input.password,
+                    name: `password`,
+                    placeholder: ``,
+                    required: true,
+                    type: `password`
+                }, {
+                    key: `user.create.data.city`,
+                    id: `cityId`,
+                    label: this.lang.Input.city,
+                    name: `cityId`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`,
+                    value: ``,
+                    select: true,
+                    selectIn: `city`
+                }, {
+                    key: `user.create.data.permit`,
+                    id: `roleId`,
+                    label: this.lang.Input.permit,
+                    name: `roleId`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`,
+                    value: ``,
+                    select: true,
+                    selectIn: `permit`
+                }
+            ]
+        }
+        return form;
+    }
+
+    public getFormUpdate() {
+        const form: FORM = {
+            method: `PUT`,
+            path: `/user/---/update`,
+            name: this.lang.Titles.Form.create,
+            fields: [
+                {
+                    id: `from.update.user.name`,
+                    key: `from.update.user.name`,
+                    label: this.lang.Input.name,
+                    name: `name`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`
+                }
+            ]
+        }
+        return form;
+    }
+
+    public getFromDelete(id: string) {
+        const form: FORM = {
+            method: `PUT`,
+            path: `/user/${id}/delete`,
+            name: this.lang.Titles.Form.delete,
+            fields: [],
+            delete: true
+        }
+        return form;
     }
 
     // event for recovery user

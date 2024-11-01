@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ReponseServiceDto } from 'src/Validation/GlobalType';
-import { Prisma } from '@prisma/client';
+import { ConfigCountry, Prisma } from '@prisma/client';
 import { ConfigCountryModel } from 'src/Model/M/Master/CountryModel';
 import { ListenerService } from '../ListenerService';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
@@ -8,6 +8,8 @@ import { ListenerPayloadHistory } from 'src/Validation/Listener/ListenerEvent';
 import { AbstractListenerEvent } from 'src/Validation/Listener/AbstractListenerEvent';
 import { TranslateType } from 'src/Validation/Translate';
 import { LanguajeService } from '../Translate/LanguajeService';
+import { FORM } from 'src/Validation/UI/Form/GenericForm';
+import { BaseStaticticsPie } from 'src/Validation/Event';
 
 @Injectable()
 export class ConfigCountryService {
@@ -21,6 +23,10 @@ export class ConfigCountryService {
         private translate: LanguajeService
     ) {
         this.lang = this.translate.GetTranslate()
+    }
+
+    public async CountCountry ({filter}: {filter:Prisma.ConfigCountryWhereInput[]}) {
+        return this.country.count({ filter });
     }
 
     public async CreateCountry(body: Prisma.ConfigCountryCreateInput): Promise<ReponseServiceDto>  {
@@ -149,9 +155,84 @@ export class ConfigCountryService {
         }
     }   
     
+    public getFormCreate() {
+        const form: FORM = {
+            method: `POST`,
+            path: `/country/create`,
+            name: this.lang.Titles.Form.create,
+            fields: [
+                {
+                    id: `from.create.country.name`,
+                    key: `from.create.country.name`,
+                    label: this.lang.Input.name,
+                    name: `name`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`
+                }, {
+                    id: `from.create.country.prefixPhone`,
+                    key: `from.create.country.prefixPhone`,
+                    label: this.lang.Input.prefixPhone,
+                    name: `prefixPhone`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`
+                }, {
+                    key: `user.update.data.coin`,
+                    id: `coinId`,
+                    label: this.lang.Input.coin,
+                    name: `coinId`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`,
+                    value: ``,
+                    select: true,
+                    selectIn: `coin`
+                }
+            ]
+        }
+        return form;
+    }
+
+    public getFormUpdate(data: ConfigCountry) {
+        const form: FORM = {
+            method: `PUT`,
+            path: `/country/${data.id}/update`,
+            name: this.lang.Titles.Form.update,
+            fields: [
+                {
+                    id: `from.create.country.name`,
+                    key: `from.create.country.name`,
+                    label: this.lang.Input.name,
+                    name: `name`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`,
+                    value: data.name
+                }
+            ]
+        }
+        return form;
+    }
+
+    public getFromDelete(id: string) {
+        const form: FORM = {
+            method: `PUT`,
+            path: `/country/${id}/delete`,
+            name: this.lang.Titles.Form.delete,
+            fields: [],
+            delete: true
+        }
+        return form;
+    }
+
     // event for recovery user
     @OnEvent(`action.country`)
     private async ListenerEvent(event: AbstractListenerEvent) {
         this.listener.Distpatch(event);
+    }
+
+    private staticticsPie(): BaseStaticticsPie[] {
+        return [{name:`state_in_country`}];
     }
 }

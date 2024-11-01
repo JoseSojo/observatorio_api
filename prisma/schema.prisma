@@ -58,6 +58,10 @@ model User {
   paymentMethod           PaymentMethod[]
   subscription            Subscription[]        @relation("create")
   subscriptionDetail      SubscriptionDetail[]  @relation("create")
+
+  byNotifications         Notification[]      @relation("userBy")
+  forNotifications        Notification[]      @relation("userFor")
+
 }
 
 model Subscription {
@@ -65,9 +69,8 @@ model Subscription {
   name                    String?
 
   countMonth              Int
-  defaultMount            Float             @default(9.99) // defaul for month
-
-  discount                Int               @default(0)
+  defaultMount            Float             @default(9.99)  // defaul for month
+  discount                Int               @default(0)     // descuento en caso de que aplique
 
   details                 SubscriptionDetail[]
   
@@ -231,6 +234,25 @@ model ConfigCity {
   updateAt                DateTime            @updatedAt()      @default(now())
 }
 
+// Notifications
+model Notification {
+  id                      String              @id                 @default(uuid())
+
+  content                 String
+
+  generateBy              String              @default("app")
+
+  userById                String?
+  userByReference         User?               @relation("userBy", fields: [userById], references: [id])
+
+  userForId               String?
+  userForReference        User?               @relation("userFor", fields: [userForId], references: [id])
+
+  createAt                DateTime            @default(now())
+  updateAt                DateTime            @default(now())           @updatedAt
+  isDelete                Boolean            @default(false)
+}
+
 // history and statictics for month and year
 
 model History {
@@ -297,7 +319,7 @@ model StaticticsForYear {
   id                      String              @id                 @default(uuid())
 
   objectName              String?             // ob
-  objectReferenceId       String              @default("global.app")             // is id => model throw is global
+  objectReferenceId       String              @default("application")             // is id => model throw is global
 
   year                    Int  
 

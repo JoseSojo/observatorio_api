@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ReponseServiceDto } from 'src/Validation/GlobalType';
-import { Prisma } from '@prisma/client';
+import { PaymentMethod, Prisma } from '@prisma/client';
 import { PaymentMethodModel } from 'src/Model/M/Master/PaymentMethodModel';
 import { ListenerService } from '../ListenerService';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
@@ -8,6 +8,7 @@ import { ListenerPayloadHistory } from 'src/Validation/Listener/ListenerEvent';
 import { AbstractListenerEvent } from 'src/Validation/Listener/AbstractListenerEvent';
 import { TranslateType } from 'src/Validation/Translate';
 import { LanguajeService } from '../Translate/LanguajeService';
+import { FORM } from 'src/Validation/UI/Form/GenericForm';
 
 @Injectable()
 export class PaymentMethodService {
@@ -40,16 +41,16 @@ export class PaymentMethodService {
         const result = await resultPromise;
         
         const currentEvent: AbstractListenerEvent = {
-            event:`create.country`,
+            event:`create.payment`,
             id:result.id,
-            objectName:`country`,
+            objectName:`payment`,
             user:result.createById
         }
         this.event.emit(`action.payment.method`, currentEvent);
 
         return {
             body: {
-                user: result
+                payment: result
             },
             error: false,
             message: this.lang.Action.CREATE
@@ -147,6 +148,76 @@ export class PaymentMethodService {
             error: false,
         }
     } 
+
+    public getFormCreate() {
+        const form: FORM = {
+            method: `POST`,
+            path: `/payment/create`,
+            name: this.lang.Titles.Form.create,
+            fields: [
+                {
+                    id: `from.create.payment.name`,
+                    key: `from.create.payment.name`,
+                    label: this.lang.Input.name,
+                    name: `name`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`
+                }, {
+                    id: `from.create.payment.coinId`,
+                    key: `from.create.payment.coinId`,
+                    label: this.lang.Input.coin,
+                    name: `coinId`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`,
+                    select: true,
+                    selectIn: `coin`
+                }, {
+                    id: `from.create.payment.description`,
+                    key: `from.create.payment.description`,
+                    label: this.lang.Input.description,
+                    name: `description`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`,
+                }
+            ]
+        }
+        return form;
+    }
+
+    public getFormUpdate(data: PaymentMethod) {
+        const form: FORM = {
+            method: `PUT`,
+            path: `/payment/${data.id}/update`,
+            name: this.lang.Titles.Form.update,
+            fields: [
+                {
+                    id: `from.create.payment.name`,
+                    key: `from.create.payment.name`,
+                    label: this.lang.Input.name,
+                    name: `name`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`,
+                    value: data.name
+                }
+            ]
+        }
+        return form;
+    }
+
+    public getFromDelete(id: string) {
+        const form: FORM = {
+            method: `PUT`,
+            path: `/payment/${id}/delete`,
+            name: this.lang.Titles.Form.delete,
+            fields: [],
+            delete: true
+        }
+        return form;
+    }
 
     // event for recovery user
     @OnEvent(`action.payment.method`)

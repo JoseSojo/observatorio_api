@@ -47,7 +47,7 @@ export class UserModel {
                 rolReference: true,
                 cityReference: true,
                 _count: true,
-                
+                subscriptionReference:true,
             }
         })
     }
@@ -61,6 +61,10 @@ export class UserModel {
             skip,
             take,
             orderBy: order ? order : { createAt:'desc' },
+            include: {
+                rolReference: true,
+                _count: true,
+            }
         });
     }
 

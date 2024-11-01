@@ -40,8 +40,8 @@ export class SubscriptionModel {
             take,
             include: {
                 _count: true,
-                createByReference: { select:{ name:true,lastname:true,rolReference:{select:{name:true}} } },
-                details: { where:{isDelete:false} }
+                createByReference: { select:{ name:true,lastname:true,rolReference:{select:{name:true}}, email:true } },
+                details: { where:{isDelete:false} },
             },
             orderBy: order ? order : { createAt:'desc' },
         });

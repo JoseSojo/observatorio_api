@@ -3,7 +3,7 @@ import { UserModel } from 'src/Model/M/User/UserModel';
 import { LoginDto } from 'src/Validation/Auth/LoginDto';
 import { ReponseServiceDto } from 'src/Validation/GlobalType';
 import { GlobalService } from '../GlobalService';
-import { Prisma } from '@prisma/client';
+import { Coin, Prisma } from '@prisma/client';
 import { currentSuperAdmin } from 'src/Factory/PermitsFactory';
 import { PermitsModel } from 'src/Model/M/Permits/PermitsModel';
 import { CoinModel } from 'src/Model/M/Master/CoinModel';
@@ -13,6 +13,7 @@ import { ListenerPayloadHistory } from 'src/Validation/Listener/ListenerEvent';
 import { AbstractListenerEvent } from 'src/Validation/Listener/AbstractListenerEvent';
 import { TranslateType } from 'src/Validation/Translate';
 import { LanguajeService } from '../Translate/LanguajeService';
+import { FORM } from 'src/Validation/UI/Form/GenericForm';
 
 @Injectable()
 export class CoinService {
@@ -42,6 +43,7 @@ export class CoinService {
 
         const result = await resultPromise;
         
+
         const currentEvent: AbstractListenerEvent = {
             event:`create.coin`,
             id:result.id,
@@ -95,17 +97,16 @@ export class CoinService {
     }
     
     public async FindAllCoin({filter, skip, take}:{skip:number, take:number, filter: Prisma.CoinWhereInput[]}): Promise<ReponseServiceDto> {
-        
-        const countPromise = this.coin.count({ filter });
+        const count = await this.coin.count({ filter });
+
         const listPromise = this.coin.findAll({ filter, skip, take });
 
-        const count = await countPromise;
         const list = await listPromise;
-        
+
         return {
             body: {
                 next: skip+take > count ? false : true,
-                previous: count <= take ? false : true,
+                previous: count < take ? false : true,
                 nowSkip: skip+take,
                 nowTake: take,
                 list,
@@ -153,9 +154,77 @@ export class CoinService {
         }
     } 
 
+    public getFormCreate() {
+        const form: FORM = {
+            method: `POST`,
+            path: `/coin/create`,
+            name: this.lang.Titles.Form.create,
+            fields: [
+                {
+                    id: `from.create.coin.name`,
+                    key: `from.create.coin.name`,
+                    label: this.lang.Input.name,
+                    name: `name`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`
+                }, {
+                    id: `from.create.coin.prefix`,
+                    key: `from.create.coin.prefix`,
+                    label: this.lang.Input.prefix,
+                    name: `prefix`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`
+                }, {
+                    id: `from.create.coin.description`,
+                    key: `from.create.coin.description`,
+                    label: this.lang.Input.description,
+                    name: `description`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`
+                }
+            ]
+        }
+        return form;
+    }
+
+    public getFormUpdate(data: Coin) {
+        const form: FORM = {
+            method: `PUT`,
+            path: `/coin/${data.id}/update`,
+            name: this.lang.Titles.Form.update,
+            fields: [
+                {
+                    id: `from.create.coin.name`,
+                    key: `from.create.coin.name`,
+                    label: this.lang.Input.name,
+                    name: `name`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`,
+                    value: data.name
+                }
+            ]
+        }
+        return form;
+    }
+
+    public getFromDelete(id: string) {
+        const form: FORM = {
+            method: `PUT`,
+            path: `/coin/${id}/delete`,
+            name: this.lang.Titles.Form.delete,
+            fields: [],
+            delete: true
+        }
+        return form;
+    }
     // event for recovery coin
     @OnEvent(`action.coin`)
     private async ListenerEvent(event: AbstractListenerEvent) {
+
         this.listener.Distpatch(event);
     }
 

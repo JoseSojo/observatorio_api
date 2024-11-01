@@ -18,3 +18,9 @@ export interface UpdateUserType {
     name:               string;
     lastname:           string;
 }
+
+export interface UpdatePassowrdUserType {
+    newPassword:           string;
+    nowPassword:           string;
+    repeatPassword:           string;
+}

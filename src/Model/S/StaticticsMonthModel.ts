@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { GlobalService } from 'src/Service/GlobalService';
 import { PrismaService } from 'src/Service/PrismaService';
+import { EventType } from 'src/Validation/Event';
 import { ForMonthCreate, ForMonthFound, ForMonthUpdate } from 'src/Validation/Listener/StaticticsEvent';
 
 
@@ -12,6 +13,19 @@ export class StaticticsMonthModel {
         private prisma: PrismaService,
         private global: GlobalService
     ) {}
+
+    public async GetStatictics({event,month,id,year}:{month:number,id?:string,event:EventType,year:number}) {
+        return this.prisma.staticticsForMonth.findFirst({
+            where: {
+                AND: [
+                    { monthNumber: month },
+                    { objectName: event },
+                    { objectReferenceId: id ? id : `application` },
+                    { year: year },
+                ]
+            }
+        })
+    }
 
     public async Execute(data: ForMonthFound) {
         const months = this.global.GetAllMonth();

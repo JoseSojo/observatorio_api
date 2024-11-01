@@ -3,7 +3,7 @@ import { UserModel } from 'src/Model/M/User/UserModel';
 import { LoginDto } from 'src/Validation/Auth/LoginDto';
 import { ReponseServiceDto } from 'src/Validation/GlobalType';
 import { GlobalService } from '../GlobalService';
-import { Prisma } from '@prisma/client';
+import { ConfigState, Prisma } from '@prisma/client';
 import { currentSuperAdmin } from 'src/Factory/PermitsFactory';
 import { PermitsModel } from 'src/Model/M/Permits/PermitsModel';
 import { ConfigStateModel } from 'src/Model/M/Master/StateModel';
@@ -13,6 +13,8 @@ import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { AbstractListenerEvent } from 'src/Validation/Listener/AbstractListenerEvent';
 import { TranslateType } from 'src/Validation/Translate';
 import { LanguajeService } from '../Translate/LanguajeService';
+import { FORM } from 'src/Validation/UI/Form/GenericForm';
+import { BaseStaticticsPie } from 'src/Validation/Event';
 
 @Injectable()
 export class StateService {
@@ -37,7 +39,6 @@ export class StateService {
         if(coinFound) {
             return { body: null, error: true, message: this.lang.Action.NOW_EXIST }
         }
-
         const resultPromise = this.state.create({ data:body });
 
         const result = await resultPromise;
@@ -105,8 +106,8 @@ export class StateService {
         
         return {
             body: {
-                next: skip+take > count ? false : true,
-                previous: count <= take ? false : true,
+                next: skip+take < count ? true : false,
+                previous: count < take+skip ? true : false,
                 nowSkip: skip+take,
                 nowTake: take,
                 list,
@@ -154,10 +155,76 @@ export class StateService {
             error: false,
         }
     }   
-    
+
+    public getFormCreate() {
+        const form: FORM = {
+            method: `POST`,
+            path: `/state/create`,
+            name: this.lang.Titles.Form.create,
+            fields: [
+                {
+                    id: `from.create.state.name`,
+                    key: `from.create.state.name`,
+                    label: this.lang.Input.name,
+                    name: `name`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`
+                }, {
+                    id: `from.create.state.countryId`,
+                    key: `from.create.state.countryId`,
+                    label: this.lang.Input.name,
+                    name: `countryId`,
+                    placeholder: `seleccionar país`,
+                    required: true,
+                    type: `text`,
+                    select: true,
+                    selectIn: `country`
+                }
+            ]
+        }
+        return form;
+    }
+
+    public getFormUpdate(data: ConfigState) {
+        const form: FORM = {
+            method: `PUT`,
+            path: `/state/${data.id}/update`,
+            name: this.lang.Titles.Form.update,
+            fields: [
+                {
+                    id: `from.create.state.name`,
+                    key: `from.create.state.name`,
+                    label: this.lang.Input.name,
+                    name: `name`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`,
+                    value: data.name
+                }
+            ]
+        }
+        return form;
+    }
+
+    public getFromDelete(id: string) {
+        const form: FORM = {
+            method: `PUT`,
+            path: `/state/${id}/delete`,
+            name: this.lang.Titles.Form.delete,
+            fields: [],
+            delete: true
+        }
+        return form;
+    }
+
     // event for recovery user
     @OnEvent(`action.state`)
     private async ListenerEvent(event: AbstractListenerEvent) {
         this.listener.Distpatch(event);
+    }
+
+    private staticticsPie(): BaseStaticticsPie[] {
+        return [{name:`city_in_state`}];
     }
 }

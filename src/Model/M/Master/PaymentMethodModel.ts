@@ -17,6 +17,10 @@ export class PaymentMethodModel {
     public async findBy({filter}:{filter: Prisma.PaymentMethodWhereInput[]}): Promise<PaymentMethod | null> {
         return this.prisma.paymentMethod.findFirst({ 
             where: { AND:[...filter, {isDelete:false}] },
+            include: {
+                createByReference: true,
+                moneyReference: true
+            }
         })
     }
 
@@ -34,6 +38,10 @@ export class PaymentMethodModel {
             where:{ AND:[...filter, { isDelete:false }], },
             skip,
             take,
+            include: {
+                moneyReference: true,
+                createByReference: true
+            },
             orderBy: order ? order : { createAt:'desc' },
         });
     }
