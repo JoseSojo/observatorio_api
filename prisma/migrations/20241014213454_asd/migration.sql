@@ -1,5 +1,0 @@
--- AlterTable
-ALTER TABLE `User` ADD COLUMN `cityId` VARCHAR(191) NULL;
-
--- AddForeignKey
-ALTER TABLE `User` ADD CONSTRAINT `User_cityId_fkey` FOREIGN KEY (`cityId`) REFERENCES `ConfigCity`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

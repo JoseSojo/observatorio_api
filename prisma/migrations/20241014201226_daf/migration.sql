@@ -1,5 +1,0 @@
--- AlterTable
-ALTER TABLE `User` ADD COLUMN `rolId` VARCHAR(191) NULL;
-
--- AddForeignKey
-ALTER TABLE `User` ADD CONSTRAINT `User_rolId_fkey` FOREIGN KEY (`rolId`) REFERENCES `Permits`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
