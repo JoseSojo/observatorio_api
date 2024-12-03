@@ -40,7 +40,6 @@ export class ConfigProgramService {
                 body: entity
             };
         } catch (error) {
-            console.log(error);
             // log
             // log error
             return {
@@ -151,7 +150,6 @@ export class ConfigProgramService {
             // Fin
         } catch (error) {
             // log
-            console.log(error);
             // log error
             return {
                 message: this.lang.ACTIONS.DANGER.UPDATE,

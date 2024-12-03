@@ -40,6 +40,15 @@ import { ReportController } from './report/report.controller';
 import { StorageService } from './storage/storage.service';
 import { PublicController } from './public/public.controller';
 import AppEvent from './AppEvent';
+import { RegionalModule } from './regional/regional.module';
+import { ConfigEstadoService } from './regional/service/estados.service';
+import { ConfigMunicipioService } from './regional/service/municipio.service';
+import { ConfigParroquiaService } from './regional/service/parroquia.service';
+import { ConfigNucleoService } from './regional/service/nucleo.service';
+import EstadoModel from './regional/model/estados.model';
+import MunicipioModel from './regional/model/municipio.model';
+import ParroquiaModel from './regional/model/parroquia.model';
+import NucleoModel from './regional/model/nucleo.model';
 
 @Module({
   imports: [
@@ -55,6 +64,7 @@ import AppEvent from './AppEvent';
     PermitModule,
     UserModule,
     ProjectModule,
+    RegionalModule,
   ],
   controllers: [
     // PermitController
@@ -101,7 +111,17 @@ import AppEvent from './AppEvent';
 
     AppCategory,
 
-    StorageService
+    StorageService,
+
+    // REGIONAL
+    ConfigEstadoService,
+    ConfigMunicipioService,
+    ConfigParroquiaService,
+    ConfigNucleoService,
+    EstadoModel,
+    MunicipioModel,
+    ParroquiaModel,
+    NucleoModel,
   ],
 })
 export class AppModule { }

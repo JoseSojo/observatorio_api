@@ -40,14 +40,12 @@ export class ConfigNucleoService {
                 body: entity
             };
         } catch (error) {
-            console.log(error);
             // log
             // log error
             return {
                 message: this.lang.ACTIONS.DANGER.CREATE,
                 error: true,
                 errorMessage: error.message,
-                body: []
             };
         }
     }
@@ -151,7 +149,6 @@ export class ConfigNucleoService {
             // Fin
         } catch (error) {
             // log
-            console.log(error);
             // log error
             return {
                 message: this.lang.ACTIONS.DANGER.UPDATE,
@@ -230,7 +227,8 @@ export class ConfigNucleoService {
     public getDataList() {
         return [
             `Nombre`,
-            `Categoría`,
+            `Parroquia`,
+            `Municipio`,
             `Creador`,
             `Creación`
         ];
@@ -239,7 +237,8 @@ export class ConfigNucleoService {
     public getExtractList() {
         return [
             `name`,
-            `categoryRef.name`,
+            `parroquiaReference.name`,
+            `parroquiaReference.municipioReference.name`,
             `createByRef.email`,
             `createAt`
         ];
@@ -266,11 +265,28 @@ export class ConfigNucleoService {
     public getFormCreate() {
         const form: FORM = {
             method: `POST`,
-            path: `/program/create`,
+            path: `/nucleo/create`,
             name: this.lang.TITLES.CREATE,
             fields: [
-                
-                
+                {
+                    id: `from.create.regional.nucleo.name`,
+                    key: `from.create.regional.nucleo.name`,
+                    label: this.lang.TITLES.INPUT.NAME,
+                    name: `name`,
+                    placeholder: `Nombre`,
+                    required: true,
+                    type: `text`,
+                },  {
+                    id: `from.create.regional.nucleo.parroquia`,
+                    key: `from.create.regional.nucleo.parroquia`,
+                    label: this.lang.TITLES.INPUT.PARROQUIA,
+                    name: `parroquiaId`,
+                    placeholder: `Parroquia`,
+                    required: true,
+                    type: `text`,
+                    select: true,
+                    selectIn: `parroquia`
+                }
             ]
         }
         return form;
@@ -279,20 +295,19 @@ export class ConfigNucleoService {
     public getFormUpdate(data: configNucleo) {
         const form: FORM = {
             method: `PUT`,
-            path: `/program/${data.id}/update`,
-            name: this.lang.TITLES.CREATE,
+            path: `/nucluo/${data.id}/update`,
+            name: this.lang.TITLES.UPDATE,
             fields: [
-                
-                // {
-                //     id: `from.create.program.name`,
-                //     key: `from.create.program.name`,
-                //     label: this.lang.TITLES.INPUT.NAME,
-                //     name: `name`,
-                //     placeholder: ``,
-                //     required: true,
-                //     type: `text`,
-                //     selectIn: `category`,
-                // }
+                {
+                    id: `from.update.regional.nucleo.name`,
+                    key: `from.update.regional.nucleo.name`,
+                    label: this.lang.TITLES.INPUT.NAME,
+                    name: `name`,
+                    placeholder: data.name,
+                    required: true,
+                    type: `text`,
+                    value: data.name
+                }
             ]
         }
         return form;

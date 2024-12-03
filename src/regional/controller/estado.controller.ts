@@ -9,16 +9,19 @@ import { HistoryCreate } from "src/history/guards/history.guard";
 import { ConfigParroquiaService } from "../service/parroquia.service";
 import ParroquiaModel from "../model/parroquia.model";
 import { ParroquiaCreate } from "../guards/parroquia.guard";
+import { EstadoCreate } from "../guards/estado.guard";
+import { ConfigEstadoService } from "../service/estados.service";
+import EstadoModel from "../model/estados.model";
 
-@Controller(`program`)
-export default class ProgramController {
+@Controller(`state`)
+export default class StateController {
 
     private lang: LanguajeInterface;
 
     constructor(
         private languaje: LanguajeService,
-        private service: ConfigParroquiaService,
-        private model: ParroquiaModel,
+        private service: ConfigEstadoService,
+        private model: EstadoModel,
         private history: HistoryService,
         private appEvent: AppEvent,
     ) {
@@ -27,25 +30,21 @@ export default class ProgramController {
 
     @Post(`create`)
     @UseGuards(AuthGuard)
-    private async create(@Req() req: any, @Body() body: ParroquiaCreate) {
+    private async create(@Req() req: any, @Body() body: EstadoCreate) {
         // variables
         const user = req.user as any;
 
         // permisos
-        console.log(body);
 
         // validaciones
 
         // lógica
-        const currentBody: ParroquiaCreate = {
+        const currentBody: EstadoCreate = {
             name: body.name,
             userId: user.id,
-            municipioId: body.municipioId
         }
 
         const responseService = await this.service.create({ data:currentBody }) as any;
-
-        console.log(responseService.body);
 
         await this.RegisterHistory({
             ip: req.ip,
@@ -71,7 +70,7 @@ export default class ProgramController {
         const skip = query.skip ? Number(query.skip) : 0;
         const take = query.take ? Number(query.take) : 10;
 
-        const filter: Prisma.configParroquiaWhereInput = {}
+        const filter: Prisma.configStateWhereInput = {}
 
         const responseService = this.service.paginate({ filter, skip, take });
 
@@ -109,7 +108,7 @@ export default class ProgramController {
         // lógica
         const id = param.id;
 
-        const filter: Prisma.configParroquiaWhereInput = { id };
+        const filter: Prisma.configStateWhereInput = { id };
         const responseService = this.service.find({ filter });
 
         return responseService;
@@ -202,7 +201,7 @@ export default class ProgramController {
     @UseGuards(AuthGuard)
     private async report(@Req() req: any) {
         // variables
-        let filter: Prisma.configParroquiaWhereInput = {deleteAt:null}
+        let filter: Prisma.configStateWhereInput = {deleteAt:null}
 
         const count = await this.model.count({filter});
         let now = 0;
@@ -215,11 +214,11 @@ export default class ProgramController {
 
         // lógica
 
-        let select: Prisma.configParroquiaSelect = {};
+        let select: Prisma.configStateSelect = {};
         let header: string[] = [];
         let label: string[]  = [];
 
-        select = { name: true,_count:{select:{nucleos:true,user:true}},createByRef:{select:{name:true,lastname:true}},createAt:true,municipioReference:true };
+        select = { name: true,_count:{select:{municipios:true}},createByRef:{select:{name:true,lastname:true}},createAt:true };
         header = [``,`Nombre`,`Proyectos`,`Creador`,``,`Creación`];
         label = [`categoryRef.name`,`name`,`_count.projects`,`createByRef.name`,`createByRef.lastname`,`createAt`];
 
@@ -268,7 +267,7 @@ export default class ProgramController {
 
     private async getCustomHistory(id:string) {
         return { count:0, list:[] }
-        let filter: Prisma.configParroquiaWhereInput = {deleteAt:null}
+        let filter: Prisma.configStateWhereInput = {deleteAt:null}
         const count = await this.model.count({filter});
         let now = 0;
         let skip = 0;
@@ -280,11 +279,11 @@ export default class ProgramController {
 
         // lógica
 
-        let select: Prisma.configParroquiaSelect = {};
+        let select: Prisma.configStateSelect = {};
         let data: string[][] = [];
         let label: string[]  = [];
 
-        select = { name: true,createByRef:{select:{name:true,lastname:true}},createAt:true };
+        select = { name: true,_count:{select:{municipios:true}},createByRef:{select:{name:true,lastname:true}},createAt:true };
         data.push([`Descripción`,`Usuario`,``,`Fecha`]);
         data.push([`description`,`createByRef.name`,`createByRef.lastname`,`createAt`]);
 

@@ -152,7 +152,6 @@ export class ConfigLineService {
 
             // Fin
         } catch (error) {
-            console.log(error);
             // log
             // log error
             return {

@@ -52,6 +52,35 @@ export default class UserModel {
                 rolReference: true,
                 parentReference: true,
                 token: true,
+                age: true,
+                birtdate: true,
+                ci: true,
+                email2: true,
+                estadoCivil: true,
+                nacionality: true,
+                phone: true,
+                phone2: true,
+                sexo: true,
+                secondName: true,
+                secondLastname: true,
+                parroquiaReference: {
+                    select: {
+                        name: true,
+                        id: true,
+                        municipioReference: {
+                            select: {
+                                name: true,
+                                id: true,
+                                stateReference: {
+                                    select: {
+                                        name: true,
+                                        id: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 username: true,
                 createAt: true,
                 updateAt: true,

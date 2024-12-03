@@ -32,7 +32,6 @@ export default class ProgramController {
         const user = req.user as any;
 
         // permisos
-        console.log(body);
 
         // validaciones
 
@@ -44,8 +43,6 @@ export default class ProgramController {
         }
 
         const responseService = await this.service.create({ data:currentBody }) as any;
-
-        console.log(responseService.body);
 
         await this.RegisterHistory({
             ip: req.ip,

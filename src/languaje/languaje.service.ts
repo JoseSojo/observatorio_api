@@ -47,6 +47,9 @@ export class LanguajeService {
             TITLES: {
                 DOWNLOAD: `Descargar`,
                 INPUT: {
+                    MUNICIPIO: `Municipio`,
+                    PARROQUIA: `Parroquia`,
+                    STATE: `Estado`,
                     CI: `Cédula`,
                     PERMIT: `Permisos`,
                     PASSWORD: `Contraseña`,

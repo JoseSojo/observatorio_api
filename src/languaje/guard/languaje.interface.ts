@@ -58,10 +58,12 @@ interface TITLES_INTERFACE {
         EMAIL:      string;
         PASSWORD:   string;
         DESCRIPTION:string;
-        USERNAME:string;
+        USERNAME:   string;
         PERMIT:     string;
-        CI:     string;
-
+        CI:         string;
+        STATE:      string;
+        PARROQUIA:  string;
+        MUNICIPIO:  string;
     };
 
     SLIDE: {

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { LanguajeService } from 'src/languaje/languaje.service';
 import { LanguajeInterface } from 'src/languaje/guard/languaje.interface';
-import { configProgram, Prisma } from '@prisma/client';
+import { configParroquia, configProgram, Prisma } from '@prisma/client';
 import { FORM } from 'src/validation/types/FromInterface';
 import { ReportOption } from 'src/validation/types/ReportOptions';
 import ParroquiaModel from '../model/parroquia.model';
@@ -40,7 +40,6 @@ export class ConfigParroquiaService {
                 body: entity
             };
         } catch (error) {
-            console.log(error);
             // log
             // log error
             return {
@@ -151,7 +150,6 @@ export class ConfigParroquiaService {
             // Fin
         } catch (error) {
             // log
-            console.log(error);
             // log error
             return {
                 message: this.lang.ACTIONS.DANGER.UPDATE,
@@ -230,7 +228,7 @@ export class ConfigParroquiaService {
     public getDataList() {
         return [
             `Nombre`,
-            `Categoría`,
+            `Municipio`,
             `Creador`,
             `Creación`
         ];
@@ -239,7 +237,7 @@ export class ConfigParroquiaService {
     public getExtractList() {
         return [
             `name`,
-            `categoryRef.name`,
+            `municipioReference.name`,
             `createByRef.email`,
             `createAt`
         ];
@@ -266,12 +264,12 @@ export class ConfigParroquiaService {
     public getFormCreate() {
         const form: FORM = {
             method: `POST`,
-            path: `/program/create`,
+            path: `/parroquia/create`,
             name: this.lang.TITLES.CREATE,
             fields: [
                 {
-                    id: `from.create.program.name`,
-                    key: `from.create.program.name`,
+                    id: `from.create.Parroquia.name`,
+                    key: `from.create.Parroquia.name`,
                     label: this.lang.TITLES.INPUT.NAME,
                     name: `name`,
                     placeholder: ``,
@@ -279,14 +277,14 @@ export class ConfigParroquiaService {
                     type: `text`,
                 },
                 {
-                    id: `from.create.program.category`,
-                    key: `from.create.program.category`,
-                    label: this.lang.TITLES.INPUT.CATEGORY,
-                    name: `category`,
+                    id: `from.create.Parroquia.municipio`,
+                    key: `from.create.Parroquia.municipio`,
+                    label: this.lang.TITLES.INPUT.MUNICIPIO,
+                    name: `municipioId`,
                     placeholder: ``,
                     required: true,
                     type: `text`,
-                    selectIn: `category`,
+                    selectIn: `municipio`,
                     select: true
                 }
             ]
@@ -294,32 +292,22 @@ export class ConfigParroquiaService {
         return form;
     }
 
-    public getFormUpdate(data: configProgram) {
+    public getFormUpdate(data: configParroquia) {
         const form: FORM = {
             method: `PUT`,
-            path: `/program/${data.id}/update`,
-            name: this.lang.TITLES.CREATE,
+            path: `/parroquia/${data.id}/update`,
+            name: this.lang.TITLES.UPDATE,
             fields: [
                 {
-                    id: `from.create.program.name`,
-                    key: `from.create.program.name`,
+                    id: `from.create.Parroquia.name`,
+                    key: `from.create.Parroquia.name`,
                     label: this.lang.TITLES.INPUT.NAME,
                     name: `name`,
                     placeholder: ``,
                     required: true,
                     type: `text`,
                     value: data.name
-                },
-                // {
-                //     id: `from.create.program.name`,
-                //     key: `from.create.program.name`,
-                //     label: this.lang.TITLES.INPUT.NAME,
-                //     name: `name`,
-                //     placeholder: ``,
-                //     required: true,
-                //     type: `text`,
-                //     selectIn: `category`,
-                // }
+                }
             ]
         }
         return form;

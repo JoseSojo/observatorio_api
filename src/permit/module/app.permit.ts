@@ -3,10 +3,11 @@ import { Injectable } from "@nestjs/common";
 @Injectable()
 export default class AppPermit {
 
-    public readonly SUPER_ADMIN         = `SUPER_ADMIN`;
-    public readonly COODINADOR          = `COODINADOR`;
-    public readonly ESTUDIANTE          = `ESTUDIANTE`;
-    public readonly ANALISTA            = `ANALISTA`;
+    public readonly SUPER_ADMIN             = `SUPER_ADMIN`;
+    public readonly COODINADOR              = `COODINADOR`;
+    public readonly ESTUDIANTE              = `ESTUDIANTE`;
+    public readonly OBRERO_ADMINISTRATIVO   = `OBRERO_ADMINISTRATIVO`;
+    public readonly ANALISTA                = `ANALISTA`;
 
     public GetPermitAnalista () {
         return [
@@ -167,6 +168,12 @@ export default class AppPermit {
             this.APP_PERMIT_PROJECT_SHOW,
             this.APP_PERMIT_PROJECT_LIST,
             this.APP_PERMIT_PROPIETARY_PROJECTS
+        ]
+    }
+
+    public GetPermitObreroAdmintrativo () {
+        return [
+            ...this.APP_DEFAULT_PERMIT,
         ]
     }
 

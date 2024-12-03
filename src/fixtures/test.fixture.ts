@@ -32,6 +32,7 @@ export default class TestFixture {
         const coordinador = this.permitFound.GetPermitCoordinador();
         const student = this.permitFound.GetPermitEstudiante();
         const analista = this.permitFound.GetPermitAnalista();
+        const obadm = this.permitFound.GetPermitObreroAdmintrativo();
 
         const user1: UserCreate = {
             email: `admin@gmail.com`,
@@ -46,11 +47,13 @@ export default class TestFixture {
         const coordiandorGroupFoundPromise = this.permit.find({ filter:{ name:this.permitFound.COODINADOR } });
         const estudianteGroupFoundPromise = this.permit.find({ filter:{ name:this.permitFound.ESTUDIANTE } });
         const analistaGroupFoundPromise = this.permit.find({ filter:{ name:this.permitFound.ANALISTA } });
+        const obadmGroupFoundPromise = this.permit.find({ filter:{ name:this.permitFound.OBRERO_ADMINISTRATIVO } });
         
         const adminGroupFound =  (await adminGroupFoundPromise).body;
         const coordiandorGroupFound =  (await coordiandorGroupFoundPromise).body;
         const estudianteGroupFound =  (await estudianteGroupFoundPromise).body;
         const analistaGroupFound =  (await analistaGroupFoundPromise).body;
+        const obadmGroupFound =  (await obadmGroupFoundPromise).body;
 
         let adminId = adminGroupFound ? adminGroupFound.id : ``;
 
@@ -84,6 +87,14 @@ export default class TestFixture {
             jsonResponse.push(`${this.permitFound.ESTUDIANTE} ya creado.`);
         } else {
             await this.permit.create({ data:{ group:analista, name:this.permitFound.ANALISTA } });
+            jsonResponse.push(`${this.permitFound.ESTUDIANTE}, creado exitosamente`);
+        }
+
+        if(obadmGroupFound) {
+            await this.permit.udpate({ data:{name:this.permitFound.ANALISTA, group:analista}, id:obadmGroupFound.id });
+            jsonResponse.push(`${this.permitFound.ESTUDIANTE} ya creado.`);
+        } else {
+            await this.permit.create({ data:{ group:obadm, name:this.permitFound.OBRERO_ADMINISTRATIVO } });
             jsonResponse.push(`${this.permitFound.ESTUDIANTE}, creado exitosamente`);
         }
 

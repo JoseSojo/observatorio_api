@@ -1,52 +1,54 @@
 import { Module } from '@nestjs/common';
-import { ConfigService } from './config.service';
-import { ConfigController } from './config.controller';
-import CategoryModel from './model/category.model';
-import ProgramModel from './model/program.model';
-import LineModel from './model/line.model';
 import { PrismaService } from 'src/prisma/prisma.service';
 import FoundPermitService from 'src/permit/found.permit.service';
 import { LanguajeService } from 'src/languaje/languaje.service';
-import { ConfigCategoryService } from './service/category.service';
-import { ConfigProgramService } from './service/program.service';
-import { ConfigLineService } from './service/line.service';
 import { ValidationService } from 'src/validation/validation.service';
 import AppCategory from './app/AppCategory';
-import LineController from './controller/line.controller';
-import ProgramController from './controller/program.controller';
-import CategoryController from './controller/category.controller';
-import { AuthGuard } from 'src/guards/AuthGuard';
 import UserModel from 'src/user/model/user.model';
-import ConfigDocumentModel from './model/document.model';
 import { HistoryService } from 'src/history/history.service';
 import HistoryModel from 'src/history/model/history.model';
 import AppEvent from 'src/AppEvent';
+import MunicipioController from './controller/municipio.controller';
+import StateController from './controller/estado.controller';
+import NucleoController from './controller/nucleo.controller';
+import ParroquiaController from './controller/parroquia.controller';
+import { ConfigEstadoService } from './service/estados.service';
+import { ConfigMunicipioService } from './service/municipio.service';
+import { ConfigParroquiaService } from './service/parroquia.service';
+import { ConfigNucleoService } from './service/nucleo.service';
+import EstadoModel from './model/estados.model';
+import MunicipioModel from './model/municipio.model';
+import ParroquiaModel from './model/parroquia.model';
+import NucleoModel from './model/nucleo.model';
 
 @Module({
   controllers: [
-    ConfigController,
-    LineController,
-    ProgramController,
-    CategoryController,
+    MunicipioController,
+    StateController,
+    NucleoController,
+    ParroquiaController
   ],
   providers: [
     AppEvent,
     HistoryService,
     HistoryModel,
-    ConfigDocumentModel,
     UserModel,
     LanguajeService,
     ValidationService,
     PrismaService,
-    ConfigService,
-    ConfigCategoryService,
-    ConfigProgramService,
-    ConfigLineService,
-    CategoryModel,
-    ProgramModel,
-    LineModel,
     FoundPermitService,
-    AppCategory
+    AppCategory,
+
+    ConfigEstadoService,
+    ConfigMunicipioService,
+    ConfigParroquiaService,
+    ConfigNucleoService,
+    EstadoModel,
+    MunicipioModel,
+    ParroquiaModel,
+    NucleoModel,
+    
+
   ],
 })
-export class ConfigModule {}
+export class RegionalModule {}

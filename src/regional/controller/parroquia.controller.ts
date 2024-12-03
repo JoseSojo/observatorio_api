@@ -2,23 +2,23 @@ import { Body, Controller, Get, Param, Post, Put, Query, Req, UseGuards } from "
 import { LanguajeService } from "src/languaje/languaje.service";
 import { LanguajeInterface } from "src/languaje/guard/languaje.interface";
 import { Prisma } from "@prisma/client";
-import { ConfigProgramService } from "../service/program.service";
-import { ProgramCreate } from "../guards/program.guard";
 import { AuthGuard } from "src/guards/AuthGuard";
-import ProgramModel from "../model/program.model";
 import { HistoryService } from "src/history/history.service";
 import AppEvent from "src/AppEvent";
 import { HistoryCreate } from "src/history/guards/history.guard";
+import { ConfigParroquiaService } from "../service/parroquia.service";
+import ParroquiaModel from "../model/parroquia.model";
+import { ParroquiaCreate } from "../guards/parroquia.guard";
 
-@Controller(`program`)
-export default class ProgramController {
+@Controller(`parroquia`)
+export default class ParroquiaController {
 
     private lang: LanguajeInterface;
 
     constructor(
         private languaje: LanguajeService,
-        private service: ConfigProgramService,
-        private model: ProgramModel,
+        private service: ConfigParroquiaService,
+        private model: ParroquiaModel,
         private history: HistoryService,
         private appEvent: AppEvent,
     ) {
@@ -27,25 +27,22 @@ export default class ProgramController {
 
     @Post(`create`)
     @UseGuards(AuthGuard)
-    private async create(@Req() req: any, @Body() body: ProgramCreate) {
+    private async create(@Req() req: any, @Body() body: ParroquiaCreate) {
         // variables
         const user = req.user as any;
 
         // permisos
-        console.log(body);
 
         // validaciones
 
         // lógica
-        const currentBody: ProgramCreate = {
+        const currentBody: ParroquiaCreate = {
             name: body.name,
             userId: user.id,
-            category: body.category
+            municipioId: body.municipioId
         }
 
         const responseService = await this.service.create({ data:currentBody }) as any;
-
-        console.log(responseService.body);
 
         await this.RegisterHistory({
             ip: req.ip,
@@ -71,7 +68,7 @@ export default class ProgramController {
         const skip = query.skip ? Number(query.skip) : 0;
         const take = query.take ? Number(query.take) : 10;
 
-        const filter: Prisma.configProgramWhereInput = {}
+        const filter: Prisma.configParroquiaWhereInput = {}
 
         const responseService = this.service.paginate({ filter, skip, take });
 
@@ -109,7 +106,7 @@ export default class ProgramController {
         // lógica
         const id = param.id;
 
-        const filter: Prisma.configProgramWhereInput = { id };
+        const filter: Prisma.configParroquiaWhereInput = { id };
         const responseService = this.service.find({ filter });
 
         return responseService;
@@ -117,7 +114,7 @@ export default class ProgramController {
 
     @Put(`:id/update`)
     @UseGuards(AuthGuard)
-    private async update(@Req() req: any, @Param() param: { id: string }, @Body() body: ProgramCreate) {
+    private async update(@Req() req: any, @Param() param: { id: string }, @Body() body: ParroquiaCreate) {
         // variables
         const user = req.user as any;
 
@@ -127,10 +124,10 @@ export default class ProgramController {
 
         // lógica
         const id = param.id;
-        const currentBody: ProgramCreate = {
+        const currentBody: ParroquiaCreate = {
             name: body.name,
             userId: user.id,
-            category: body.category
+            municipioId: body.municipioId
         }
 
         const responseService = this.service.udpate({ id,data:currentBody });
@@ -202,7 +199,7 @@ export default class ProgramController {
     @UseGuards(AuthGuard)
     private async report(@Req() req: any) {
         // variables
-        let filter: Prisma.configProgramWhereInput = {deleteAt:null}
+        let filter: Prisma.configParroquiaWhereInput = {deleteAt:null}
 
         const count = await this.model.count({filter});
         let now = 0;
@@ -215,11 +212,11 @@ export default class ProgramController {
 
         // lógica
 
-        let select: Prisma.configProgramSelect = {};
+        let select: Prisma.configParroquiaSelect = {};
         let header: string[] = [];
         let label: string[]  = [];
 
-        select = { name: true,_count:{select:{projects:true}},createByRef:{select:{name:true,lastname:true}},createAt:true,categoryRef: true };
+        select = { name: true,municipioReference:{ select:{name:true} },_count:{ select:{nucleos:true,user:true} },createAt:true,createByRef:{select:{name:true,email:true,lastname:true,username:true}} };
         header = [``,`Nombre`,`Proyectos`,`Creador`,``,`Creación`];
         label = [`categoryRef.name`,`name`,`_count.projects`,`createByRef.name`,`createByRef.lastname`,`createAt`];
 
@@ -268,7 +265,7 @@ export default class ProgramController {
 
     private async getCustomHistory(id:string) {
         return { count:0, list:[] }
-        let filter: Prisma.configProgramWhereInput = {deleteAt:null}
+        let filter: Prisma.configParroquiaWhereInput = {deleteAt:null}
         const count = await this.model.count({filter});
         let now = 0;
         let skip = 0;
@@ -280,11 +277,11 @@ export default class ProgramController {
 
         // lógica
 
-        let select: Prisma.configProgramSelect = {};
+        let select: Prisma.configParroquiaSelect = {};
         let data: string[][] = [];
         let label: string[]  = [];
 
-        select = { name: true,_count:{select:{projects:true}},createByRef:{select:{name:true,lastname:true}},createAt:true };
+        select = { name: true,municipioReference:{ select:{name:true} },_count:{ select:{nucleos:true,user:true} },createAt:true,createByRef:{select:{name:true,email:true,lastname:true,username:true}} };
         data.push([`Descripción`,`Usuario`,``,`Fecha`]);
         data.push([`description`,`createByRef.name`,`createByRef.lastname`,`createAt`]);
 

@@ -11,6 +11,52 @@ import { HistoryCreate } from "src/history/guards/history.guard";
 import { HistoryService } from "src/history/history.service";
 import AppEvent from "src/AppEvent";
 
+interface Contact_Data_Interface {
+    phone?: string,
+    phone2?: string,
+    email?: string,
+    email2?: string
+}
+
+interface Residence_Data_Interface {
+    state?: {
+        label: string,
+        value: string,
+        name: string
+    },
+    municipio?: {
+        label: string,
+        value: string,
+        name: string
+    },
+    parroquia?: {
+        label: string,
+        value: string,
+        name: string
+    },
+}
+
+interface Perosnal_Data_Interface {
+    name?: string;
+    name2?: string;
+    lastname?: string;
+    lastname2?: string;
+    nacionality?: string;
+    ci?: string;
+    birthdate?: string;
+    age?: string;
+    civil?: string;
+    sex?: string;
+}
+
+interface CUTSOM_INTERFACE_UPDATE extends Perosnal_Data_Interface  {
+    phone?: string,
+    phone2?: string,
+    email?: string,
+    email2?: string,
+    residence?: Residence_Data_Interface
+}
+
 @Controller(`user`)
 export class UserController {
 
@@ -110,7 +156,7 @@ export class UserController {
 
     @Put(`:id/update`)
     @UseGuards(AuthGuard)
-    private async update(@Req() req: any, @Param() param: { id: string }, @Body() body: UserCreate) {
+    private async update(@Req() req: any, @Param() param: { id: string }, @Body() body: CUTSOM_INTERFACE_UPDATE) {
         // variables
         const user = req.user as any;
 
@@ -118,15 +164,25 @@ export class UserController {
 
         // validaciones
 
+        const date = new Date();
         // lógica
         const id = param.id;
-        const currentBody: UserCreate = {
+        const currentBody: Prisma.userUpdateInput = {
             name: body.name,
+            secondName: body.name2,
             email: body.email,
             lastname: body.lastname,
-            password: body.password,
-            rolId: body.rolId,
-            username: body.username
+            secondLastname: body.lastname2,
+            age: body.age ? Number(body.age) : 0,
+            birtdate: new Date(body.birthdate),
+            ci: body.ci,
+            email2: body.email2,
+            estadoCivil: body.civil,
+            nacionality: body.nacionality,
+            phone: body.phone,
+            phone2: body.phone2,
+            sexo: body.sex === `M` ? `M` : `F`,
+            parroquiaReference: { connect:{ id:body.residence.parroquia.value } }
         }
 
         const responseService = await this.service.udpate({ id, data: currentBody });

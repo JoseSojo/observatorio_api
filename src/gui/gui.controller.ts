@@ -14,6 +14,14 @@ import { PermitService } from 'src/permit/permit.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import ProjectModel from 'src/project/model/project.model';
 import ProjectService from 'src/project/project.service';
+import EstadoModel from 'src/regional/model/estados.model';
+import MunicipioModel from 'src/regional/model/municipio.model';
+import NucleoModel from 'src/regional/model/nucleo.model';
+import ParroquiaModel from 'src/regional/model/parroquia.model';
+import { ConfigEstadoService } from 'src/regional/service/estados.service';
+import { ConfigMunicipioService } from 'src/regional/service/municipio.service';
+import { ConfigNucleoService } from 'src/regional/service/nucleo.service';
+import { ConfigParroquiaService } from 'src/regional/service/parroquia.service';
 import { StorageService } from 'src/storage/storage.service';
 import UserModel from 'src/user/model/user.model';
 import { UserService } from 'src/user/user.service';
@@ -39,6 +47,15 @@ export class GuiController {
         private lineService: ConfigLineService,
         private permitService: PermitService,
         private projectService: ProjectService,
+
+        private stateService: ConfigEstadoService,
+        private municipioService: ConfigMunicipioService,
+        private parroquiaService: ConfigParroquiaService,
+        private nucleoService: ConfigNucleoService,
+        private estadoModel: EstadoModel,
+        private municipioModel: MunicipioModel,
+        private parroquiaModel: ParroquiaModel,
+        private nucleoModel: NucleoModel,
 
         private storageService: StorageService,
 
@@ -406,6 +423,26 @@ export class GuiController {
             title = this.lang.TITLES.SLIDE.PERMIT;
             // actions = this.getActionsList(permits, currentPermit, param.crud);
             // actionsUnique = this.getActionsUnique(permits, currentPermit, param.crud);
+        } else if (param.crud == `state`) {
+            header = this.stateService.getDataList();
+            title = this.lang.TITLES.SLIDE.REGIONAL.STATE;
+            actions = this.getActionsList(permits, currentPermit, param.crud);
+            actionsUnique = this.getActionsUnique(permits, currentPermit, param.crud);
+        } else if (param.crud == `municipio`) {
+            header = this.municipioService.getDataList();
+            title = this.lang.TITLES.SLIDE.REGIONAL.MUNICIPIO;
+            actions = this.getActionsList(permits, currentPermit, param.crud);
+            actionsUnique = this.getActionsUnique(permits, currentPermit, param.crud);
+        } else if (param.crud == `parroquia`) {
+            header = this.parroquiaService.getDataList();
+            title = this.lang.TITLES.SLIDE.REGIONAL.PARROQUIA;
+            actions = this.getActionsList(permits, currentPermit, param.crud);
+            actionsUnique = this.getActionsUnique(permits, currentPermit, param.crud);
+        } else if (param.crud == `nucleo`) {
+            header = this.nucleoService.getDataList();
+            title = this.lang.TITLES.SLIDE.REGIONAL.NUCLEO;
+            actions = this.getActionsList(permits, currentPermit, param.crud);
+            actionsUnique = this.getActionsUnique(permits, currentPermit, param.crud);
         }
 
         return {
@@ -455,6 +492,26 @@ export class GuiController {
             title = this.lang.TITLES.SLIDE.PROJECTS;
             actions = this.getActionsList(permits, currentPermit, param.crud);
             // form = this.projectService.getFormCreate();
+        } else if (param.crud == `state`) {
+            header = this.stateService.getDataList();
+            title = this.lang.TITLES.SLIDE.REGIONAL.STATE;
+            actions = this.getActionsList(permits, currentPermit, param.crud);
+            form = this.stateService.getFormCreate();
+        } else if (param.crud == `municipio`) {
+            header = this.municipioService.getDataList();
+            title = this.lang.TITLES.SLIDE.REGIONAL.MUNICIPIO;
+            actions = this.getActionsList(permits, currentPermit, param.crud);
+            form = this.municipioService.getFormCreate();
+        } else if (param.crud == `parroquia`) {
+            header = this.parroquiaService.getDataList();
+            title = this.lang.TITLES.SLIDE.REGIONAL.PARROQUIA;
+            actions = this.getActionsList(permits, currentPermit, param.crud);
+            form = this.parroquiaService.getFormCreate();
+        }else if (param.crud == `nucleo`) {
+            header = this.nucleoService.getDataList();
+            title = this.lang.TITLES.SLIDE.REGIONAL.NUCLEO;
+            actions = this.getActionsList(permits, currentPermit, param.crud);
+            form = this.nucleoService.getFormCreate();
         }
 
         return {
@@ -516,6 +573,34 @@ export class GuiController {
             title = this.lang.TITLES.SLIDE.PROJECTS;
             actions = this.getActionsList(permits, currentPermit, param.crud);
             form = this.projectService.getFormUpdate(item);
+        } else if (param.crud == `state`) {
+            const currentItem = await this.stateService.find({ filter: { id: param.id } });
+            item = currentItem.body
+            header = this.stateService.getDataList();
+            title = this.lang.TITLES.SLIDE.REGIONAL.STATE;
+            actions = this.getActionsList(permits, currentPermit, param.crud);
+            form = this.stateService.getFormUpdate(item);
+        } else if (param.crud == `municipio`) {
+            const currentItem = await this.municipioService.find({ filter: { id: param.id } });
+            item = currentItem.body
+            header = this.municipioService.getDataList();
+            title = this.lang.TITLES.SLIDE.REGIONAL.MUNICIPIO;
+            actions = this.getActionsList(permits, currentPermit, param.crud);
+            form = this.municipioService.getFormUpdate(item);
+        } else if (param.crud == `parroquia`) {
+            const currentItem = await this.parroquiaService.find({ filter: { id: param.id } });
+            item = currentItem.body
+            header = this.parroquiaService.getDataList();
+            title = this.lang.TITLES.SLIDE.REGIONAL.PARROQUIA;
+            actions = this.getActionsList(permits, currentPermit, param.crud);
+            form = this.parroquiaService.getFormUpdate(item);
+        } else if (param.crud == `nucleo`) {
+            const currentItem = await this.nucleoService.find({ filter: { id: param.id } });
+            item = currentItem.body
+            header = this.nucleoService.getDataList();
+            title = this.lang.TITLES.SLIDE.REGIONAL.NUCLEO;
+            actions = this.getActionsList(permits, currentPermit, param.crud);
+            form = this.nucleoService.getFormUpdate(item);
         }
 
         return {
@@ -575,6 +660,34 @@ export class GuiController {
             const currentItem = await this.projectService.find({ filter: { id: param.id } });
             item = currentItem.body
             header = this.projectService.getDataList();
+            title = this.lang.TITLES.SLIDE.PROJECTS;
+            actions = this.getActionsList(permits, currentPermit, param.crud);
+            // form = this.projectService.getFormUpdate(item);
+        } else if (param.crud == `state`) {
+            const currentItem = await this.stateService.find({ filter: { id: param.id } });
+            item = currentItem.body
+            header = this.stateService.getDataList();
+            title = this.lang.TITLES.SLIDE.PROJECTS;
+            actions = this.getActionsList(permits, currentPermit, param.crud);
+            // form = this.projectService.getFormUpdate(item);
+        } else if (param.crud == `municipio`) {
+            const currentItem = await this.municipioService.find({ filter: { id: param.id } });
+            item = currentItem.body
+            header = this.municipioService.getDataList();
+            title = this.lang.TITLES.SLIDE.PROJECTS;
+            actions = this.getActionsList(permits, currentPermit, param.crud);
+            // form = this.projectService.getFormUpdate(item);
+        } else if (param.crud == `parroquia`) {
+            const currentItem = await this.parroquiaService.find({ filter: { id: param.id } });
+            item = currentItem.body
+            header = this.parroquiaService.getDataList();
+            title = this.lang.TITLES.SLIDE.PROJECTS;
+            actions = this.getActionsList(permits, currentPermit, param.crud);
+            // form = this.projectService.getFormUpdate(item);
+        } else if (param.crud == `nucleo`) {
+            const currentItem = await this.nucleoService.find({ filter: { id: param.id } });
+            item = currentItem.body
+            header = this.nucleoService.getDataList();
             title = this.lang.TITLES.SLIDE.PROJECTS;
             actions = this.getActionsList(permits, currentPermit, param.crud);
             // form = this.projectService.getFormUpdate(item);
@@ -868,6 +981,46 @@ export class GuiController {
                 report: this.permit.APP_PERMIT_USER_REPORT,
                 update: this.permit.APP_PERMIT_USER_UPDATE,
                 delete: this.permit.APP_PERMIT_USER_DELETE,
+            };
+        }
+        else if (crud == `state`) {
+            return {
+                list: this.permit.APP_PERMIT_CONFIG_STATE_LIST,
+                create: this.permit.APP_PERMIT_CONFIG_STATE_CREATE,
+                unique: this.permit.APP_PERMIT_CONFIG_STATE_SHOW,
+                report: this.permit.APP_PERMIT_CONFIG_STATE_REPORT,
+                update: this.permit.APP_PERMIT_CONFIG_STATE_UPDATE,
+                delete: this.permit.APP_PERMIT_CONFIG_STATE_DELETE,
+            };
+        }
+        else if (crud == `municipio`) {
+            return {
+                list: this.permit.APP_PERMIT_CONFIG_MUNICIPIO_LIST,
+                create: this.permit.APP_PERMIT_CONFIG_MUNICIPIO_CREATE,
+                unique: this.permit.APP_PERMIT_CONFIG_MUNICIPIO_SHOW,
+                report: this.permit.APP_PERMIT_CONFIG_MUNICIPIO_REPORT,
+                update: this.permit.APP_PERMIT_CONFIG_MUNICIPIO_UPDATE,
+                delete: this.permit.APP_PERMIT_CONFIG_MUNICIPIO_DELETE,
+            };
+        }
+        else if (crud == `nucleo`) {
+            return {
+                list: this.permit.APP_PERMIT_CONFIG_NUCLEOS_LIST,
+                create: this.permit.APP_PERMIT_CONFIG_NUCLEOS_CREATE,
+                unique: this.permit.APP_PERMIT_CONFIG_NUCLEOS_SHOW,
+                report: this.permit.APP_PERMIT_CONFIG_NUCLEOS_REPORT,
+                update: this.permit.APP_PERMIT_CONFIG_NUCLEOS_UPDATE,
+                delete: this.permit.APP_PERMIT_CONFIG_NUCLEOS_DELETE,
+            };
+        }
+        else if (crud == `parroquia`) {
+            return {
+                list: this.permit.APP_PERMIT_CONFIG_PARRAOQUIAS_LIST,
+                create: this.permit.APP_PERMIT_CONFIG_PARRAOQUIAS_CREATE,
+                unique: this.permit.APP_PERMIT_CONFIG_PARRAOQUIAS_SHOW,
+                report: this.permit.APP_PERMIT_CONFIG_PARRAOQUIAS_REPORT,
+                update: this.permit.APP_PERMIT_CONFIG_PARRAOQUIAS_UPDATE,
+                delete: this.permit.APP_PERMIT_CONFIG_PARRAOQUIAS_DELETE,
             };
         }
         else {

@@ -109,8 +109,6 @@ export class ProjectController {
 
         const customFilter: Prisma.projectsWhereInput = { AND:filter }
 
-        console.log(customFilter);
-
         const responseService = await this.projectService.paginate({ filter:customFilter, skip, take });
 
         return responseService;
@@ -399,7 +397,6 @@ export class ProjectController {
     }
 
     private async RegisterHistory (data: ProjectHistoryCreate) {
-        console.log(data);
         await this.historyProject.create({ data:{
             eventName: data.eventName,
             projectRef: {

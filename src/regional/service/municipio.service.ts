@@ -152,7 +152,6 @@ export class ConfigMunicipioService {
 
             // Fin
         } catch (error) {
-            console.log(error);
             // log
             // log error
             return {
@@ -264,10 +263,28 @@ export class ConfigMunicipioService {
     public getFormCreate() {
         const form: FORM = {
             method: `POST`,
-            path: `/line/create`,
+            path: `/municipio/create`,
             name: this.lang.TITLES.CREATE,
             fields: [
-                
+                {
+                    id: `from.create.regional.municipio.name`,
+                    key: `from.create.regional.municipio.name`,
+                    label: this.lang.TITLES.INPUT.NAME,
+                    name: `name`,
+                    placeholder: `Nombre`,
+                    required: true,
+                    type: `text`,
+                },  {
+                    id: `from.create.regional.municipio.state`,
+                    key: `from.create.regional.municipio.state`,
+                    label: this.lang.TITLES.INPUT.STATE,
+                    name: `estadoId`,
+                    placeholder: `Estado`,
+                    required: true,
+                    type: `text`,
+                    select: true,
+                    selectIn: `state`
+                }
             ]
         }
         return form;
@@ -276,10 +293,18 @@ export class ConfigMunicipioService {
     public getFormUpdate(data: configMunicipio) {
         const form: FORM = {
             method: `PUT`,
-            path: `/line/${data.id}/update`,
-            name: this.lang.TITLES.CREATE,
+            path: `/municipio/${data.id}/update`,
+            name: this.lang.TITLES.UPDATE,
             fields: [
-                
+                {
+                    id: `from.create.regional.municipio.name`,
+                    key: `from.create.regional.municipio.name`,
+                    label: this.lang.TITLES.INPUT.NAME,
+                    name: `name`,
+                    placeholder: `Nombre`,
+                    required: true,
+                    type: `text`,
+                }
             ]
         }
         return form;

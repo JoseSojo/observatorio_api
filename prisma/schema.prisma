@@ -16,7 +16,6 @@ datasource db {
 model user {
   id                      String              @id                 @default(uuid())
 
-  email                   String
   username                String
   password                String
 
@@ -33,8 +32,13 @@ model user {
   estadoCivil             String?
   sexo                    String?
 
+  email                   String
+  phone                   String?
+  phone2                  String?
+  email2                  String?
+
   parroquiaId             String?
-  municipioReference      configParroquia?      @relation(fields: [parroquiaId], references: [id])
+  parroquiaReference      configParroquia?      @relation(fields: [parroquiaId], references: [id])
 
   token                   String?
 

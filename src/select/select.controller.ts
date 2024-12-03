@@ -9,6 +9,10 @@ import { LanguajeService } from 'src/languaje/languaje.service';
 import AppPermit from 'src/permit/module/app.permit';
 import { PermitService } from 'src/permit/permit.service';
 import ProjectService from 'src/project/project.service';
+import { ConfigEstadoService } from 'src/regional/service/estados.service';
+import { ConfigMunicipioService } from 'src/regional/service/municipio.service';
+import { ConfigNucleoService } from 'src/regional/service/nucleo.service';
+import { ConfigParroquiaService } from 'src/regional/service/parroquia.service';
 import { UserService } from 'src/user/user.service';
 
 @Controller('select')
@@ -28,6 +32,11 @@ export class SelectController {
         private permitService: PermitService,
         private projectService: ProjectService,
 
+        private stateService: ConfigEstadoService,
+        private municipioService: ConfigMunicipioService,
+        private parroquiaService: ConfigParroquiaService,
+        private nucleoService: ConfigNucleoService,
+
     ) {
         this.lang = this.languje.GetTranslate();
     }
@@ -42,8 +51,6 @@ export class SelectController {
 
         let list: { id: string, label: string }[] = [];
 
-        console.log(param);
-
         if (param.id === `category`) {
             const result = await this.categoryService.paginate({ skip: 0, take: 20, filter: { OR: [{ ident: { contains: query.param ? query.param : `` } }, { name: { contains: query.param ? query.param : `` } }] } });
             const data: { id: string, label: string }[] = [];
@@ -53,7 +60,6 @@ export class SelectController {
             list = data;
         } else if (param.id === `program`) {
             const filter: Prisma.configProgramWhereInput = { name: { contains: query.param ? query.param : `` } }
-            console.log(query);
             if (query.category) {
                 filter.categoryId = query.category
             }
@@ -74,9 +80,7 @@ export class SelectController {
             const studentStruc = await this.permitService.find({ filter: { name: this.permit.ESTUDIANTE } });
             const student = studentStruc.body;
 
-            console.log(query);
-
-            const result = await this.userService.paginate({ skip: 0, take: 20, filter: { AND: [{ rolId: student.id }, { name: { contains: query.param } }, { lastname: { contains: query.param } }, { email: { contains: query.param } }, { username: { contains: query.param } }] } });
+            const result = await this.userService.paginate({ skip: 0, take: 20, filter: { AND: [{ rolId: student.id }, { name: { contains: query.param ? query.param : `` } }, { lastname: { contains: query.param ? query.param : `` } }, { email: { contains: query.param ? query.param : `` } }, { username: { contains: query.param ? query.param : `` } }] } });
             const data: { id: string, label: string }[] = [];
             result.body.list.map((item: any) => {
                 data.push({ id: item.id, label: `${item.ci ? `${item.ci} -` : ``} ${item.name} ${item.lastname}` });
@@ -98,6 +102,36 @@ export class SelectController {
             const data: { id: string, label: string }[] = [];
             permitss.map((item: any) => {
                 data.push({ id: item.id, label: item.name });
+            });
+            list = data;
+        } else if (param.id == `estadoId` || param.id == `estado`) {
+            // const studentStruc = await this.permitService.find({ filter: { name: this.permit.ESTUDIANTE } });
+            // const student = studentStruc.body;
+
+            const result = await this.stateService.paginate({ skip: 0, take: 20, filter: { name:{ contains:query.param ? query.param : `` } }});
+            const data: { id: string, label: string }[] = [];
+            result.body.list.map((item: any) => {
+                data.push({ id: item.id, label: `${item.name}` });
+            });
+            list = data;
+        } else if (param.id == `municipio` || param.id == `municipioId`) {
+            // const studentStruc = await this.permitService.find({ filter: { name: this.permit.ESTUDIANTE } });
+            // const student = studentStruc.body;
+
+            const result = await this.municipioService.paginate({ skip: 0, take: 20, filter: { name:{ contains:query.param ? query.param : `` } }});
+            const data: { id: string, label: string }[] = [];
+            result.body.list.map((item: any) => {
+                data.push({ id: item.id, label: `${item.name}` });
+            });
+            list = data;
+        }  else if (param.id == `parroquia` || param.id == `parroquiaId`) {
+            // const studentStruc = await this.permitService.find({ filter: { name: this.permit.ESTUDIANTE } });
+            // const student = studentStruc.body;
+
+            const result = await this.parroquiaService.paginate({ skip: 0, take: 20, filter: { name:{ contains:query.param ? query.param : `` } }});
+            const data: { id: string, label: string }[] = [];
+            result.body.list.map((item: any) => {
+                data.push({ id: item.id, label: `${item.name}` });
             });
             list = data;
         }

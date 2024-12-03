@@ -28,7 +28,17 @@ export default class NucleoModel {
                 deleteAt: true,
                 createByRef: true,
                 createById: true,
-                parroquiaReference: true,
+                parroquiaReference: {
+                    select: {
+                        name: true,
+                        id: true,
+                        municipioReference: {
+                            select: {
+                                name: true,
+                            }
+                        }
+                    }
+                },
             }
         });
 

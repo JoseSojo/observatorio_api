@@ -50,9 +50,6 @@ export default class ProjectService {
                 documentRef: { connect:{ id:data.documentId } }
             }
 
-            console.log(dataCreate.public, data.public);
-            console.log(dataCreate.downloader, data.downloader);
-
             if(data.lineId) {
                 dataCreate.lineRef = { connect:{ id:data.lineId } };
             }
@@ -70,7 +67,6 @@ export default class ProjectService {
                 body: entity
             };
         } catch (error) {
-            console.log(error);
             // log
             // log error
             return {
@@ -179,7 +175,6 @@ export default class ProjectService {
 
             // Fin
         } catch (error) {
-            console.log(error);
             // log
             // log error
             return {

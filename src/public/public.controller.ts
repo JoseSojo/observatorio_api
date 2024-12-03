@@ -61,7 +61,6 @@ export class PublicController {
         if(query.program) { filter.push({ programId:query.program }) };
         if(query.category) { filter.push({ programRef:{ categoryId:query.category } }) };
 
-        console.log(filter);
 
         const customFilter: Prisma.projectsWhereInput = { AND:filter }
         const responseServicePromise = this.projectService.paginate({ filter:customFilter, skip, take });

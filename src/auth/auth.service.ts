@@ -91,11 +91,14 @@ export default class AuthService {
         try {
             const emailFoundPromise = this.userService.find({ filter:{ email:data.email } });
             const usernameFoundPromise = this.userService.find({ filter:{ username:data.username } });
-            const permitFound = this.permit.find({ filter:{ name:this.permitApp.ESTUDIANTE } });
+
+            const permitName = data.usertype === `ESTUDIANTE` ? this.permitApp.ESTUDIANTE : this.permitApp.OBRERO_ADMINISTRATIVO;
+
+            const permitFound = this.permit.find({ filter:{ name:permitName } });
 
             const emailFound = (await emailFoundPromise).body; 
             const usernameFound = (await usernameFoundPromise).body; 
-            const permitStudent = (await permitFound).body; 
+            const permitStudent = (await permitFound).body;
 
             if(emailFound) {
                 return {

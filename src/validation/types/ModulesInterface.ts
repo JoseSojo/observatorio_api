@@ -6,3 +6,7 @@ export type ModulesInterface =
     |   `line`
     |   `permit`
     |   `project`
+    |   `state`
+    |   `municipio`
+    |   `parroquia`
+    |   `nucleo`

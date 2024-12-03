@@ -1,27 +1,26 @@
 import { Body, Controller, Get, Param, Post, Put, Query, Req, UseGuards } from "@nestjs/common";
-import { ConfigCategoryService } from "../service/category.service";
 import { LanguajeService } from "src/languaje/languaje.service";
 import { LanguajeInterface } from "src/languaje/guard/languaje.interface";
-import { CategoryCreate } from "../guards/category.guard";
 import { Prisma } from "@prisma/client";
 import { AuthGuard } from "src/guards/AuthGuard";
-import { ConfigModule } from "../config.module";
-import CategoryModel from "../model/category.model";
 import { HistoryCreate } from "src/history/guards/history.guard";
 import { HistoryService } from "src/history/history.service";
 import { Request } from "express";
 import AppEvent from "src/AppEvent";
+import NucleoModel from "../model/nucleo.model";
+import { ConfigNucleoService } from "../service/nucleo.service";
+import { NucleoCreate } from "../guards/nucleo.guard";
 
-@Controller(`category`)
-export default class CategoryController {
+@Controller(`nucleo`)
+export default class NucleoController {
 
     private lang: LanguajeInterface;
 
     constructor(
         private languaje: LanguajeService,
-        private service: ConfigCategoryService,
+        private service: ConfigNucleoService,
         private history: HistoryService,
-        private model: CategoryModel,
+        private model: NucleoModel,
         private appEvent: AppEvent
     ) {
         this.lang = this.languaje.GetTranslate();
@@ -29,7 +28,7 @@ export default class CategoryController {
 
     @Post(`create`)
     @UseGuards(AuthGuard)
-    private async create(@Req() req: any, @Body() body: CategoryCreate) {
+    private async create(@Req() req: any, @Body() body: NucleoCreate) {
         // variables
         const user = req.user as any;
 
@@ -38,10 +37,10 @@ export default class CategoryController {
         // validaciones
 
         // lógica
-        const currentBody: CategoryCreate = {
-            id: body.id,
+        const currentBody: NucleoCreate = {
             name: body.name,
-            userId: user.id
+            userId: user.id,
+            parroquiaId: body.parroquiaId
         }
 
         const responseService = await this.service.create({ data:currentBody });
@@ -50,7 +49,7 @@ export default class CategoryController {
             ip: req.ip,
             browser: req.headers['user-agent'].toString(),
             eventName: this.appEvent.EVENT_CATEGORY_RECOVERY,
-            objectId: body.id ? body.id : responseService.body.id,
+            objectId: responseService.body.id,
             objectName: `cateogry`,
             objectReference: `category`,
             userId: req.user.id ? req.user.id : `no_user`
@@ -71,7 +70,7 @@ export default class CategoryController {
         const skip = query.skip ? Number(query.skip) : 0;
         const take = query.take ? Number(query.take) : 10;
 
-        const filter: Prisma.configCategoryWhereInput = {}
+        const filter: Prisma.configNucleoWhereInput = {}
 
         const responseServicePromise = this.service.paginate({ filter, skip, take });
         const responseService = await responseServicePromise;
@@ -110,7 +109,7 @@ export default class CategoryController {
         // lógica
         const id = param.id;
 
-        const filter: Prisma.configCategoryWhereInput = { id };
+        const filter: Prisma.configNucleoWhereInput = { id };
         const responseService = this.service.find({ filter });
 
         return responseService;
@@ -118,7 +117,7 @@ export default class CategoryController {
 
     @Put(`:id/update`)
     @UseGuards(AuthGuard)
-    private async update(@Req() req: any, @Param() param: { id: string }, @Body() body: CategoryCreate) {
+    private async update(@Req() req: any, @Param() param: { id: string }, @Body() body: NucleoCreate) {
         // variables
         const user = req.user as any;
 
@@ -128,9 +127,10 @@ export default class CategoryController {
 
         // lógica
         const id = param.id;
-        const currentBody: Prisma.configCategoryUpdateInput = {
+        const currentBody: NucleoCreate = {
             name: body.name,
-            ident: body.id
+            parroquiaId: body.parroquiaId,
+            userId: user.id
         }
 
         await this.RegisterHistory({
@@ -202,7 +202,7 @@ export default class CategoryController {
     @UseGuards(AuthGuard)
     private async reportMany(@Req() req: any) {
         // variables
-        let filter: Prisma.configCategoryWhereInput = {deleteAt:null}
+        let filter: Prisma.configNucleoWhereInput = {deleteAt:null}
 
         const count = await this.model.count({filter});
         let now = 0;

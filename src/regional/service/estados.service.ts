@@ -137,7 +137,7 @@ export class ConfigEstadoService {
         try {
             // Inicio
 
-            const entityPromise = this.model.update({ filter: { id }, data })
+            const entityPromise = this.model.update({ filter: { id }, data:{ name:data.name } })
 
             // estadística
             // historial
@@ -274,7 +274,7 @@ export class ConfigEstadoService {
         const filed: ReportOption[] = [
             {
                 label: this.lang.REPORTS.CATEGORY.many,
-                path: `/category/many/`,
+                path: `/state/many/`,
                 value: `many`,
             }
         ]
@@ -285,7 +285,7 @@ export class ConfigEstadoService {
         const filed: ReportOption[] = [
             {
                 label: this.lang.REPORTS.CATEGORY.unique,
-                path: `/category/report/unique/${id}`,
+                path: `/state/report/unique/${id}`,
                 value: ``,
             }
         ]
@@ -295,9 +295,19 @@ export class ConfigEstadoService {
     public getFormCreate() {
         const form: FORM = {
             method: `POST`,
-            path: `/category/create`,
+            path: `/state/create`,
             name: this.lang.TITLES.CREATE,
-            fields: []
+            fields: [
+                {
+                    id: `from.create.regional.state.name`,
+                    key: `from.create.regional.state.name`,
+                    label: this.lang.TITLES.INPUT.NAME,
+                    name: `name`,
+                    placeholder: `Nombre`,
+                    required: true,
+                    type: `text`,
+                },
+            ]
         }
         return form;
     }
@@ -305,9 +315,22 @@ export class ConfigEstadoService {
     public getFormUpdate(data: configState) {
         const form: FORM = {
             method: `PUT`,
-            path: `/category/${data.id}/update`,
-            name: this.lang.TITLES.CREATE,
-            fields: []
+            path: `/state/${data.id}/update`,
+            name: this.lang.TITLES.UPDATE,
+            fields: [
+                {
+                    id: `from.create.regional.name`,
+                    key: `from.create.regional.name`,
+                    label: this.lang.TITLES.INPUT.NAME,
+                    name: `name`,
+                    placeholder: data.name,
+                    required: true,
+                    type: `text`,
+                    select: true,
+                    selectIn: ``,
+                    value: data.name
+                }
+            ]
         }
         return form;
     }
