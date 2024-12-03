@@ -128,10 +128,18 @@ export class GuiController {
             }
         }
 
+        // Cateogrías
         const CategoryCount = async (params: any[]) => {
             const CHILD: { label: string, value: string }[] = [];
+
+            console.log({AND:[
+                { programRef: { categoryRef: { id: `123` } }},
+                {authos:{ every:{id:user.id} }} ,
+                {authos:{ some:{id:user.id} }} ,
+            ]});
+
             params.forEach(async (item) => {
-                const found = await this.projectModel.count({ filter: { programRef: { categoryRef: { id: item.id } } } });
+                const found = await this.projectModel.count({ filter:{ programRef: { categoryRef: { id: item.id } }}});
                 CHILD.push({
                     label: item.name,
                     value: found.toString()
@@ -162,6 +170,26 @@ export class GuiController {
                     },
                     ...child
                 ]
+            });
+        }
+
+        // MIS PROYECTOS
+        if(permits.includes(this.permit.APP_PERMIT_PROPIETARY_PROJECT)) {
+
+            const result = await this.prisma.author.findMany({
+                where: { createById:user.id },
+            });
+
+            const customId: {id:string}[] = [];
+            result.forEach((item) => customId.push({id:item.projectsId}), []);
+
+            const countAllPromise = this.projectModel.count({ filter:{ AND:customId }});
+            const countAll = await countAllPromise;
+
+            Cards.push({
+                ico: `project`,
+                label: `Mis Proyectos`,
+                value: countAll,
             });
         }
 
