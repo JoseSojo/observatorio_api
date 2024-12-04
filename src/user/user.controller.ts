@@ -128,7 +128,7 @@ export class UserController {
         let customFilter: Prisma.userWhereInput = { name: this.permit.ESTUDIANTE };
 
         if (user.rolReference.name === this.permit.SUPER_ADMIN) {
-            customFilter = { OR: [{ rolReference: { name: this.permit.COODINADOR } }, { rolReference: { name: this.permit.ESTUDIANTE } }] }
+            customFilter = { OR: [{ rolReference: { name: this.permit.COODINADOR } }, { rolReference: { name: this.permit.ESTUDIANTE } }, { rolReference: { name: this.permit.ANALISTA } }] }
         } else if (user.rolReference.name === this.permit.COODINADOR) {
             customFilter = { rolReference: { name: this.permit.ESTUDIANTE } };
         }

@@ -313,8 +313,8 @@ export class ConfigMunicipioService {
     public getOptionsReportList() {
         const filed: ReportOption[] = [
             {
-                label: this.lang.REPORTS.LINE.many,
-                path: `/line/report/many/`,
+                label: this.lang.REPORTS.MUNICIPIO.many,
+                path: `/municipio/report/many/`,
                 value: `many`,
             }
         ]
@@ -324,8 +324,8 @@ export class ConfigMunicipioService {
     public getOptionsReportUnique(id: string) {
         const filed: ReportOption[] = [
             {
-                label: this.lang.REPORTS.LINE.unique,
-                path: `/line/report/unique/${id}`,
+                label: this.lang.REPORTS.MUNICIPIO.unique,
+                path: `/municipio/report/unique/${id}`,
                 value: ``,
             }
         ]

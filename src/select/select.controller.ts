@@ -87,16 +87,15 @@ export class SelectController {
             });
             list = data;
         } else if (param.id == `rolId`) {
-
             let customFilter: Prisma.userGroupWhereInput = {name: this.permit.ESTUDIANTE};
 
             if(user.rolReference.name === this.permit.SUPER_ADMIN) {
-                customFilter = { OR:[{name: this.permit.ESTUDIANTE},{name: this.permit.COODINADOR}] }
+                customFilter = { OR:[{name: this.permit.ESTUDIANTE},{name: this.permit.COODINADOR},{name:this.permit.ANALISTA}] }
             } else if(user.rolReference.name === this.permit.COODINADOR) {
                 customFilter = {name: this.permit.ESTUDIANTE};
             }
 
-            const permitStruc = await this.permitService.paginate({ filter:customFilter,skip:0,take:2 });
+            const permitStruc = await this.permitService.paginate({ filter:customFilter,skip:0,take:5 });
             const permitss = permitStruc.body.list;
 
             const data: { id: string, label: string }[] = [];

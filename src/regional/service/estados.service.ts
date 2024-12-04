@@ -231,7 +231,7 @@ export class ConfigEstadoService {
     public getDataList() {
         return [
             `Nombre`,
-            "Cantidad de Estados",
+            "Cantidad de Municipios",
             `Creador`,
             `Creación`            
         ];
@@ -249,9 +249,9 @@ export class ConfigEstadoService {
     public getDataUnique() {
         return [
             `Nombre`,
-            "Cantidad de Estados",
+            "Cantidad de Municipios",
             `Creador`,
-            `Creación`  
+            `Creación`            
         ];
     }
 
@@ -273,8 +273,8 @@ export class ConfigEstadoService {
     public getOptionsReportList() {
         const filed: ReportOption[] = [
             {
-                label: this.lang.REPORTS.CATEGORY.many,
-                path: `/state/many/`,
+                label: this.lang.REPORTS.STATE.many,
+                path: `/state/report/many/`,
                 value: `many`,
             }
         ]
@@ -284,7 +284,7 @@ export class ConfigEstadoService {
     public getOptionsReportUnique(id: string) {
         const filed: ReportOption[] = [
             {
-                label: this.lang.REPORTS.CATEGORY.unique,
+                label: this.lang.REPORTS.STATE.many,
                 path: `/state/report/unique/${id}`,
                 value: ``,
             }

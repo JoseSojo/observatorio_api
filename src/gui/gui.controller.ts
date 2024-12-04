@@ -1,5 +1,6 @@
-import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query, Req, UseGuards } from '@nestjs/common';
 import { user } from '@prisma/client';
+import { CardsService } from 'src/cards/cards.service';
 import CategoryModel from 'src/config/model/category.model';
 import ConfigDocumentModel from 'src/config/model/document.model';
 import ProgramModel from 'src/config/model/program.model';
@@ -39,6 +40,8 @@ export class GuiController {
 
         private permit: AppPermit,
         private languje: LanguajeService,
+
+        private cards: CardsService,
 
         // modules
         private userService: UserService,
@@ -209,7 +212,7 @@ export class GuiController {
 
     @Get(`graphic`)
     @UseGuards(AuthGuard)
-    private async graphic(@Req() req: any) {
+    private async graphic(@Req() req: any, @Query() query: {biblioteca?:string}) {
         const user = req.user as any;
         const permits = user.rolReference.group as string[];
 
@@ -303,9 +306,9 @@ export class GuiController {
             });
             graphic.push({ label:header,value:values });
         }
-        // if (permits.includes(this.permit.APP_PERMIT_STATICTIS_PROJECTS_IN_HISTORY)) {
+        if(!query.biblioteca) {
 
-        // }
+        }
 
         return graphic
     }
@@ -332,6 +335,12 @@ export class GuiController {
 
         // HISTORY
 
+
+        // ANALISIS
+        console.log(permits.includes(this.permit.APP_PERMIT_ANALITIC_SECTION));
+        if (permits.includes(this.permit.APP_PERMIT_ANALITIC_SECTION)) {
+            actions.push({ ico: `analysis`, label: this.lang.TITLES.SLIDE.ANALYSIS, path: `/dashboard/analysis` });
+        }
 
         // CONFIG
         if (permits.includes(this.permit.APP_PERMIT_CONFIG_CATEGORY_LIST)) {
@@ -772,6 +781,34 @@ export class GuiController {
             dataList = this.projectService.getUniqueExtract();
             // title = item.name;
             report = this.projectService.getOptionsReportList();
+        } else if (param.crud === `state`) {
+            // const currentItem = await this.lineService.find({ filter:{id:param.id} });
+            // item = currentItem.body;
+
+            dataList = this.stateService.getUniqueExtract();
+            // title = item.name;
+            report = this.stateService.getOptionsReportList();
+        } else if (param.crud === `municipio`) {
+            // const currentItem = await this.lineService.find({ filter:{id:param.id} });
+            // item = currentItem.body;
+
+            dataList = this.municipioService.getUniqueExtract();
+            // title = item.name;
+            report = this.municipioService.getOptionsReportList();
+        } else if (param.crud === `parroquia`) {
+            // const currentItem = await this.lineService.find({ filter:{id:param.id} });
+            // item = currentItem.body;
+
+            dataList = this.parroquiaService.getUniqueExtract();
+            // title = item.name;
+            report = this.parroquiaService.getOptionsReportList();
+        } else if (param.crud === `nucleo`) {
+            // const currentItem = await this.lineService.find({ filter:{id:param.id} });
+            // item = currentItem.body;
+
+            dataList = this.nucleoService.getUniqueExtract();
+            // title = item.name;
+            report = this.nucleoService.getOptionsReportList();
         }
 
 
@@ -904,7 +941,43 @@ export class GuiController {
             title = item.title;
             // actions = this.getActionsUniquePage(permits, currentPermit, param.crud, param.id);
             // actionsUnique = this.getActionsUnique(permits, currentPermit, param.crud);
-        }
+        } else if (param.crud == `state`) {
+            const currentItem = await this.stateService.find({ filter: { id: param.id } });
+            item = currentItem.body;
+
+            dataList = this.stateService.getUniqueExtract();
+            header = this.stateService.getDataUnique();
+            title = item.name;
+            actions = this.getActionsUniquePage(permits, currentPermit, param.crud, param.id);
+            actionsUnique = this.getActionsUnique(permits, currentPermit, param.crud);
+        }  else if (param.crud == `municipio`) {
+            const currentItem = await this.municipioService.find({ filter: { id: param.id } });
+            item = currentItem.body;
+
+            dataList = this.municipioService.getUniqueExtract();
+            header = this.municipioService.getDataUnique();
+            title = item.name;
+            actions = this.getActionsUniquePage(permits, currentPermit, param.crud, param.id);
+            actionsUnique = this.getActionsUnique(permits, currentPermit, param.crud);
+        }  else if (param.crud == `parroquia`) {
+            const currentItem = await this.parroquiaService.find({ filter: { id: param.id } });
+            item = currentItem.body;
+
+            dataList = this.parroquiaService.getUniqueExtract();
+            header = this.parroquiaService.getDataUnique();
+            title = item.name;
+            actions = this.getActionsUniquePage(permits, currentPermit, param.crud, param.id);
+            actionsUnique = this.getActionsUnique(permits, currentPermit, param.crud);
+        }  else if (param.crud == `nucleo`) {
+            const currentItem = await this.nucleoService.find({ filter: { id: param.id } });
+            item = currentItem.body;
+
+            dataList = this.nucleoService.getUniqueExtract();
+            header = this.nucleoService.getDataUnique();
+            title = item.name;
+            actions = this.getActionsUniquePage(permits, currentPermit, param.crud, param.id);
+            actionsUnique = this.getActionsUnique(permits, currentPermit, param.crud);
+        } 
 
         return {
             header,

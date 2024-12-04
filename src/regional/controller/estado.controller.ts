@@ -49,7 +49,7 @@ export default class StateController {
         await this.RegisterHistory({
             ip: req.ip,
             browser: req.headers['user-agent'].toString(),
-            eventName: this.appEvent.EVENT_PROGRAM_CREATE,
+            eventName: this.appEvent.EVENT_REGIONAL_STATE_CREATE,
             objectId: responseService.body.id ? responseService.body.id : responseService.body.id,
             objectName: `program`,
             objectReference: `program`,
@@ -137,7 +137,7 @@ export default class StateController {
         await this.RegisterHistory({
             ip: req.ip,
             browser: req.headers['user-agent'].toString(),
-            eventName: this.appEvent.EVENT_PROGRAM_UPDATE,
+            eventName: this.appEvent.EVENT_REGIONAL_STATE_UPDATE,
             objectId: id,
             objectName: `program`,
             objectReference: `program`,
@@ -162,7 +162,7 @@ export default class StateController {
         await this.RegisterHistory({
             ip: req.ip,
             browser: req.headers['user-agent'].toString(),
-            eventName: this.appEvent.EVENT_PROGRAM_DELETE,
+            eventName: this.appEvent.EVENT_REGIONAL_STATE_DELETE,
             objectId: id,
             objectName: `program`,
             objectReference: `program`,
@@ -187,7 +187,7 @@ export default class StateController {
         await this.RegisterHistory({
             ip: req.ip,
             browser: req.headers['user-agent'].toString(),
-            eventName: this.appEvent.EVENT_PROGRAM_RECOVERY,
+            eventName: this.appEvent.EVENT_REGIONAL_STATE_RECOVERY,
             objectId: id,
             objectName: `program`,
             objectReference: `program`,

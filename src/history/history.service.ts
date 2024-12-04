@@ -178,7 +178,7 @@ export class HistoryService {
     public getExtractList() {
         return [
             `ip`,
-            ``,
+            `userReference.email`,
             `eventName`,
             `createAt`
         ];

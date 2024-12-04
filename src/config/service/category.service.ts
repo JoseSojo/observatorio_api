@@ -277,7 +277,7 @@ export class ConfigCategoryService {
         const filed: ReportOption[] = [
             {
                 label: this.lang.REPORTS.CATEGORY.many,
-                path: `/category/many/`,
+                path: `/category/report/many/`,
                 value: `many`,
             }
         ]

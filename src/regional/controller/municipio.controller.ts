@@ -49,7 +49,7 @@ export default class MunicipioController {
         await this.RegisterHistory({
             ip: req.ip,
             browser: req.headers['user-agent'].toString(),
-            eventName: this.appEvent.EVENT_CATEGORY_CREATE,
+            eventName: this.appEvent.EVENT_REGIONAL_MUNICIPIO_CREATE,
             objectId: responseService.body.id ? responseService.body.id : responseService.body.id,
             objectName: `cateogry`,
             objectReference: `category`,
@@ -137,7 +137,7 @@ export default class MunicipioController {
         await this.RegisterHistory({
             ip: req.ip,
             browser: req.headers['user-agent'].toString(),
-            eventName: this.appEvent.EVENT_LINE_UPDATE,
+            eventName: this.appEvent.EVENT_REGIONAL_MUNICIPIO_UPDATE,
             objectId: id,
             objectName: `municipio`,
             objectReference: `municipio`,
@@ -162,7 +162,7 @@ export default class MunicipioController {
         await this.RegisterHistory({
             ip: req.ip,
             browser: req.headers['user-agent'].toString(),
-            eventName: this.appEvent.EVENT_LINE_DELETE,
+            eventName: this.appEvent.EVENT_REGIONAL_MUNICIPIO_DELETE,
             objectId: id,
             objectName: `municipio`,
             objectReference: `municipio`,
@@ -187,7 +187,7 @@ export default class MunicipioController {
         await this.RegisterHistory({
             ip: req.ip,
             browser: req.headers['user-agent'].toString(),
-            eventName: this.appEvent.EVENT_LINE_RECOVERY,
+            eventName: this.appEvent.EVENT_REGIONAL_MUNICIPIO_RECOVERY,
             objectId: id,
             objectName: `municipio`,
             objectReference: `municipio`,

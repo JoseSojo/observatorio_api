@@ -48,7 +48,7 @@ export default class NucleoController {
         await this.RegisterHistory({
             ip: req.ip,
             browser: req.headers['user-agent'].toString(),
-            eventName: this.appEvent.EVENT_CATEGORY_RECOVERY,
+            eventName: this.appEvent.EVENT_REGIONAL_NUCLEO_CREATE,
             objectId: responseService.body.id,
             objectName: `cateogry`,
             objectReference: `category`,
@@ -162,7 +162,7 @@ export default class NucleoController {
         await this.RegisterHistory({
             ip: req.ip,
             browser: req.headers['user-agent'].toString(),
-            eventName: this.appEvent.EVENT_CATEGORY_DELETE,
+            eventName: this.appEvent.EVENT_REGIONAL_NUCLEO_DELETE,
             objectId: id,
             objectName: `cateogry`,
             objectReference: `category`,
@@ -188,7 +188,7 @@ export default class NucleoController {
         await this.RegisterHistory({
             ip: req.ip,
             browser: req.headers['user-agent'].toString(),
-            eventName: this.appEvent.EVENT_CATEGORY_RECOVERY,
+            eventName: this.appEvent.EVENT_REGIONAL_NUCLEO_RECOVERY,
             objectId: id,
             objectName: `cateogry`,
             objectReference: `category`,

@@ -97,6 +97,26 @@ export class LanguajeService {
                 }
             },
             REPORTS: {
+                MUNICIPIO: {
+                    many: `Municipios`,
+                    project: `Municipios`,
+                    unique: `Municipio único`,
+                },
+                NUCLEO: {
+                    many: `Nucleos`,
+                    project: `Nucleos`,
+                    unique: `Nucleo único`,
+                },
+                PARROQUIA: {
+                    many: `Parroquias`,
+                    project: `Parroquias`,
+                    unique: `Parroquia único`,
+                },
+                STATE: {
+                    many: `Estados`,
+                    project: `Estados`,
+                    unique: `Estado único`,
+                },
                 PROJECT: {
                     many: `Proyectos`,
                     project: `Proyectos`,

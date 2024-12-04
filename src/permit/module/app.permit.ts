@@ -12,6 +12,7 @@ export default class AppPermit {
     public GetPermitAnalista () {
         return [
             ...this.APP_DEFAULT_PERMIT,
+            this.APP_PERMIT_ANALITIC_SECTION,
             this.APP_PERMIT_CONFIG_STATE_LIST,
             this.APP_PERMIT_CONFIG_STATE_SHOW,
             this.APP_PERMIT_CONFIG_STATE_REPORT,
@@ -45,6 +46,7 @@ export default class AppPermit {
         return [
             ...this.APP_DEFAULT_PERMIT,
             this.APP_PERMIT_USER_LIST,
+            this.APP_PERMIT_ANALITIC_SECTION,
             this.APP_PERMIT_USER_SHOW,
             this.APP_PERMIT_USER_CREATE,
             this.APP_PERMIT_USER_UPDATE,
@@ -321,6 +323,10 @@ export default class AppPermit {
     public readonly APP_PERMIT_STATICTIS_PROJECTS_IN_CATEGORY    = `APP_PERMIT_STATICTIS_PROJECTS_IN_CATEGORY`; // categorías con más proyectos
     public readonly APP_PERMIT_STATICTIS_PROJECTS_IN_LINE        = `APP_PERMIT_STATICTIS_PROJECTS_IN_LINE`; // líneas con más proyectos
     public readonly APP_PERMIT_STATICTIS_PROJECTS_IN_HISTORY     = `APP_PERMIT_STATICTIS_PROJECTS_IN_HISTORY`; // top proyectos con más interacciones
+
+    // ANALISTA
+    public readonly APP_PERMIT_ANALITIC_SECTION     = `APP_PERMIT_ANALITIC_SECTION`; // programas con más proyectos
+
 
     /**
      * PROPIETARIO

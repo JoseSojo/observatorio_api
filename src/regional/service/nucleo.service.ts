@@ -247,7 +247,8 @@ export class ConfigNucleoService {
     public getDataUnique() {
         return [
             `Nombre`,
-            `Categoría`,
+            `Parroquia`,
+            `Municipio`,
             `Creador`,
             `Creación`
         ];
@@ -256,7 +257,8 @@ export class ConfigNucleoService {
     public getUniqueExtract() {
         return [
             `name`,
-            `categoryRef.name`,
+            `parroquiaReference.name`,
+            `parroquiaReference.municipioReference.name`,
             `createByRef.email`,
             `createAt`
         ];
@@ -316,8 +318,8 @@ export class ConfigNucleoService {
     public getOptionsReportList() {
         const filed: ReportOption[] = [
             {
-                label: this.lang.REPORTS.PROGRAM.many,
-                path: `/program/report/many/`,
+                label: this.lang.REPORTS.NUCLEO.many,
+                path: `/nucleo/report/many/`,
                 value: `many`,
             }
         ]
@@ -327,8 +329,8 @@ export class ConfigNucleoService {
     public getOptionsReportUnique(id: string) {
         const filed: ReportOption[] = [
             {
-                label: this.lang.REPORTS.PROGRAM.unique,
-                path: `/program/report/unique/${id}`,
+                label: this.lang.REPORTS.NUCLEO.unique,
+                path: `/nucleo/report/unique/${id}`,
                 value: ``,
             }
         ]

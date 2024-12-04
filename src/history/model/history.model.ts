@@ -16,7 +16,7 @@ export default class HistoryModel {
     }
 
     public async findAll({ skip, take, filter, select }: { skip?:number,take?:number,filter?:Prisma.historyWhereInput, select?:Prisma.historySelect }) {
-        const result = this.prisma.history.findMany({ 
+        const result = await this.prisma.history.findMany({ 
             skip, 
             take, 
             where: filter, 
@@ -29,11 +29,18 @@ export default class HistoryModel {
                 objectName: true,
                 objectId: true,
                 objectReference: true,
-                userId: true
+                userId: true,
             }
         });
 
-        return result;
+        const newHistory: any[] = [];
+
+        result.forEach(async (history) => {
+            const userFound = await this.prisma.user.findFirst({ where:{id:history.userId} });
+            newHistory.push({...history, userReference: userFound})
+        });
+
+        return newHistory;
     }
 
     public async find({ filter, select }: { filter?:Prisma.historyWhereInput, select?:Prisma.historySelect }) {

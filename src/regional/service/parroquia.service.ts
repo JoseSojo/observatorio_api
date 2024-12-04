@@ -316,8 +316,8 @@ export class ConfigParroquiaService {
     public getOptionsReportList() {
         const filed: ReportOption[] = [
             {
-                label: this.lang.REPORTS.PROGRAM.many,
-                path: `/program/report/many/`,
+                label: this.lang.REPORTS.PARROQUIA.many,
+                path: `/parroquia/report/many/`,
                 value: `many`,
             }
         ]
@@ -327,8 +327,8 @@ export class ConfigParroquiaService {
     public getOptionsReportUnique(id: string) {
         const filed: ReportOption[] = [
             {
-                label: this.lang.REPORTS.PROGRAM.unique,
-                path: `/program/report/unique/${id}`,
+                label: this.lang.REPORTS.PARROQUIA.unique,
+                path: `/parroquia/report/unique/${id}`,
                 value: ``,
             }
         ]
