@@ -1,8 +1,73 @@
+        // registro de trabajos Especiales de grado
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export default class AppEvent {
 
+    private readonly STATICTICS_USER = `STATICTICS_USER`;
+    private readonly STATICTICS_USER_STUDENT = `STATICTICS_USER_STUDENT`;
+    private readonly STATICTICS_USER_OBRERO_ADMINISTRATIVO = `STATICTICS_USER_OBRERO_ADMINISTRATIVO`;
+    private readonly STATICTICS_INFORMATION_EDUCATIVE = `STATICTICS_INFORMATION_EDUCATIVE`;
+    private readonly STATICTICS_INFORMATION_LABORAL = `STATICTICS_INFORMATION_LABORAL`;
+    private readonly STATICTICS_PROJECT = `STATICTICS_PROJECT`;
+    private readonly STATICTICS_PROJECT_DOCTORADO = `STATICTICS_PROJECT_DOCTORADO`;
+    private readonly STATICTICS_PROJECT_ESPECIAL_GRADO = `STATICTICS_PROJECT_ESPECIAL_GRADO`;
+    private readonly STATICTICS_PROJECT_DE_GRADO = `STATICTICS_PROJECT_DE_GRADO`;
+    private readonly STATICTICS_PROJECT_PRE_GRADO = `STATICTICS_PROJECT_PRE_GRADO`;
+
+    // STATICTICS
+    public getAllEvents () {
+        return {
+            user: {
+                user: {
+                    label: `Registros de todos los usuarios`,
+                    key: this.STATICTICS_USER
+                },
+                student: {
+                    label: `Registros de todos los estudiantes`,
+                    key: this.STATICTICS_USER_STUDENT
+                },
+                obreroadmin: {
+                    label: `Registros de todos los obreros/administrativos`,
+                    key: this.STATICTICS_USER_OBRERO_ADMINISTRATIVO
+                },
+            },
+            information: {
+                user: {
+                    label: `Registro información educativa`,
+                    key: this.STATICTICS_INFORMATION_EDUCATIVE
+                },
+                student: {
+                    label: `Registros registro de información laboral`,
+                    key: this.STATICTICS_INFORMATION_LABORAL
+                },
+            },
+            project: {
+                project: {
+                    label: `Registros de todos los proyectos`,
+                    key: this.STATICTICS_PROJECT
+                },
+                doctorado: {
+                    label: `Registros de Tesis Doctoral`,
+                    key: this.STATICTICS_PROJECT_DOCTORADO
+                },
+                especialGrado: {
+                    label: `Registros de Trabajos Especiales de Grado`,
+                    key: this.STATICTICS_PROJECT_ESPECIAL_GRADO
+                },
+                deGrado: {
+                    label: `Registros de Trabajos de Grado`,
+                    key: this.STATICTICS_PROJECT_DE_GRADO
+                },
+                preGrado: {
+                    label: `Registros de Trabajos Pre Grado`,
+                    key: this.STATICTICS_PROJECT_PRE_GRADO
+                }
+            }
+        }
+    }
+
+    // 
     public readonly EVENT_CATEGORY_CREATE = `EVENT_CATEGORY_CREATE`;  
     public readonly EVENT_CATEGORY_UPDATE = `EVENT_CATEGORY_UPDATE`;  
     public readonly EVENT_CATEGORY_DELETE = `EVENT_CATEGORY_DELETE`;  
@@ -49,4 +114,5 @@ export default class AppEvent {
     public readonly EVENT_REGIONAL_NUCLEO_UPDATE = `EVENT_REGIONAL_NUCLEO_UPDATE`;  
     public readonly EVENT_REGIONAL_NUCLEO_DELETE = `EVENT_REGIONAL_NUCLEO_DELETE`;  
     public readonly EVENT_REGIONAL_NUCLEO_RECOVERY = `EVENT_REGIONAL_NUCLEO_RECOVERY`;  
+
 }

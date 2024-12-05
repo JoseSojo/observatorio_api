@@ -46,6 +46,7 @@ import { ConfigMunicipioService } from './regional/service/municipio.service';
 import { ConfigParroquiaService } from './regional/service/parroquia.service';
 import { ConfigNucleoService } from './regional/service/nucleo.service';
 import { CardsService } from './cards/cards.service';
+import { StaticticsService } from './statictics/statictics.service';
 import EstadoModel from './regional/model/estados.model';
 import MunicipioModel from './regional/model/municipio.model';
 import ParroquiaModel from './regional/model/parroquia.model';
@@ -124,6 +125,7 @@ import NucleoModel from './regional/model/nucleo.model';
     ParroquiaModel,
     NucleoModel,
     CardsService,
+    StaticticsService,
   ],
 })
 export class AppModule { }
