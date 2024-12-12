@@ -26,6 +26,7 @@ export default class MunicipioModel {
                 createAt: true,
                 updateAt: true,
                 deleteAt: true,
+                stateReference: true,
                 createByRef: true,
                 createById: true,
                 _count: {

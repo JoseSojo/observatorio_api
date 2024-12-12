@@ -229,6 +229,7 @@ export class ConfigNucleoService {
             `Nombre`,
             `Parroquia`,
             `Municipio`,
+            `Estado`,
             `Creador`,
             `Creación`
         ];
@@ -249,8 +250,8 @@ export class ConfigNucleoService {
             `Nombre`,
             `Parroquia`,
             `Municipio`,
+            `Estado`,
             `Creador`,
-            `Creación`
         ];
     }
 

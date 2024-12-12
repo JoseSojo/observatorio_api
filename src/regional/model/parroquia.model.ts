@@ -28,7 +28,18 @@ export default class ParroquiaModel {
                 deleteAt: true,
                 createByRef: true,
                 createById: true,
-                municipioReference: true,
+                municipioReference: {
+                    select: {
+                        id:true,
+                        name: true,
+                        stateReference: {
+                            select: {
+                                id: true,
+                                name: true
+                            }
+                        }
+                    }
+                },
                 _count: {
                     select: {
                         nucleos: true,
