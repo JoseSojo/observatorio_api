@@ -8,6 +8,7 @@ export default class AppPermit {
     public readonly ESTUDIANTE              = `ESTUDIANTE`;
     public readonly OBRERO_ADMINISTRATIVO   = `OBRERO_ADMINISTRATIVO`;
     public readonly ANALISTA                = `ANALISTA`;
+    public readonly DOCENTE                 = `DOCENTE`;
 
     public GetPermitAnalista () {
         return [

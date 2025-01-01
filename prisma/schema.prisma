@@ -49,6 +49,13 @@ model user {
   // proyectos
   authors                 author[]
 
+  // education
+  education               educationProfile[]
+  cursos                  cursosProfile[]
+
+  // works
+  works                   workProfile[]
+
   // relación de usuario a usuario
   parentId                String?
   parentReference         user?                     @relation("parent", fields: [parentId], references: [id])
@@ -70,6 +77,63 @@ model user {
   configParroquia               configParroquia[]               @relation("create")
 
   historyProject                historyProject[]
+}
+
+model educationProfile {
+  id                    String              @id             @default(uuid())
+
+  nivel                 String
+  profesion             String
+  yearEnd               String
+  countryId             String
+  institucion           String
+  area                  String
+  subarea               String
+
+  userId                String
+  userRef               user                @relation(fields: [userId], references: [id])
+
+  deleteAt              String?
+  createAt              DateTime            @default(now())
+  updateAt              DateTime            @default(now()) @updatedAt
+}
+
+model cursosProfile {
+  id                    String              @id             @default(uuid())
+
+  tipo                  String
+  horas                 Int
+  country               String
+  institucion           String
+  description           String
+  area                  String
+  subarea               String
+
+  userId                String
+  userRef               user                @relation(fields: [userId], references: [id])
+
+  deleteAt              String?
+  createAt              DateTime            @default(now())
+  updateAt              DateTime            @default(now()) @updatedAt
+}
+
+model workProfile {
+  id                    String              @id             @default(uuid())
+
+  actual                String              @default("SI")
+  tipoInstitucion       String
+  institucion           String
+  ocupacion             String
+  cargo                 String
+  dateStart             DateTime
+  dateEnd               DateTime?
+
+  userId                String
+  userRef               user                @relation(fields: [userId], references: [id])
+
+  deleteAt              String?
+  createAt              DateTime            @default(now())
+  updateAt              DateTime            @default(now()) @updatedAt
 }
 
 model userGroup {
@@ -290,6 +354,8 @@ model configInvestigationLine {
   updateAt             DateTime          @default(now())     @updatedAt()
   createAt             DateTime          @default(now())
 }
+
+//
 
 model history {
   id                      String              @id                 @default(uuid())

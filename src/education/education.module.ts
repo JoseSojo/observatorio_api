@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
+import { EducationService } from './education.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import UserModel from './model/user.model';
+import UserModel from './model/education.model';
 import FoundPermitService from 'src/permit/found.permit.service';
 import { LanguajeService } from 'src/languaje/languaje.service';
 import { PermitService } from 'src/permit/permit.service';
@@ -13,27 +12,25 @@ import PermitModel from 'src/permit/module/permit.model';
 import AppEvent from 'src/AppEvent';
 import HistoryModel from 'src/history/model/history.model';
 import { HistoryService } from 'src/history/history.service';
-import EducationModel from 'src/education/model/education.model';
-import { EducationService } from 'src/education/education.service';
+import { EducationController } from './education.controller';
+import EducationModel from './model/education.model';
 
 @Module({
-  controllers: [UserController],
+  controllers: [EducationController],
   providers: [
     AppEvent,
     LanguajeService,
     ValidationService,
     PrismaService,
     FoundPermitService,
-    UserService,
-    UserModel,
+    EducationModel,
+    EducationService,
     AuthGuard,
     AppPermit,
     PermitService,
     PermitModel,
     HistoryModel,
     HistoryService,
-    EducationModel,
-    EducationService,
   ]
 })
-export class UserModule {}
+export class EducationModule {}

@@ -33,6 +33,7 @@ export default class TestFixture {
         const student = this.permitFound.GetPermitEstudiante();
         const analista = this.permitFound.GetPermitAnalista();
         const obadm = this.permitFound.GetPermitObreroAdmintrativo();
+        const docente = this.permitFound.GetPermitObreroAdmintrativo();
 
         const user1: UserCreate = {
             email: `admin@gmail.com`,
@@ -48,12 +49,14 @@ export default class TestFixture {
         const estudianteGroupFoundPromise = this.permit.find({ filter:{ name:this.permitFound.ESTUDIANTE } });
         const analistaGroupFoundPromise = this.permit.find({ filter:{ name:this.permitFound.ANALISTA } });
         const obadmGroupFoundPromise = this.permit.find({ filter:{ name:this.permitFound.OBRERO_ADMINISTRATIVO } });
+        const docenteGroupFoundPromise = this.permit.find({ filter:{ name:this.permitFound.DOCENTE } });
         
         const adminGroupFound =  (await adminGroupFoundPromise).body;
         const coordiandorGroupFound =  (await coordiandorGroupFoundPromise).body;
         const estudianteGroupFound =  (await estudianteGroupFoundPromise).body;
         const analistaGroupFound =  (await analistaGroupFoundPromise).body;
         const obadmGroupFound =  (await obadmGroupFoundPromise).body;
+        const docenteGroupFound =  (await docenteGroupFoundPromise).body;
 
         let adminId = adminGroupFound ? adminGroupFound.id : ``;
 
@@ -96,6 +99,14 @@ export default class TestFixture {
         } else {
             await this.permit.create({ data:{ group:obadm, name:this.permitFound.OBRERO_ADMINISTRATIVO } });
             jsonResponse.push(`${this.permitFound.ESTUDIANTE}, creado exitosamente`);
+        }
+
+        if(docenteGroupFound) {
+            await this.permit.udpate({ data:{name:this.permitFound.DOCENTE, group:docente}, id:docenteGroupFound.id });
+            jsonResponse.push(`${this.permitFound.DOCENTE} ya creado.`);
+        } else {
+            await this.permit.create({ data:{ group:docente, name:this.permitFound.DOCENTE } });
+            jsonResponse.push(`${this.permitFound.DOCENTE}, creado exitosamente`);
         }
 
         let userId = ``;
