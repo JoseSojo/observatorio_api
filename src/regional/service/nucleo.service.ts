@@ -240,6 +240,7 @@ export class ConfigNucleoService {
             `name`,
             `parroquiaReference.name`,
             `parroquiaReference.municipioReference.name`,
+            `parroquiaReference.municipioReference.stateReference.name`,
             `createByRef.email`,
             `createAt`
         ];

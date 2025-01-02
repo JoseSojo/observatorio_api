@@ -58,6 +58,8 @@ import { EducationController } from './education/education.controller';
 import WorkModel from './work/model/work.model';
 import { WorkController } from './work/work.controller';
 import { WorkService } from './work/work.service';
+import GuiPublicController from './gui/public.controller';
+import StaticticsController from './statictics/statictics.controller';
 
 @Module({
   imports: [
@@ -85,7 +87,9 @@ import { WorkService } from './work/work.service';
     ReportController,
     PublicController,
     EducationController,
-    WorkController
+    WorkController,
+    GuiPublicController,
+    StaticticsController
   ],
   providers: [
     AppEvent,

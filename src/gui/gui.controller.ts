@@ -89,10 +89,19 @@ export class GuiController {
         if (permits.includes(this.permit.APP_PERMIT_COUNT_USER)) {
             const student = this.permit.ESTUDIANTE;
             const coor = this.permit.COODINADOR;
+            const docente = this.permit.DOCENTE;
+            const analis = this.permit.ANALISTA;
+            const obrAdmin = this.permit.OBRERO_ADMINISTRATIVO;
             const coordinadoresPromise = this.userModel.count({ filter: { AND: [{ deleteAt: null }, { rolReference: { name: coor } }] } });
             const estudaintesPromise = this.userModel.count({ filter: { AND: [{ deleteAt: null }, { rolReference: { name: student } }] } });
+            const docentePromise = this.userModel.count({ filter: { AND: [{ deleteAt: null }, { rolReference: { name: docente } }] } });
+            const analisPromise = this.userModel.count({ filter: { AND: [{ deleteAt: null }, { rolReference: { name: analis } }] } });
+            const obrAdminPromise = this.userModel.count({ filter: { AND: [{ deleteAt: null }, { rolReference: { name: obrAdmin } }] } });
             const estCount = await estudaintesPromise;
             const coorCount = await coordinadoresPromise;
+            const docenteCount = await docentePromise;
+            const analistaCount = await analisPromise;
+            const obrAdminCount = await obrAdminPromise;
 
             const CHILD: { label: string, value: string }[] = []
 
@@ -101,6 +110,15 @@ export class GuiController {
             }
             if (permits.includes(this.permit.APP_PERMIT_COUNT_ESTUDIANTES)) {
                 CHILD.push({ label: `Estudiantes`, value: estCount.toString() });
+            }
+            if (permits.includes(this.permit.APP_PERMIT_COUNT_DOCENTE)) {
+                CHILD.push({ label: `Docentes`, value: docenteCount.toString() });
+            }
+            if (permits.includes(this.permit.APP_PERMIT_COUNT_OBRERO_ADMIN)) {
+                CHILD.push({ label: `Obrero/Adminsitrativo`, value: obrAdminCount.toString() });
+            }
+            if (permits.includes(this.permit.APP_PERMIT_COUNT_ANALISTA)) {
+                CHILD.push({ label: `Analista`, value: analistaCount.toString() });
             }
 
             if (permits.includes(this.permit.APP_PERMIT_COUNT_COORDINADORES) && permits.includes(this.permit.APP_PERMIT_COUNT_ESTUDIANTES)) {

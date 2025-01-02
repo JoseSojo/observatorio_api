@@ -77,12 +77,12 @@ export class ProjectController {
         await whiteFilePromise;
         const responseService = await createProjectPromise as any;
 
-        await this.RegisterHistory({
-            eventName: this.appEvent.EVENT_PROJECT_CREATE,
-            userId: req.user.id,
-            projectId: responseService.body.id,
-            userAuth: true
-        });
+        // await this.RegisterHistory({
+        //     eventName: this.appEvent.EVENT_PROJECT_CREATE,
+        //     userId: req.user.id,
+        //     projectId: responseService.body.id,
+        //     userAuth: true
+        // });
 
         return responseService;
     }
@@ -106,6 +106,8 @@ export class ProjectController {
             // filter.push({ authos:{ every:{ createById:user.id } } });
             filter.push({ authos:{ some:{ createById:user.id } } });
         }
+
+        filter.push({ deleteAt:null })
 
         const customFilter: Prisma.projectsWhereInput = { AND:filter }
 

@@ -7,6 +7,7 @@ import ProjectModel from './model/project.model';
 import { ProjectCreate } from './guards/project.model';
 import { FORM } from 'src/validation/types/FromInterface';
 import { ReportOption } from 'src/validation/types/ReportOptions';
+import { StaticticsService } from 'src/statictics/statictics.service';
 
 @Injectable()
 export default class ProjectService {
@@ -15,7 +16,8 @@ export default class ProjectService {
 
     constructor (
         private model: ProjectModel,
-        private languajeService: LanguajeService
+        private languajeService: LanguajeService,
+        private statictics: StaticticsService
     ) {
         this.lang = this.languajeService.GetTranslate();
     }    
@@ -33,6 +35,10 @@ export default class ProjectService {
             data.userIdCurrent.forEach(id => {
                 authors.push({ createById: id });
             })
+
+            const splitDate = data.date.split(`-`);
+            console.log(splitDate); // ano / mes /dia
+            const staticticsPromise = this.statictics.currentStaticticsProject({ day:Number(splitDate[2]),month:Number(splitDate[1]), year:Number(splitDate[0]) })
 
             const dataCreate: Prisma.projectsCreateInput = {
                 date: data.date,
@@ -55,7 +61,7 @@ export default class ProjectService {
             }
             const entity = await this.model.create({data:dataCreate});
 
-            
+            await staticticsPromise;
 
             // // estadistica
             // // historial
@@ -69,6 +75,7 @@ export default class ProjectService {
         } catch (error) {
             // log
             // log error
+            console.log(error);
             return {
                 message: this.lang.ACTIONS.DANGER.CREATE,
                 error: true,

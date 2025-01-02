@@ -57,6 +57,8 @@ export class PublicController {
 
         const filter: Prisma.projectsWhereInput[] = [];
 
+        filter.push({ public: true })
+
         if(query.param) { filter.push({ title:{contains:query.param} }) };
         if(query.program) { filter.push({ programId:query.program }) };
         if(query.category) { filter.push({ programRef:{ categoryId:query.category } }) };

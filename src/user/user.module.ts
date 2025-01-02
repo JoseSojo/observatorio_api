@@ -15,6 +15,7 @@ import HistoryModel from 'src/history/model/history.model';
 import { HistoryService } from 'src/history/history.service';
 import EducationModel from 'src/education/model/education.model';
 import { EducationService } from 'src/education/education.service';
+import { StaticticsService } from 'src/statictics/statictics.service';
 
 @Module({
   controllers: [UserController],
@@ -34,6 +35,7 @@ import { EducationService } from 'src/education/education.service';
     HistoryService,
     EducationModel,
     EducationService,
+    StaticticsService
   ]
 })
 export class UserModule {}

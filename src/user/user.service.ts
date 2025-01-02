@@ -7,6 +7,7 @@ import { UserCreate } from './guards/user.guard';
 
 import * as bcrypt from 'bcrypt';
 import { FORM } from 'src/validation/types/FromInterface';
+import { StaticticsService } from 'src/statictics/statictics.service';
 
 @Injectable()
 export class UserService {
@@ -15,7 +16,8 @@ export class UserService {
 
     constructor (
         private model: UserModel,
-        private languajeService: LanguajeService
+        private languajeService: LanguajeService,
+        private statictics: StaticticsService,
     ) {
         this.lang = this.languajeService.GetTranslate();
     }    
@@ -26,6 +28,9 @@ export class UserService {
      */
     public async create ({ data }: { data:UserCreate }) {
         try {
+            const date = new Date();
+
+            const staticticsPromise = this.statictics.currentStaticticsUser({ day:date.getDate(),month:date.getMonth()+1,year:date.getFullYear() });
             const hastPassword = this.hashPassword({ password:data.password });
 
             // Inicio
@@ -46,6 +51,7 @@ export class UserService {
             const entity = await this.model.create({data:dataCreate});
 
             // estadistica
+            await staticticsPromise;
             // historial
 
             // FIN
