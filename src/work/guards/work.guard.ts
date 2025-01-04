@@ -1,6 +1,6 @@
 
 export interface WorkCreate {
-    actual: string
+    actual: boolean
     tipoInstitucion: string
     institucion: string
     ocupacion: string

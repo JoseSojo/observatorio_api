@@ -34,6 +34,14 @@ export class WorkController {
         // permisos
 
         // validaciones
+        if (!body.cargo) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.work.cargo, error: true }
+        if (!body.institucion) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.work.institucion, error: true }
+        if (!body.dateStart) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.work.dateStart, error: true }
+        if (!body.ocupacion) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.work.ocupacion, error: true }
+        if (!body.tipoInstitucion) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.work.type, error: true }
+        
+        // fecha fin
+        if (body.actual === false && !body.dateEnd) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.work.dateEnd, error: true }
 
         // const studentResult = await this.permitService.find({ filter:{ name:this.permit.ESTUDIANTE } });
         // const student = studentResult.body;
@@ -42,7 +50,7 @@ export class WorkController {
         const currentBody: WorkCreate = {
             institucion: body.institucion,
             userId: user.id,
-            actual: body.actual ? "SI" : "NO",
+            actual: body.actual ? true : false,
             tipoInstitucion: body.tipoInstitucion,
             ocupacion: body.ocupacion,
             cargo: body.cargo,

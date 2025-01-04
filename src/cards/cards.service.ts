@@ -27,19 +27,24 @@ export class CardsService {
 
     // Crea 1 card por cada categoría
     public async publicCards(): Promise<Card[]> {
-        const cards: Card[] = []
+        const cards: Card[] = [];
 
         const test = await this.prisma.configCategory.findMany({
             include: { configProgram: { include: { _count: true }}},
-            where: { configProgram:{some:{projects:{some:{deleteAt:``}}}} },
-            orderBy: { ident: 'asc' }
+            where: { configProgram:{every:{projects:{every:{deleteAt:``}}}} },
+            orderBy: { name: 'asc' },
+            skip: 0,
+            take: 4
         });
+
+        console.log(test);
 
         test.forEach(item => {
             let sum = 0; 
             item.configProgram.forEach(pr => sum += pr._count.projects) 
             cards.push({ ico: ``, label: `${item.ident} - ${item.name}`, value: sum });
         })
+
 
         return cards;
     }

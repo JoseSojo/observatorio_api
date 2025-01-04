@@ -25,7 +25,68 @@ export class LanguajeService {
                     VALIDATIONS: {
                         EMAIL_IN_USE: `Error, correo en uso.`,
                         PASSWORD_FREE: `Error, contraseña muy débil.`,
-                        USERNAME_IN_USE: `Error, usuario en uso`
+                        USERNAME_IN_USE: `Error, usuario en uso.`,
+                        CI_IN_USE: `Error, cédula en uso.`,
+
+                        NAME_IN_USE: `Nombre en uso`,
+
+                        SUMARY_IN_USE: `Resumen en uso.`,
+                        SUMARY_LONG_TEXT: `Resumen debe ser de 150 caracteres`,
+                        TITLE_IN_USE: `Título en uso.`,
+                        
+                        FIELDS_REQUIERED: {
+                            author: `Debes agregar al menos un autor.`,
+                            category: `Campo "Categoría" es requerido.`,
+                            ci: `Campo "Cédula" es requerido.`,
+                            date: `Campo "Fecha" es requerido.`,
+                            email: `Campo "Correo" es requerido.`,
+                            file: `Debes agregar un archivo.`,
+                            id: `Campo "Identificador" es requerido.`,
+                            keywords: `Campo "Palabras clave" es requerido.`,
+                            lastname: `Campo "Apellido" es requerido.`,
+                            municipio: `Campo "Municipio" es requerido.`,
+                            name: `Campo "Nombre" es requerido.`,
+                            parroquia: `Campo "Parroquia" es requerido.`,
+                            password: `Campo "Contraseña" es requerido.`,
+                            program: `Campo "Programa" es requerido.`,
+                            rol: `Campo "Rol" es requerido.`,
+                            state: `Campo "Estado" es requerido.`,
+                            sumary: `Campo "Resumen" es requerido.`,
+                            title: `Campo "Título" es requerido.`,
+                            username: `Campo "Usuario" es requerido.`,
+
+                            education: {
+                                course: {
+                                    area: `Campo "Área" es requerido.`,
+                                    country: `Campo "País" es requerido.`,
+                                    description: `Campo "Descripción" es requerido.`,
+                                    hours: `Campo "Horas" es requerido.`,
+                                    institucion: `Campo "Institución" es requerido.`,
+                                    subarea: `Campo "Subarea" es requerido.`,
+                                    tipe: `Campo "Tipo" es requerido.`,
+                                },
+                                title: {
+                                    area: `Campo "Área" es requerido.`,
+                                    country: `Campo "País" es requerido.`,
+                                    institucion: `Campo "Institución" es requerido.`,
+                                    nivel: `Campo "Nivel" es requerido.`,
+                                    profesion: `Campo "Profesión" es requerido.`,
+                                    subarea: `Campo "Subarea" es requerido.`,
+                                    yearEnd: `Campo "Año Finalización" es requerido.`,
+                                }
+                            },
+                            work: {
+                                cargo: `Campo "Cargo" es requerido.`,
+                                dateEnd: `Campo "Fecha Fin" es requerido.`,
+                                dateStart: `Campo "Fecha Inicio" es requerido.`,
+                                institucion: `Campo "Institución" es requerido.`,
+                                ocupacion: `Campo "Ocupación" es requerido.`,
+                                type: `Campo "Tipo Institución" es requerido.`,
+
+                                dateEndNotNow: `Si es tu trabajo actual no agregues fecha de finalización`,
+                                IsNotNowRequeredDateEnd: `Debes agregar fecha de finalización.`
+                            }
+                        }
                     }
                 },
                 SUCCESS: {

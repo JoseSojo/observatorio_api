@@ -34,6 +34,13 @@ export class EducationController {
         // permisos
 
         // validaciones
+        if (!body.area) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.education.course.area, error: true }
+        if (!body.country) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.education.course.country, error: true }
+        if (!body.description) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.education.course.description, error: true }
+        if (!body.horas) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.education.course.hours, error: true }
+        if (!body.institucion) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.education.course.institucion, error: true }
+        if (!body.subarea) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.education.course.subarea, error: true }
+        if (!body.tipo) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.education.course.tipe, error: true }
 
         // const studentResult = await this.permitService.find({ filter:{ name:this.permit.ESTUDIANTE } });
         // const student = studentResult.body;
@@ -101,6 +108,14 @@ export class EducationController {
         // permisos
 
         // validaciones
+        if (!body.area) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.education.title.area, error: true }
+        if (!body.countryId) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.education.title.country, error: true }
+        if (!body.institucion) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.education.title.institucion, error: true }
+        if (!body.nivel) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.education.title.nivel, error: true }
+        if (!body.subarea) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.education.title.subarea, error: true }
+        if (!body.profesion) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.education.title.profesion, error: true }
+        if (!body.yearEnd) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.education.title.yearEnd, error: true }
+
 
         // const studentResult = await this.permitService.find({ filter:{ name:this.permit.ESTUDIANTE } });
         // const student = studentResult.body;

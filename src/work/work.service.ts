@@ -38,7 +38,7 @@ export class WorkService {
         try {
             // Inicio
             const dataCreate: Prisma.workProfileCreateInput = {
-                actual: data.actual,
+                actual: data.actual ? `SI` : `NO`,
                 tipoInstitucion: data.tipoInstitucion,
                 institucion: data.institucion,
                 ocupacion: data.ocupacion,

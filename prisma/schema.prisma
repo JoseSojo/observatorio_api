@@ -19,6 +19,7 @@ model user {
   username                String
   password                String
 
+  profilePath             String?
 
   nacionality             String?
   ci                      String?

@@ -13,11 +13,16 @@ import { HistoryCreate, ProjectHistoryCreate } from 'src/history/guards/history.
 import HistotyProjectModel from './history/model/history.model';
 import HistoryProjectService from './history/history.service';
 import AppPermit from 'src/permit/module/app.permit';
+import { LanguajeService } from 'src/languaje/languaje.service';
+import { LanguajeInterface } from 'src/languaje/guard/languaje.interface';
 
 @Controller('project')
 export class ProjectController {
 
+    private lang: LanguajeInterface;
+
     constructor(
+        private languaje: LanguajeService,
         private docsModel: ConfigDocumentModel,
         private projectService: ProjectService,
         private model: ProjectModel,
@@ -26,7 +31,9 @@ export class ProjectController {
         private permit: AppPermit,
         // private history: HistoryService,
         private appEvent: AppEvent,
-    ) {}
+    ) {
+        this.lang = this.languaje.GetTranslate();
+    }
 
     @UseInterceptors(FileInterceptor('file'))
     // @UseInterceptors(FileInterceptor('portada'))
@@ -40,7 +47,21 @@ export class ProjectController {
         const downloadPath = `/public/projects/${this.fileName()}.${ext}`; // Replace with your desired path
 
         // permisos
+
         // validación
+        if (!body.date) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.date, error: true }
+        if (!body.documentId) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.file, error: true }
+        if (!body.keywords) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.keywords, error: true }
+        if (!body.programId) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.program, error: true }
+        if (!body.resumen) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.sumary, error: true }
+        if (!body.title) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.title, error: true }
+        if (!body.userIdCurrent) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.author, error: true }
+
+        // title found
+        if((await this.projectService.find({ filter:{ title:body.title } }))) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.TITLE_IN_USE, error: true }
+        if(body.resumen.length > 150) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.SUMARY_LONG_TEXT, error: true }
+        if((await this.projectService.find({ filter:{ resumen:body.resumen } }))) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.SUMARY_IN_USE, error: true }
+
         // inicio logica
 
         // Write the file using the buffer

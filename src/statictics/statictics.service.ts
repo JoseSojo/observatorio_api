@@ -734,7 +734,7 @@ export class StaticticsService {
         const years = await this.getAllYear();
         const list = [];
         years.forEach((y) => {
-            list.push(y.year);
+            list.push(({ id:y.year, label:y.year }));
         })
         return list;
     }
@@ -752,11 +752,19 @@ export class StaticticsService {
         
     }
 
+    public async fitlerMonthUser () {
+        return this.getAllMonth()
+    }
+
+    public async filterYearUser () {
+        return await this.getHeaderYearUser()
+    }
+
     public async getHeaderYearProject () {
         const years = await this.getAllYear();
-        const list = [];
+        const list: any = [];
         years.forEach((y) => {
-            list.push(y.year);
+            list.push({ id:y.year, label:y.year });
         })
         return list;
     }
@@ -772,5 +780,13 @@ export class StaticticsService {
         })
         return lists;
         
+    }
+
+    public async fitlerMonthProject () {
+        return this.getAllMonth();
+    }
+
+    public async filterYearProject () {
+        return await this.getHeaderYearProject();
     }
 }
