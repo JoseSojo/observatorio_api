@@ -397,6 +397,14 @@ export class UserService {
                     required: true,
                     type: `text`,
                 }, {
+                    id: `from.create.user.ci`,
+                    key: `from.create.user.ci`,
+                    label: this.lang.TITLES.INPUT.CI,
+                    name: `ci`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`,
+                }, {
                     id: `from.create.user.email`,
                     key: `from.create.user.email`,
                     label: this.lang.TITLES.INPUT.EMAIL,
