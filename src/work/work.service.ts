@@ -48,10 +48,7 @@ export class WorkService {
                 userRef: { connect:{id:data.userId} }
             }
 
-            console.log(dataCreate.actual);
-
             if(dataCreate.actual === "SI") {
-                console.log(123);
                 await this.RemoveWorkNow({ id:data.userId });
             }
 
@@ -67,7 +64,6 @@ export class WorkService {
                 body: entity
             };
         } catch (error) {
-            console.log(error);
             // log
             // log error
             return {

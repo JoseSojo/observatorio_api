@@ -225,7 +225,6 @@ export class UserController {
     private async update(@Req() req: any, @Param() param: { id: string }, @Body() body: CUTSOM_INTERFACE_UPDATE) {
         // variables
         const user = req.user as any;
-        console.log(user);
 
         // permisos
 

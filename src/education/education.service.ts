@@ -48,7 +48,6 @@ export class EducationService {
                 body: entity
             };
         } catch (error) {
-            console.log(error);
             // log
             // log error
             return {
@@ -131,8 +130,6 @@ export class EducationService {
                 body: entity
             };
         } catch (error) {
-            console.log(error);
-            // log
             // log error
             return {
                 message: this.lang.ACTIONS.DANGER.CREATE,

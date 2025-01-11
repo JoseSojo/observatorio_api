@@ -4,27 +4,6 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { AuthGuard } from "src/guards/AuthGuard";
 import AppPermit from "src/permit/module/app.permit";
 
-interface StaticticsForMonth {
-    header: string[],
-    value: string[],
-    title: string,
-    childs: { value:string[], title:string }[]
-}
-
-interface StaticticsForYear {
-    header: string[],
-    value: string[],
-    title: string,
-    childs: { value:string[], title:string }[]
-}
-
-interface StaticticsForCentury {
-    header: string[],
-    value: string[],
-    title: string,
-    childs: { value:string[], title:string }[]
-}
-
 @Controller(`statictics`)
 export default class StaticticsController {
 
@@ -48,11 +27,11 @@ export default class StaticticsController {
         } else if(query.key === `user`) {
             if(permits.includes(this.permit.STATICTICS_CREATE_USER)) staticticsFound.push({path:`/statictics/users/all/?key=month`, label:`Estadisticas de usuarios`});
             if(permits.includes(this.permit.STATICTICS_CREATE_USER)) staticticsFound.push({path:`/statictics/users/all/?key=year`, label:`Estadisticas de usuarios`});
-            if(permits.includes(this.permit.STATICTICS_CREATE_USER)) staticticsFound.push({path:`/statictics/users/all/?key=century`, label:`Estadisticas de usuarios`});
+            // if(permits.includes(this.permit.STATICTICS_CREATE_USER)) staticticsFound.push({path:`/statictics/users/all/?key=century`, label:`Estadisticas de usuarios`});
         } else if(query.key === `project`) {
             if(permits.includes(this.permit.STATICTICS_CREATE_USER)) staticticsFound.push({path:`/statictics/projects/all/?key=month`, label:`Estadisticas de usuarios`});
             if(permits.includes(this.permit.STATICTICS_CREATE_USER)) staticticsFound.push({path:`/statictics/projects/all/?key=year`, label:`Estadisticas de usuarios`});
-            if(permits.includes(this.permit.STATICTICS_CREATE_USER)) staticticsFound.push({path:`/statictics/projects/all/?key=century`, label:`Estadisticas de usuarios`});
+            // if(permits.includes(this.permit.STATICTICS_CREATE_USER)) staticticsFound.push({path:`/statictics/projects/all/?key=century`, label:`Estadisticas de usuarios`});
         } else if(query.key === `dashboard`) {
             if(permits.includes(this.permit.STATICTICS_CREATE_USER)) staticticsFound.push({path:`/statictics/users/all/?key=month`, label:`Estadisticas de usuarios`});
             if(permits.includes(this.permit.STATICTICS_CREATE_PROJECT)) staticticsFound.push({path:`/statictics/projects/all/?key=month`, label:`Estadisticas de usuarios`});
@@ -61,8 +40,8 @@ export default class StaticticsController {
             if(permits.includes(this.permit.STATICTICS_CREATE_USER)) staticticsFound.push({path:`/statictics/projects/all/?key=month`, label:`Estadisticas de usuarios`});
             if(permits.includes(this.permit.STATICTICS_CREATE_USER)) staticticsFound.push({path:`/statictics/users/all/?key=year`, label:`Estadisticas de usuarios`});
             if(permits.includes(this.permit.STATICTICS_CREATE_USER)) staticticsFound.push({path:`/statictics/projects/all/?key=year`, label:`Estadisticas de usuarios`});
-            if(permits.includes(this.permit.STATICTICS_CREATE_USER)) staticticsFound.push({path:`/statictics/users/all/?key=century`, label:`Estadisticas de usuarios`});
-            if(permits.includes(this.permit.STATICTICS_CREATE_USER)) staticticsFound.push({path:`/statictics/projects/all/?key=century`, label:`Estadisticas de usuarios`});
+            // if(permits.includes(this.permit.STATICTICS_CREATE_USER)) staticticsFound.push({path:`/statictics/users/all/?key=century`, label:`Estadisticas de usuarios`});
+            // if(permits.includes(this.permit.STATICTICS_CREATE_USER)) staticticsFound.push({path:`/statictics/projects/all/?key=century`, label:`Estadisticas de usuarios`});
         }
 
         return staticticsFound;
@@ -89,7 +68,8 @@ export default class StaticticsController {
             list = listResult.month;
             title = `Usuarios creados por mes.`;
             filter = await this.statictics.fitlerMonthUser();
-            filterName = `month`
+            filterName = `month`;
+
         }
         else if(query.key === `year`) {
             header = this.statictics.getHeaderMonth();
@@ -97,11 +77,6 @@ export default class StaticticsController {
             title = `Usuarios creados por año.`;
             filter = await this.statictics.filterYearUser();
             filterName = `year`
-        }
-        else if(query.key === `century`) {
-            header = await this.statictics.getHeaderCenturyUser();
-            list = listResult.century;
-            title = `Usuarios creados por años.`
         }
 
         return {
@@ -115,6 +90,7 @@ export default class StaticticsController {
     @Get(`projects/all`)
     private async staticticsProject(@Query() query: {key:`year`|`month`|`century`,day:string,month:string,year:string}) {
         const date = new Date();
+        if(query.key === "century") return 
 
         const day = query.day ? Number(query.day) : date.getDate();
         const month = query.month ? Number(query.month) : date.getMonth()+1;
@@ -137,22 +113,16 @@ export default class StaticticsController {
         if (query.key === `month`) {
             header = this.statictics.getHeaderDay();
             list = listResult.month;
-            title = `Proyectos creados por mes.`
+            title = `Proyectos creados por mes.`;
             filter = await this.statictics.fitlerMonthProject();
-            filterName = `month`
+            filterName = `month`;
         }
         else if(query.key === `year`) {
             header = this.statictics.getHeaderMonth();
             list = listResult.year;
-            title = `Proyectos creados por año.`
+            title = `Proyectos creados por año.`;
             filter = await this.statictics.filterYearProject();
-            filterName = `year`
-            console.log(`year aquí`)
-        }
-        else if(query.key === `century`) {
-            header = await this.statictics.getHeaderCenturyUser();
-            list = listResult.century;
-            title = `Proyectos creados por años.`
+            filterName = `year`;
         }
 
         return {
@@ -161,6 +131,31 @@ export default class StaticticsController {
             value: list,
             filter,
             filterName
+        }
+    }
+
+    @Get(`projects/century`)
+    private async staticticsProjectCentury() {
+        const projectCentury = await this.prisma.staticticsProjectForCentury.findMany();
+        const projectGroupCentury = await this.prisma.staticticsProjectForCentury.groupBy({ by:`year` });
+
+
+        let header = [];
+        let list = [];
+        let title = `Proyectos por años.`;
+
+        projectGroupCentury.forEach((item) => {
+            header.push(item.year.toString());
+        })
+
+        projectCentury.forEach(item => {
+            list.push(item.totalYear);
+        })
+
+        return {
+            title,
+            header,
+            value: list,
         }
     }
 

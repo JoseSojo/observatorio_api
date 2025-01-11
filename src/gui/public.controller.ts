@@ -118,8 +118,6 @@ export default class GuiPublicController {
 
         graphic.push({ label:header, value:values });
 
-        console.log(graphic);
-
         return graphic
     }
 

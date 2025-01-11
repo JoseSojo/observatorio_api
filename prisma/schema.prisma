@@ -176,7 +176,7 @@ model projects {
   public                    Boolean             @default(true)
   downloader                Boolean             @default(true)
 
-  date                      String
+  date                      DateTime
 
   status                    String?
 

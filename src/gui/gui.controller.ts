@@ -153,12 +153,6 @@ export class GuiController {
         const CategoryCount = async (params: any[]) => {
             const CHILD: { label: string, value: string }[] = [];
 
-            console.log({AND:[
-                { programRef: { categoryRef: { id: `123` } }},
-                {authos:{ every:{id:user.id} }} ,
-                {authos:{ some:{id:user.id} }} ,
-            ]});
-
             params.forEach(async (item) => {
                 const found = await this.projectModel.count({ filter:{ programRef: { categoryRef: { id: item.id } }}});
                 CHILD.push({
@@ -355,7 +349,6 @@ export class GuiController {
 
 
         // ANALISIS
-        console.log(permits.includes(this.permit.APP_PERMIT_ANALITIC_SECTION));
         if (permits.includes(this.permit.APP_PERMIT_ANALITIC_SECTION)) {
             actions.push({ ico: `analysis`, label: this.lang.TITLES.SLIDE.ANALYSIS, path: `/dashboard/analysis` });
         }

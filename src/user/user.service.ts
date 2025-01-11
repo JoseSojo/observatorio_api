@@ -8,6 +8,7 @@ import { UserCreate } from './guards/user.guard';
 import * as bcrypt from 'bcrypt';
 import { FORM } from 'src/validation/types/FromInterface';
 import { StaticticsService } from 'src/statictics/statictics.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UserService {
@@ -16,6 +17,7 @@ export class UserService {
 
     constructor (
         private model: UserModel,
+        private prisma: PrismaService,
         private languajeService: LanguajeService,
         private statictics: StaticticsService,
     ) {
@@ -29,8 +31,9 @@ export class UserService {
     public async create ({ data }: { data:UserCreate }) {
         try {
             const date = new Date();
-
+            const rol = await this.prisma.userGroup.findFirst({ where:{ id:data.rolId } });
             const staticticsPromise = this.statictics.currentStaticticsUser({ day:date.getDate(),month:date.getMonth()+1,year:date.getFullYear() });
+            const staticticsRolPromise = this.statictics.currentStaticticsUser({ day:date.getDate(),month:date.getMonth()+1,year:date.getFullYear(), category:rol.name });
             const hastPassword = this.hashPassword({ password:data.password });
 
             // Inicio
@@ -52,6 +55,8 @@ export class UserService {
 
             // estadistica
             await staticticsPromise;
+            await staticticsRolPromise;
+
             // historial
 
             // FIN

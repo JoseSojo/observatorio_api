@@ -95,10 +95,10 @@ export default class TestFixture {
 
         if(obadmGroupFound) {
             await this.permit.udpate({ data:{name:this.permitFound.ANALISTA, group:analista}, id:obadmGroupFound.id });
-            jsonResponse.push(`${this.permitFound.ESTUDIANTE} ya creado.`);
+            jsonResponse.push(`${this.permitFound.OBRERO_ADMINISTRATIVO} ya creado.`);
         } else {
             await this.permit.create({ data:{ group:obadm, name:this.permitFound.OBRERO_ADMINISTRATIVO } });
-            jsonResponse.push(`${this.permitFound.ESTUDIANTE}, creado exitosamente`);
+            jsonResponse.push(`${this.permitFound.OBRERO_ADMINISTRATIVO}, creado exitosamente`);
         }
 
         if(docenteGroupFound) {

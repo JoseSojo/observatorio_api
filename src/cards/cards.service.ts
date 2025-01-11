@@ -37,8 +37,6 @@ export class CardsService {
             take: 4
         });
 
-        console.log(test);
-
         test.forEach(item => {
             let sum = 0; 
             item.configProgram.forEach(pr => sum += pr._count.projects) 

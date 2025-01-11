@@ -10,90 +10,99 @@ export class StaticticsService {
     constructor(
         private prisma: PrismaService,
         private event: AppEvent
-    ) {}
+    ) { }
 
     /**
      * STATICTiCS FOR USER 
      */
-    public async currentStaticticsUser ({day,month,year}:{day:number,month:number,year:number}) {
-        const object = this.event.STATICTICS_CREATE_USER;
+    public async currentStaticticsUser({ day, month, year,category }: { day: number, month: number, year: number, category?:string }) {
+        const object = category || this.event.STATICTICS_CREATE_USER;
 
-        const staticticsFoundMonthPromise = this.prisma.staticticsUserForMonth.findFirst({ where: { monthNumber: month }});
-        const staticticsFoundYearPromise = this.prisma.staticticsUserForYear.findFirst({ where: { year }});
-        const staticticsFoundCenturyPromise = this.prisma.staticticsUserForCentury.findFirst({ where: { year }});
+        const staticticsFoundMonthPromise = this.prisma.staticticsUserForMonth.findFirst({ where: { monthNumber: month } });
+        const staticticsFoundYearPromise = this.prisma.staticticsUserForYear.findFirst({ where: { year } });
+        const staticticsFoundCenturyPromise = this.prisma.staticticsUserForCentury.findFirst({ where: { year } });
 
-        const staticticsFoundMonth = await staticticsFoundMonthPromise; 
-        const staticticsFoundYear = await staticticsFoundYearPromise; 
-        const staticticsFoundCentury = await staticticsFoundCenturyPromise; 
+        const staticticsFoundMonth = await staticticsFoundMonthPromise;
+        const staticticsFoundYear = await staticticsFoundYearPromise;
+        const staticticsFoundCentury = await staticticsFoundCenturyPromise;
 
-        if(staticticsFoundMonth) {
+        if (staticticsFoundMonth) {
             await this.customUpdateMonthUser(day, staticticsFoundMonth.id);
         } else {
             await this.customCreateMonthUser(day, object)
         }
 
-        if(staticticsFoundYear) {
-            console.log(true);
+        if (staticticsFoundYear) {
             await this.customUpdateYearUser(month, staticticsFoundYear.id)
         } else {
             await this.customCreateYearUser(month, object);
         }
 
-        if(staticticsFoundCentury) {
+        if (staticticsFoundCentury) {
             await this.customUpdateCenturyUser(staticticsFoundCentury.id);
         } else {
             await this.customCreateCenturyUser(year, object)
         }
     }
 
-    public async getStaticsUser ({day,month,year}:{day:number,month:number,year:number}) {
+    public async getStaticsUser({ day, month, year }: { day: number, month: number, year: number }) {
         const object = this.event.STATICTICS_CREATE_USER;
-        const userMonthPromise = this.prisma.staticticsUserForMonth.findFirst({ where:{AND:[{monthNumber:month,objectName:object}]} });
-        const userYearPromise = this.prisma.staticticsUserForYear.findFirst({ where:{AND:[{year:year,objectName:object}]} });
-        const userCenturyPromise = this.prisma.staticticsUserForCentury.findMany({ where:{objectName:object} });
-        
-        const um = await userMonthPromise;
-        const uy = await userYearPromise;
-        const uc = await userCenturyPromise;
+        const userMonthPromise = this.prisma.staticticsUserForMonth.findMany({ where: { AND: [{ monthNumber: month }] } });
+        const userYearPromise = this.prisma.staticticsUserForYear.findMany({ where: { AND: [{ year: year }] } });
+        const userCenturyPromise = this.prisma.staticticsUserForCentury.findMany({});
 
-        const valueMonth = [
-            um.totalDay1, um.totalDay2, um.totalDay3, um.totalDay4, um.totalDay5, um.totalDay6, um.totalDay7, um.totalDay8, um.totalDay9, um.totalDay10,
-            um.totalDay11, um.totalDay12, um.totalDay13, um.totalDay14, um.totalDay15, um.totalDay16, um.totalDay17, um.totalDay18, um.totalDay19, um.totalDay20,
-            um.totalDay21, um.totalDay22, um.totalDay23, um.totalDay24, um.totalDay25, um.totalDay26, um.totalDay27, um.totalDay28, um.totalDay29, um.totalDay30,
-            um.totalDay10
-        ];
-        const valueYear = [
-            uy.totalMonth1,
-            uy.totalMonth2,
-            uy.totalMonth3,
-            uy.totalMonth4,
-            uy.totalMonth5,
-            uy.totalMonth6,
-            uy.totalMonth7,
-            uy.totalMonth8,
-            uy.totalMonth9,
-            uy.totalMonth10,
-            uy.totalMonth11,
-            uy.totalMonth12,
-        ];
-        const valueCentury = [];
-        uc.forEach(item => {
-            valueCentury.push(item.totalYear)
-        });
+        const umList = await userMonthPromise;
+        const uyList = await userYearPromise;
+        // const uc = await userCenturyPromise;
+
+        const valueMonth: { label: string, value: any[] }[] = []
+        umList.forEach((um) => {
+            const currentValue = [
+                um.totalDay1, um.totalDay2, um.totalDay3, um.totalDay4, um.totalDay5, um.totalDay6, um.totalDay7, um.totalDay8, um.totalDay9, um.totalDay10,
+                um.totalDay11, um.totalDay12, um.totalDay13, um.totalDay14, um.totalDay15, um.totalDay16, um.totalDay17, um.totalDay18, um.totalDay19, um.totalDay20,
+                um.totalDay21, um.totalDay22, um.totalDay23, um.totalDay24, um.totalDay25, um.totalDay26, um.totalDay27, um.totalDay28, um.totalDay29, um.totalDay30,
+                um.totalDay10
+            ];
+            valueMonth.push({ label: um.objectName === `STATICTICS_CREATE_USER` ? `Todos` : um.objectName, value: currentValue });
+        })
+
+        const valueYear: { label: string, value: any[] }[] = [];
+        uyList.forEach((uy) => {
+            const currentValue = [
+                uy.totalMonth1,
+                uy.totalMonth2,
+                uy.totalMonth3,
+                uy.totalMonth4,
+                uy.totalMonth5,
+                uy.totalMonth6,
+                uy.totalMonth7,
+                uy.totalMonth8,
+                uy.totalMonth9,
+                uy.totalMonth10,
+                uy.totalMonth11,
+                uy.totalMonth12,
+            ];
+            valueYear.push({ label: uy.objectName === `STATICTICS_CREATE_USER` ? `Todos` : uy.objectName, value: currentValue });
+
+        })
+        // const valueCentury = [];
+        // uc.forEach(item => {
+        //     valueCentury.push(item.totalYear)
+        // });
 
         return {
             month: valueMonth,
-            totalMonth: um.totalMonth,
+            // totalMonth: um.totalMonth,
 
             year: valueYear,
-            totalYear: uy.totalYear,
+            // totalYear: uy.totalYear,
 
-            century: valueCentury,
-            totalCentury: 0,
+            // century: valueCentury,
+            // totalCentury: 0,
         }
     }
 
-    private async customCreateYearUser (month: number, object: string) {
+    private async customCreateYearUser(month: number, object: string) {
         try {
             await this.prisma.staticticsUserForYear.create({
                 data: {
@@ -113,37 +122,36 @@ export class StaticticsService {
                     totalMonth11: month === 11 ? 1 : 0,
                     totalMonth12: month === 12 ? 1 : 0,
                 }
-            });  
+            });
         } catch (error) {
-            console.log(error);
         }
     }
 
-    private async customUpdateYearUser (month: number, id: string) {
+    private async customUpdateYearUser(month: number, id: string) {
         // const dayNow = this.getDay();
 
         await this.prisma.staticticsUserForYear.update({
             data: {
                 year: this.getYear(),
-                totalMonth1: month === 1 ? {increment:1} : {increment:0},
-                totalMonth2: month === 2 ? {increment:1} : {increment:0},
-                totalMonth3: month === 3 ? {increment:1} : {increment:0},
-                totalMonth4: month === 4 ? {increment:1} : {increment:0},
-                totalMonth5: month === 5 ? {increment:1} : {increment:0},
-                totalMonth6: month === 6 ? {increment:1} : {increment:0},
-                totalMonth7: month === 7 ? {increment:1} : {increment:0},
-                totalMonth8: month === 8 ? {increment:1} : {increment:0},
-                totalMonth9: month === 9 ? {increment:1} : {increment:0},
-                totalMonth10: month === 10 ? {increment:1} : {increment:0},
-                totalMonth11: month === 11 ? {increment:1} : {increment:0},
-                totalMonth12: month === 12 ? {increment:1} : {increment:0},
+                totalMonth1: month === 1 ? { increment: 1 } : { increment: 0 },
+                totalMonth2: month === 2 ? { increment: 1 } : { increment: 0 },
+                totalMonth3: month === 3 ? { increment: 1 } : { increment: 0 },
+                totalMonth4: month === 4 ? { increment: 1 } : { increment: 0 },
+                totalMonth5: month === 5 ? { increment: 1 } : { increment: 0 },
+                totalMonth6: month === 6 ? { increment: 1 } : { increment: 0 },
+                totalMonth7: month === 7 ? { increment: 1 } : { increment: 0 },
+                totalMonth8: month === 8 ? { increment: 1 } : { increment: 0 },
+                totalMonth9: month === 9 ? { increment: 1 } : { increment: 0 },
+                totalMonth10: month === 10 ? { increment: 1 } : { increment: 0 },
+                totalMonth11: month === 11 ? { increment: 1 } : { increment: 0 },
+                totalMonth12: month === 12 ? { increment: 1 } : { increment: 0 },
             },
             where: { id }
-        });          
+        });
 
     }
 
-    private async customCreateMonthUser (day: number, object: string) {
+    private async customCreateMonthUser(day: number, object: string) {
         const month = this.getMonth();
         // const dayNow = this.getDay();
 
@@ -186,11 +194,11 @@ export class StaticticsService {
                 totalDay30: day === 30 ? 1 : 0,
                 totalDay31: day === 31 ? 1 : 0,
             }
-        });          
+        });
 
     }
 
-    private async customUpdateMonthUser (day: number, id: string) {
+    private async customUpdateMonthUser(day: number, id: string) {
         const month = this.getMonth();
         // const dayNow = this.getDay();
 
@@ -199,45 +207,45 @@ export class StaticticsService {
                 monthName: month.label,
                 monthNumber: month.id,
                 year: this.getYear(),
-                totalMonth: {increment:1},
-                totalDay1: day === 1 ? {increment:1} : {increment:0},
-                totalDay2: day === 2 ? {increment:1} : {increment:0},
-                totalDay3: day === 3 ? {increment:1} : {increment:0},
-                totalDay4: day === 4 ? {increment:1} : {increment:0},
-                totalDay5: day === 5 ? {increment:1} : {increment:0},
-                totalDay6: day === 6 ? {increment:1} : {increment:0},
-                totalDay7: day === 7 ? {increment:1} : {increment:0},
-                totalDay8: day === 8 ? {increment:1} : {increment:0},
-                totalDay9: day === 9 ? {increment:1} : {increment:0},
-                totalDay10: day === 10 ? {increment:1} : {increment:0},
-                totalDay11: day === 11 ? {increment:1} : {increment:0},
-                totalDay12: day === 12 ? {increment:1} : {increment:0},
-                totalDay13: day === 13 ? {increment:1} : {increment:0},
-                totalDay14: day === 14 ? {increment:1} : {increment:0},
-                totalDay15: day === 15 ? {increment:1} : {increment:0},
-                totalDay16: day === 16 ? {increment:1} : {increment:0},
-                totalDay17: day === 17 ? {increment:1} : {increment:0},
-                totalDay18: day === 18 ? {increment:1} : {increment:0},
-                totalDay19: day === 19 ? {increment:1} : {increment:0},
-                totalDay20: day === 20 ? {increment:1} : {increment:0},
-                totalDay21: day === 21 ? {increment:1} : {increment:0},
-                totalDay22: day === 22 ? {increment:1} : {increment:0},
-                totalDay23: day === 23 ? {increment:1} : {increment:0},
-                totalDay24: day === 24 ? {increment:1} : {increment:0},
-                totalDay25: day === 25 ? {increment:1} : {increment:0},
-                totalDay26: day === 26 ? {increment:1} : {increment:0},
-                totalDay27: day === 27 ? {increment:1} : {increment:0},
-                totalDay28: day === 28 ? {increment:1} : {increment:0},
-                totalDay29: day === 29 ? {increment:1} : {increment:0},
-                totalDay30: day === 30 ? {increment:1} : {increment:0},
-                totalDay31: day === 31 ? {increment:1} : {increment:0},
+                totalMonth: { increment: 1 },
+                totalDay1: day === 1 ? { increment: 1 } : { increment: 0 },
+                totalDay2: day === 2 ? { increment: 1 } : { increment: 0 },
+                totalDay3: day === 3 ? { increment: 1 } : { increment: 0 },
+                totalDay4: day === 4 ? { increment: 1 } : { increment: 0 },
+                totalDay5: day === 5 ? { increment: 1 } : { increment: 0 },
+                totalDay6: day === 6 ? { increment: 1 } : { increment: 0 },
+                totalDay7: day === 7 ? { increment: 1 } : { increment: 0 },
+                totalDay8: day === 8 ? { increment: 1 } : { increment: 0 },
+                totalDay9: day === 9 ? { increment: 1 } : { increment: 0 },
+                totalDay10: day === 10 ? { increment: 1 } : { increment: 0 },
+                totalDay11: day === 11 ? { increment: 1 } : { increment: 0 },
+                totalDay12: day === 12 ? { increment: 1 } : { increment: 0 },
+                totalDay13: day === 13 ? { increment: 1 } : { increment: 0 },
+                totalDay14: day === 14 ? { increment: 1 } : { increment: 0 },
+                totalDay15: day === 15 ? { increment: 1 } : { increment: 0 },
+                totalDay16: day === 16 ? { increment: 1 } : { increment: 0 },
+                totalDay17: day === 17 ? { increment: 1 } : { increment: 0 },
+                totalDay18: day === 18 ? { increment: 1 } : { increment: 0 },
+                totalDay19: day === 19 ? { increment: 1 } : { increment: 0 },
+                totalDay20: day === 20 ? { increment: 1 } : { increment: 0 },
+                totalDay21: day === 21 ? { increment: 1 } : { increment: 0 },
+                totalDay22: day === 22 ? { increment: 1 } : { increment: 0 },
+                totalDay23: day === 23 ? { increment: 1 } : { increment: 0 },
+                totalDay24: day === 24 ? { increment: 1 } : { increment: 0 },
+                totalDay25: day === 25 ? { increment: 1 } : { increment: 0 },
+                totalDay26: day === 26 ? { increment: 1 } : { increment: 0 },
+                totalDay27: day === 27 ? { increment: 1 } : { increment: 0 },
+                totalDay28: day === 28 ? { increment: 1 } : { increment: 0 },
+                totalDay29: day === 29 ? { increment: 1 } : { increment: 0 },
+                totalDay30: day === 30 ? { increment: 1 } : { increment: 0 },
+                totalDay31: day === 31 ? { increment: 1 } : { increment: 0 },
             },
             where: { id }
-        });          
+        });
 
     }
 
-    private async customCreateCenturyUser (year:number, object: string) {
+    private async customCreateCenturyUser(year: number, object: string) {
 
         await this.prisma.staticticsUserForCentury.create({
             data: {
@@ -245,102 +253,103 @@ export class StaticticsService {
                 year,
                 totalYear: 1,
             }
-        });          
+        });
 
     }
 
-    private async customUpdateCenturyUser (id: string) {
+    private async customUpdateCenturyUser(id: string) {
         await this.prisma.staticticsUserForCentury.update({
             data: {
-                totalYear: {increment:1},
+                totalYear: { increment: 1 },
             },
             where: { id }
-        });          
+        });
 
     }
 
     /**
      * STATICTiCS FOR PROJECTS 
      */
-    public async currentStaticticsProject ({day,month,year}:{day:number,month:number,year:number}) {
-        const object = this.event.STATICTICS_CREATE_PROJECT;
+    public async currentStaticticsProject({ day, month, year, categoryName }: { day: number, month: number, year: number, categoryName?: string }) {
+        const object = categoryName || this.event.STATICTICS_CREATE_PROJECT;
 
-        const staticticsFoundMonthPromise = this.prisma.staticticsProjectForMonth.findFirst({ where: { monthNumber: month }});
-        const staticticsFoundYearPromise = this.prisma.staticticsProjectForYear.findFirst({ where: { year }});
-        const staticticsFoundCenturyPromise = this.prisma.staticticsProjectForCentury.findFirst({ where: { year }});
+        const staticticsFoundMonthPromise = this.prisma.staticticsProjectForMonth.findFirst({ where: { AND: [{ monthNumber: month }, { objectName: object }] } });
+        const staticticsFoundYearPromise = this.prisma.staticticsProjectForYear.findFirst({ where: { AND: [{ year }, { objectName: object }] } });
+        const staticticsFoundCenturyPromise = this.prisma.staticticsProjectForCentury.findFirst({ where: { AND: [{ year }, { objectName: object }] } });
 
-        const staticticsFoundMonth = await staticticsFoundMonthPromise; 
-        const staticticsFoundYear = await staticticsFoundYearPromise; 
-        const staticticsFoundCentury = await staticticsFoundCenturyPromise; 
+        const staticticsFoundMonth = await staticticsFoundMonthPromise;
+        const staticticsFoundYear = await staticticsFoundYearPromise;
+        const staticticsFoundCentury = await staticticsFoundCenturyPromise;
 
-        if(staticticsFoundMonth) {
+        if (staticticsFoundMonth) {
             await this.customUpdateMonthProject(day, staticticsFoundMonth.id);
         } else {
             await this.customCreateMonthProject(day, object)
         }
 
-        if(staticticsFoundYear) {
-            console.log(true);
+        if (staticticsFoundYear) {
             await this.customUpdateYearProject(month, staticticsFoundYear.id)
         } else {
             await this.customCreateYearProject(month, object);
         }
 
-        if(staticticsFoundCentury) {
+        if (staticticsFoundCentury) {
             await this.customUpdateCenturyProject(staticticsFoundCentury.id);
         } else {
             await this.customCreateCenturyProject(year, object)
         }
     }
 
-    public async getStaticsProject ({day,month,year}:{day:number,month:number,year:number}) {
+    public async getStaticsProject({ day, month, year }: { day: number, month: number, year: number }) {
         const object = this.event.STATICTICS_CREATE_PROJECT;
-        const userMonthPromise = this.prisma.staticticsProjectForMonth.findFirst({ where:{AND:[{monthNumber:month,objectName:object}]} });
-        const userYearPromise = this.prisma.staticticsProjectForYear.findFirst({ where:{AND:[{year:year,objectName:object}]} });
-        const userCenturyPromise = this.prisma.staticticsProjectForCentury.findMany({ where:{objectName:object} });
-        
-        const um = await userMonthPromise;
-        const uy = await userYearPromise;
-        const uc = await userCenturyPromise;
+        const projectMonthPromise = this.prisma.staticticsProjectForMonth.findMany({ where: { AND: [{ monthNumber: month }] } });
+        const projectYearPromise = this.prisma.staticticsProjectForYear.findMany({ where: { AND: [{ year: year }] } });
+        // const projectCenturyPromise = this.prisma.staticticsProjectForCentury.findMany();
 
-        const valueMonth = [
-            um.totalDay1, um.totalDay2, um.totalDay3, um.totalDay4, um.totalDay5, um.totalDay6, um.totalDay7, um.totalDay8, um.totalDay9, um.totalDay10,
-            um.totalDay11, um.totalDay12, um.totalDay13, um.totalDay14, um.totalDay15, um.totalDay16, um.totalDay17, um.totalDay18, um.totalDay19, um.totalDay20,
-            um.totalDay21, um.totalDay22, um.totalDay23, um.totalDay24, um.totalDay25, um.totalDay26, um.totalDay27, um.totalDay28, um.totalDay29, um.totalDay30,
-            um.totalDay10
-        ];
-        const valueYear = [
-            uy.totalMonth1,
-            uy.totalMonth2,
-            uy.totalMonth3,
-            uy.totalMonth4,
-            uy.totalMonth5,
-            uy.totalMonth6,
-            uy.totalMonth7,
-            uy.totalMonth8,
-            uy.totalMonth9,
-            uy.totalMonth10,
-            uy.totalMonth11,
-            uy.totalMonth12,
-        ];
-        const valueCentury = [];
-        uc.forEach(item => {
-            valueCentury.push(item.totalYear)
-        });
+        const umList = await projectMonthPromise;
+        const uyList = await projectYearPromise;
+
+        const valueMonth: { label: string, value: any[] }[] = []
+
+        umList.forEach((um) => {
+            const currentValue = [
+                um.totalDay1, um.totalDay2, um.totalDay3, um.totalDay4, um.totalDay5, um.totalDay6, um.totalDay7, um.totalDay8, um.totalDay9, um.totalDay10,
+                um.totalDay11, um.totalDay12, um.totalDay13, um.totalDay14, um.totalDay15, um.totalDay16, um.totalDay17, um.totalDay18, um.totalDay19, um.totalDay20,
+                um.totalDay21, um.totalDay22, um.totalDay23, um.totalDay24, um.totalDay25, um.totalDay26, um.totalDay27, um.totalDay28, um.totalDay29, um.totalDay30,
+                um.totalDay10
+            ];
+            valueMonth.push({ label: um.objectName === `STATICTICS_CREATE_PROJECT` ? `Todos` : um.objectName, value: currentValue });
+        })
+
+        const valueYear: { label: string, value: any[] }[] = [];
+
+        uyList.forEach((uy) => {
+            const currentValue = [
+                uy.totalMonth1,
+                uy.totalMonth2,
+                uy.totalMonth3,
+                uy.totalMonth4,
+                uy.totalMonth5,
+                uy.totalMonth6,
+                uy.totalMonth7,
+                uy.totalMonth8,
+                uy.totalMonth9,
+                uy.totalMonth10,
+                uy.totalMonth11,
+                uy.totalMonth12,
+            ];
+            valueYear.push({ label: uy.objectName === `STATICTICS_CREATE_PROJECT` ? `Todos` : uy.objectName, value: currentValue });
+
+        })
 
         return {
             month: valueMonth,
-            totalMonth: um.totalMonth,
 
             year: valueYear,
-            totalYear: uy.totalYear,
-
-            century: valueCentury,
-            totalCentury: 0,
         }
     }
 
-    private async customCreateYearProject (month: number, object: string) {
+    private async customCreateYearProject(month: number, object: string) {
         try {
             await this.prisma.staticticsProjectForYear.create({
                 data: {
@@ -360,37 +369,36 @@ export class StaticticsService {
                     totalMonth11: month === 11 ? 1 : 0,
                     totalMonth12: month === 12 ? 1 : 0,
                 }
-            });  
+            });
         } catch (error) {
-            console.log(error);
         }
     }
 
-    private async customUpdateYearProject (month: number, id: string) {
+    private async customUpdateYearProject(month: number, id: string) {
         // const dayNow = this.getDay();
 
         await this.prisma.staticticsProjectForYear.update({
             data: {
                 year: this.getYear(),
-                totalMonth1: month === 1 ? {increment:1} : {increment:0},
-                totalMonth2: month === 2 ? {increment:1} : {increment:0},
-                totalMonth3: month === 3 ? {increment:1} : {increment:0},
-                totalMonth4: month === 4 ? {increment:1} : {increment:0},
-                totalMonth5: month === 5 ? {increment:1} : {increment:0},
-                totalMonth6: month === 6 ? {increment:1} : {increment:0},
-                totalMonth7: month === 7 ? {increment:1} : {increment:0},
-                totalMonth8: month === 8 ? {increment:1} : {increment:0},
-                totalMonth9: month === 9 ? {increment:1} : {increment:0},
-                totalMonth10: month === 10 ? {increment:1} : {increment:0},
-                totalMonth11: month === 11 ? {increment:1} : {increment:0},
-                totalMonth12: month === 12 ? {increment:1} : {increment:0},
+                totalMonth1: month === 1 ? { increment: 1 } : { increment: 0 },
+                totalMonth2: month === 2 ? { increment: 1 } : { increment: 0 },
+                totalMonth3: month === 3 ? { increment: 1 } : { increment: 0 },
+                totalMonth4: month === 4 ? { increment: 1 } : { increment: 0 },
+                totalMonth5: month === 5 ? { increment: 1 } : { increment: 0 },
+                totalMonth6: month === 6 ? { increment: 1 } : { increment: 0 },
+                totalMonth7: month === 7 ? { increment: 1 } : { increment: 0 },
+                totalMonth8: month === 8 ? { increment: 1 } : { increment: 0 },
+                totalMonth9: month === 9 ? { increment: 1 } : { increment: 0 },
+                totalMonth10: month === 10 ? { increment: 1 } : { increment: 0 },
+                totalMonth11: month === 11 ? { increment: 1 } : { increment: 0 },
+                totalMonth12: month === 12 ? { increment: 1 } : { increment: 0 },
             },
             where: { id }
-        });          
+        });
 
     }
 
-    private async customCreateMonthProject (day: number, object: string) {
+    private async customCreateMonthProject(day: number, object: string) {
         const month = this.getMonth();
         // const dayNow = this.getDay();
 
@@ -433,11 +441,11 @@ export class StaticticsService {
                 totalDay30: day === 30 ? 1 : 0,
                 totalDay31: day === 31 ? 1 : 0,
             }
-        });          
+        });
 
     }
 
-    private async customUpdateMonthProject (day: number, id: string) {
+    private async customUpdateMonthProject(day: number, id: string) {
         const month = this.getMonth();
         // const dayNow = this.getDay();
 
@@ -446,45 +454,45 @@ export class StaticticsService {
                 monthName: month.label,
                 monthNumber: month.id,
                 year: this.getYear(),
-                totalMonth: {increment:1},
-                totalDay1: day === 1 ? {increment:1} : {increment:0},
-                totalDay2: day === 2 ? {increment:1} : {increment:0},
-                totalDay3: day === 3 ? {increment:1} : {increment:0},
-                totalDay4: day === 4 ? {increment:1} : {increment:0},
-                totalDay5: day === 5 ? {increment:1} : {increment:0},
-                totalDay6: day === 6 ? {increment:1} : {increment:0},
-                totalDay7: day === 7 ? {increment:1} : {increment:0},
-                totalDay8: day === 8 ? {increment:1} : {increment:0},
-                totalDay9: day === 9 ? {increment:1} : {increment:0},
-                totalDay10: day === 10 ? {increment:1} : {increment:0},
-                totalDay11: day === 11 ? {increment:1} : {increment:0},
-                totalDay12: day === 12 ? {increment:1} : {increment:0},
-                totalDay13: day === 13 ? {increment:1} : {increment:0},
-                totalDay14: day === 14 ? {increment:1} : {increment:0},
-                totalDay15: day === 15 ? {increment:1} : {increment:0},
-                totalDay16: day === 16 ? {increment:1} : {increment:0},
-                totalDay17: day === 17 ? {increment:1} : {increment:0},
-                totalDay18: day === 18 ? {increment:1} : {increment:0},
-                totalDay19: day === 19 ? {increment:1} : {increment:0},
-                totalDay20: day === 20 ? {increment:1} : {increment:0},
-                totalDay21: day === 21 ? {increment:1} : {increment:0},
-                totalDay22: day === 22 ? {increment:1} : {increment:0},
-                totalDay23: day === 23 ? {increment:1} : {increment:0},
-                totalDay24: day === 24 ? {increment:1} : {increment:0},
-                totalDay25: day === 25 ? {increment:1} : {increment:0},
-                totalDay26: day === 26 ? {increment:1} : {increment:0},
-                totalDay27: day === 27 ? {increment:1} : {increment:0},
-                totalDay28: day === 28 ? {increment:1} : {increment:0},
-                totalDay29: day === 29 ? {increment:1} : {increment:0},
-                totalDay30: day === 30 ? {increment:1} : {increment:0},
-                totalDay31: day === 31 ? {increment:1} : {increment:0},
+                totalMonth: { increment: 1 },
+                totalDay1: day === 1 ? { increment: 1 } : { increment: 0 },
+                totalDay2: day === 2 ? { increment: 1 } : { increment: 0 },
+                totalDay3: day === 3 ? { increment: 1 } : { increment: 0 },
+                totalDay4: day === 4 ? { increment: 1 } : { increment: 0 },
+                totalDay5: day === 5 ? { increment: 1 } : { increment: 0 },
+                totalDay6: day === 6 ? { increment: 1 } : { increment: 0 },
+                totalDay7: day === 7 ? { increment: 1 } : { increment: 0 },
+                totalDay8: day === 8 ? { increment: 1 } : { increment: 0 },
+                totalDay9: day === 9 ? { increment: 1 } : { increment: 0 },
+                totalDay10: day === 10 ? { increment: 1 } : { increment: 0 },
+                totalDay11: day === 11 ? { increment: 1 } : { increment: 0 },
+                totalDay12: day === 12 ? { increment: 1 } : { increment: 0 },
+                totalDay13: day === 13 ? { increment: 1 } : { increment: 0 },
+                totalDay14: day === 14 ? { increment: 1 } : { increment: 0 },
+                totalDay15: day === 15 ? { increment: 1 } : { increment: 0 },
+                totalDay16: day === 16 ? { increment: 1 } : { increment: 0 },
+                totalDay17: day === 17 ? { increment: 1 } : { increment: 0 },
+                totalDay18: day === 18 ? { increment: 1 } : { increment: 0 },
+                totalDay19: day === 19 ? { increment: 1 } : { increment: 0 },
+                totalDay20: day === 20 ? { increment: 1 } : { increment: 0 },
+                totalDay21: day === 21 ? { increment: 1 } : { increment: 0 },
+                totalDay22: day === 22 ? { increment: 1 } : { increment: 0 },
+                totalDay23: day === 23 ? { increment: 1 } : { increment: 0 },
+                totalDay24: day === 24 ? { increment: 1 } : { increment: 0 },
+                totalDay25: day === 25 ? { increment: 1 } : { increment: 0 },
+                totalDay26: day === 26 ? { increment: 1 } : { increment: 0 },
+                totalDay27: day === 27 ? { increment: 1 } : { increment: 0 },
+                totalDay28: day === 28 ? { increment: 1 } : { increment: 0 },
+                totalDay29: day === 29 ? { increment: 1 } : { increment: 0 },
+                totalDay30: day === 30 ? { increment: 1 } : { increment: 0 },
+                totalDay31: day === 31 ? { increment: 1 } : { increment: 0 },
             },
             where: { id }
-        });          
+        });
 
     }
 
-    private async customCreateCenturyProject (year:number, object: string) {
+    private async customCreateCenturyProject(year: number, object: string) {
 
         await this.prisma.staticticsProjectForCentury.create({
             data: {
@@ -492,23 +500,21 @@ export class StaticticsService {
                 year,
                 totalYear: 1,
             }
-        });          
+        });
 
     }
 
-    private async customUpdateCenturyProject (id: string) {
+    private async customUpdateCenturyProject(id: string) {
         await this.prisma.staticticsProjectForCentury.update({
             data: {
-                totalYear: {increment:1},
+                totalYear: { increment: 1 },
             },
             where: { id }
-        });          
+        });
 
     }
 
-
-
-    private getObjects () {
+    private getObjects() {
         // registro de usuarios 
         // registro de usuarios Estudiantes
         // registro de usuarios ObreroAdministrativo
@@ -519,7 +525,7 @@ export class StaticticsService {
         return {}
     }
 
-    private async customCreateYear (month: number) {
+    private async customCreateYear(month: number) {
 
         await this.prisma.staticticsForYear.create({
             data: {
@@ -537,35 +543,35 @@ export class StaticticsService {
                 totalMonth11: month === 11 ? 1 : 0,
                 totalMonth12: month === 12 ? 1 : 0,
             }
-        });          
+        });
 
     }
 
-    private async customUpdateYear (month: number, id: string) {
+    private async customUpdateYear(month: number, id: string) {
         // const dayNow = this.getDay();
 
         await this.prisma.staticticsForYear.update({
             data: {
                 year: this.getYear(),
-                totalMonth1: month === 1 ? {increment:1} : {increment:0},
-                totalMonth2: month === 2 ? {increment:1} : {increment:0},
-                totalMonth3: month === 3 ? {increment:1} : {increment:0},
-                totalMonth4: month === 4 ? {increment:1} : {increment:0},
-                totalMonth5: month === 5 ? {increment:1} : {increment:0},
-                totalMonth6: month === 6 ? {increment:1} : {increment:0},
-                totalMonth7: month === 7 ? {increment:1} : {increment:0},
-                totalMonth8: month === 8 ? {increment:1} : {increment:0},
-                totalMonth9: month === 9 ? {increment:1} : {increment:0},
-                totalMonth10: month === 10 ? {increment:1} : {increment:0},
-                totalMonth11: month === 11 ? {increment:1} : {increment:0},
-                totalMonth12: month === 12 ? {increment:1} : {increment:0},
+                totalMonth1: month === 1 ? { increment: 1 } : { increment: 0 },
+                totalMonth2: month === 2 ? { increment: 1 } : { increment: 0 },
+                totalMonth3: month === 3 ? { increment: 1 } : { increment: 0 },
+                totalMonth4: month === 4 ? { increment: 1 } : { increment: 0 },
+                totalMonth5: month === 5 ? { increment: 1 } : { increment: 0 },
+                totalMonth6: month === 6 ? { increment: 1 } : { increment: 0 },
+                totalMonth7: month === 7 ? { increment: 1 } : { increment: 0 },
+                totalMonth8: month === 8 ? { increment: 1 } : { increment: 0 },
+                totalMonth9: month === 9 ? { increment: 1 } : { increment: 0 },
+                totalMonth10: month === 10 ? { increment: 1 } : { increment: 0 },
+                totalMonth11: month === 11 ? { increment: 1 } : { increment: 0 },
+                totalMonth12: month === 12 ? { increment: 1 } : { increment: 0 },
             },
             where: { id }
-        });          
+        });
 
     }
 
-    private async customCreateMonth (day: number) {
+    private async customCreateMonth(day: number) {
         const month = this.getMonth();
         // const dayNow = this.getDay();
 
@@ -606,11 +612,11 @@ export class StaticticsService {
                 totalDay30: day === 30 ? 1 : 0,
                 totalDay31: day === 31 ? 1 : 0,
             }
-        });          
+        });
 
     }
 
-    private async customUpdateMonth (day: number, id: string) {
+    private async customUpdateMonth(day: number, id: string) {
         const month = this.getMonth();
         // const dayNow = this.getDay();
 
@@ -619,67 +625,67 @@ export class StaticticsService {
                 monthName: month.label,
                 monthNumber: month.id,
                 year: this.getYear(),
-                totalDay1: day === 1 ? {increment:1} : {increment:0},
-                totalDay2: day === 2 ? {increment:1} : {increment:0},
-                totalDay3: day === 3 ? {increment:1} : {increment:0},
-                totalDay4: day === 4 ? {increment:1} : {increment:0},
-                totalDay5: day === 5 ? {increment:1} : {increment:0},
-                totalDay6: day === 6 ? {increment:1} : {increment:0},
-                totalDay7: day === 7 ? {increment:1} : {increment:0},
-                totalDay8: day === 8 ? {increment:1} : {increment:0},
-                totalDay9: day === 9 ? {increment:1} : {increment:0},
-                totalDay10: day === 10 ? {increment:1} : {increment:0},
-                totalDay11: day === 11 ? {increment:1} : {increment:0},
-                totalDay12: day === 12 ? {increment:1} : {increment:0},
-                totalDay13: day === 13 ? {increment:1} : {increment:0},
-                totalDay14: day === 14 ? {increment:1} : {increment:0},
-                totalDay15: day === 15 ? {increment:1} : {increment:0},
-                totalDay16: day === 16 ? {increment:1} : {increment:0},
-                totalDay17: day === 17 ? {increment:1} : {increment:0},
-                totalDay18: day === 18 ? {increment:1} : {increment:0},
-                totalDay19: day === 19 ? {increment:1} : {increment:0},
-                totalDay20: day === 20 ? {increment:1} : {increment:0},
-                totalDay21: day === 21 ? {increment:1} : {increment:0},
-                totalDay22: day === 22 ? {increment:1} : {increment:0},
-                totalDay23: day === 23 ? {increment:1} : {increment:0},
-                totalDay24: day === 24 ? {increment:1} : {increment:0},
-                totalDay25: day === 25 ? {increment:1} : {increment:0},
-                totalDay26: day === 26 ? {increment:1} : {increment:0},
-                totalDay27: day === 27 ? {increment:1} : {increment:0},
-                totalDay28: day === 28 ? {increment:1} : {increment:0},
-                totalDay29: day === 29 ? {increment:1} : {increment:0},
-                totalDay30: day === 30 ? {increment:1} : {increment:0},
-                totalDay31: day === 31 ? {increment:1} : {increment:0},
+                totalDay1: day === 1 ? { increment: 1 } : { increment: 0 },
+                totalDay2: day === 2 ? { increment: 1 } : { increment: 0 },
+                totalDay3: day === 3 ? { increment: 1 } : { increment: 0 },
+                totalDay4: day === 4 ? { increment: 1 } : { increment: 0 },
+                totalDay5: day === 5 ? { increment: 1 } : { increment: 0 },
+                totalDay6: day === 6 ? { increment: 1 } : { increment: 0 },
+                totalDay7: day === 7 ? { increment: 1 } : { increment: 0 },
+                totalDay8: day === 8 ? { increment: 1 } : { increment: 0 },
+                totalDay9: day === 9 ? { increment: 1 } : { increment: 0 },
+                totalDay10: day === 10 ? { increment: 1 } : { increment: 0 },
+                totalDay11: day === 11 ? { increment: 1 } : { increment: 0 },
+                totalDay12: day === 12 ? { increment: 1 } : { increment: 0 },
+                totalDay13: day === 13 ? { increment: 1 } : { increment: 0 },
+                totalDay14: day === 14 ? { increment: 1 } : { increment: 0 },
+                totalDay15: day === 15 ? { increment: 1 } : { increment: 0 },
+                totalDay16: day === 16 ? { increment: 1 } : { increment: 0 },
+                totalDay17: day === 17 ? { increment: 1 } : { increment: 0 },
+                totalDay18: day === 18 ? { increment: 1 } : { increment: 0 },
+                totalDay19: day === 19 ? { increment: 1 } : { increment: 0 },
+                totalDay20: day === 20 ? { increment: 1 } : { increment: 0 },
+                totalDay21: day === 21 ? { increment: 1 } : { increment: 0 },
+                totalDay22: day === 22 ? { increment: 1 } : { increment: 0 },
+                totalDay23: day === 23 ? { increment: 1 } : { increment: 0 },
+                totalDay24: day === 24 ? { increment: 1 } : { increment: 0 },
+                totalDay25: day === 25 ? { increment: 1 } : { increment: 0 },
+                totalDay26: day === 26 ? { increment: 1 } : { increment: 0 },
+                totalDay27: day === 27 ? { increment: 1 } : { increment: 0 },
+                totalDay28: day === 28 ? { increment: 1 } : { increment: 0 },
+                totalDay29: day === 29 ? { increment: 1 } : { increment: 0 },
+                totalDay30: day === 30 ? { increment: 1 } : { increment: 0 },
+                totalDay31: day === 31 ? { increment: 1 } : { increment: 0 },
             },
             where: { id }
-        });          
+        });
 
     }
 
-    private getDate () {
+    private getDate() {
         return `${this.date.getDate()}-${this.date.getMonth()}-${this.date.getFullYear()}`;
     }
 
-    private getDay () {
+    private getDay() {
         return this.date.getDate();
     }
 
-    private getMonth () {
-        const mth = this.date.getMonth()+1; 
+    private getMonth() {
+        const mth = this.date.getMonth() + 1;
 
         let label = `Enero`;
-        if(mth === 1) label = `Enero`
-        else if(mth === 2) label = `Febrero`
-        else if(mth === 3) label = `Marzo`
-        else if(mth === 4) label = `Abril`
-        else if(mth === 5) label = `Mayo`
-        else if(mth === 6) label = `Junio`
-        else if(mth === 7) label = `Julio`
-        else if(mth === 8) label = `Agosto`
-        else if(mth === 9) label = `Septiembre`
-        else if(mth === 10) label = `Octubre`
-        else if(mth === 11) label = `Noviembre`
-        else if(mth === 12) label = `Diciembre`
+        if (mth === 1) label = `Enero`
+        else if (mth === 2) label = `Febrero`
+        else if (mth === 3) label = `Marzo`
+        else if (mth === 4) label = `Abril`
+        else if (mth === 5) label = `Mayo`
+        else if (mth === 6) label = `Junio`
+        else if (mth === 7) label = `Julio`
+        else if (mth === 8) label = `Agosto`
+        else if (mth === 9) label = `Septiembre`
+        else if (mth === 10) label = `Octubre`
+        else if (mth === 11) label = `Noviembre`
+        else if (mth === 12) label = `Diciembre`
         else label = `Enero`;
 
         return {
@@ -692,7 +698,7 @@ export class StaticticsService {
         return this.date.getFullYear();
     }
 
-    private getAllMonth () {
+    private getAllMonth() {
         return [
             { label: `Enero`, id: 1 },
             { label: `Febrero`, id: 2 },
@@ -709,84 +715,84 @@ export class StaticticsService {
         ]
     }
 
-    private async getAllYear () {
+    private async getAllYear() {
         const years = this.prisma.staticticsForYear.groupBy({
             by: 'year',
-            orderBy: { year:'desc' }
+            orderBy: { year: 'desc' }
         })
         return await years;
     }
 
-    public getHeaderDay () {
+    public getHeaderDay() {
         return [
-            `1`,`2`,`3`,`4`,`5`,`6`,`7`,`8`,`9`,`10`,
-            `11`,`12`,`13`,`14`,`15`,`16`,`17`,`18`,`19`,`20`,
-            `21`,`22`,`23`,`24`,`25`,`26`,`27`,`28`,`29`,`30`,
+            `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`,
+            `11`, `12`, `13`, `14`, `15`, `16`, `17`, `18`, `19`, `20`,
+            `21`, `22`, `23`, `24`, `25`, `26`, `27`, `28`, `29`, `30`,
             `31`
         ]
     }
 
-    public getHeaderMonth () {
-        return [`EN`,`FE`,`MA`,`AB`,`MA`,`JU`,`JU`,`AG`,`SE`,`OC`,`NO`,`DI`]
+    public getHeaderMonth() {
+        return [`EN`, `FE`, `MA`, `AB`, `MA`, `JU`, `JU`, `AG`, `SE`, `OC`, `NO`, `DI`]
     }
 
-    public async getHeaderYearUser () {
+    public async getHeaderYearUser() {
         const years = await this.getAllYear();
         const list = [];
         years.forEach((y) => {
-            list.push(({ id:y.year, label:y.year }));
+            list.push(({ id: y.year, label: y.year }));
         })
         return list;
     }
 
-    public async getHeaderCenturyUser () {
+    public async getHeaderCenturyUser() {
         const list = await this.prisma.staticticsUserForCentury.groupBy({
             by: 'year',
-            orderBy: { year:'desc' }
+            orderBy: { year: 'desc' }
         });
         const lists = [];
         list.forEach((y) => {
             lists.push(y.year);
         })
         return lists;
-        
+
     }
 
-    public async fitlerMonthUser () {
+    public async fitlerMonthUser() {
         return this.getAllMonth()
     }
 
-    public async filterYearUser () {
+    public async filterYearUser() {
         return await this.getHeaderYearUser()
     }
 
-    public async getHeaderYearProject () {
+    public async getHeaderYearProject() {
         const years = await this.getAllYear();
         const list: any = [];
         years.forEach((y) => {
-            list.push({ id:y.year, label:y.year });
+            list.push({ id: y.year, label: y.year });
         })
         return list;
     }
 
-    public async getHeaderCenturyProject () {
+    public async getHeaderCenturyProject() {
         const list = await this.prisma.staticticsProjectForCentury.groupBy({
             by: 'year',
-            orderBy: { year:'desc' }
+            orderBy: { year: 'desc' }
         });
         const lists = [];
         list.forEach((y) => {
             lists.push(y.year);
         })
         return lists;
-        
+
     }
 
-    public async fitlerMonthProject () {
+    public async fitlerMonthProject() {
         return this.getAllMonth();
     }
 
-    public async filterYearProject () {
+    public async filterYearProject() {
         return await this.getHeaderYearProject();
     }
 }

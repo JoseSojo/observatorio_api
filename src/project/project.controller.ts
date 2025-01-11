@@ -50,17 +50,22 @@ export class ProjectController {
 
         // validación
         if (!body.date) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.date, error: true }
-        if (!body.documentId) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.file, error: true }
+        // if (!body.documentId) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.file, error: true }
         if (!body.keywords) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.keywords, error: true }
         if (!body.programId) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.program, error: true }
         if (!body.resumen) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.sumary, error: true }
         if (!body.title) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.title, error: true }
-        if (!body.userIdCurrent) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.author, error: true }
+        // if (!body.userIdCurrent) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.author, error: true }
 
         // title found
-        if((await this.projectService.find({ filter:{ title:body.title } }))) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.TITLE_IN_USE, error: true }
+        const titleFoundPromise = this.projectService.find({ filter:{ title:body.title } });
+        const descriptionFoundPromise = this.projectService.find({ filter:{ resumen:body.resumen } });
+
+        const titleFound = await titleFoundPromise;
+        const descriptionFound = await descriptionFoundPromise;
+        if(titleFound.body) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.TITLE_IN_USE, error: true }
         if(body.resumen.length > 150) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.SUMARY_LONG_TEXT, error: true }
-        if((await this.projectService.find({ filter:{ resumen:body.resumen } }))) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.SUMARY_IN_USE, error: true }
+        if(descriptionFound.body) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.SUMARY_IN_USE, error: true }
 
         // inicio logica
 

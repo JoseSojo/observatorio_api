@@ -8,6 +8,7 @@ import { ProjectCreate } from './guards/project.model';
 import { FORM } from 'src/validation/types/FromInterface';
 import { ReportOption } from 'src/validation/types/ReportOptions';
 import { StaticticsService } from 'src/statictics/statictics.service';
+import ProgramModel from 'src/config/model/program.model';
 
 @Injectable()
 export default class ProjectService {
@@ -17,7 +18,8 @@ export default class ProjectService {
     constructor (
         private model: ProjectModel,
         private languajeService: LanguajeService,
-        private statictics: StaticticsService
+        private statictics: StaticticsService,
+        private program: ProgramModel,
     ) {
         this.lang = this.languajeService.GetTranslate();
     }    
@@ -26,22 +28,26 @@ export default class ProjectService {
      * CREAR
      * 
      */
-    public async create ({ data }: { data:ProjectCreate }) {
+    public async create ({ data,category }: { data:ProjectCreate,category?:string }) {
         try {
             // Inicio
+            const programPromise = this.program.find({ filter:{id:data.programId} });
+
 
             // selecciona autores
             const authors: Prisma.authorCreateManyProjectsRefInput[] = [];
             data.userIdCurrent.forEach(id => {
                 authors.push({ createById: id });
-            })
+            });
 
             const splitDate = data.date.split(`-`);
-            console.log(splitDate); // ano / mes /dia
+            const program = await programPromise;
+
             const staticticsPromise = this.statictics.currentStaticticsProject({ day:Number(splitDate[2]),month:Number(splitDate[1]), year:Number(splitDate[0]) })
+            const staticticsCategoryPromise = this.statictics.currentStaticticsProject({ day:Number(splitDate[2]),month:Number(splitDate[1]), year:Number(splitDate[0]), categoryName:program.categoryRef.name })
 
             const dataCreate: Prisma.projectsCreateInput = {
-                date: data.date,
+                date: new Date(data.date),
                 authos: {
                     createMany: { data:authors }
                 },
@@ -62,6 +68,7 @@ export default class ProjectService {
             const entity = await this.model.create({data:dataCreate});
 
             await staticticsPromise;
+            await staticticsCategoryPromise;
 
             // // estadistica
             // // historial
@@ -75,7 +82,6 @@ export default class ProjectService {
         } catch (error) {
             // log
             // log error
-            console.log(error);
             return {
                 message: this.lang.ACTIONS.DANGER.CREATE,
                 error: true,
@@ -335,26 +341,6 @@ export default class ProjectService {
                     required: true,
                     type: `text`,
                     value: data.resumen
-                }, {
-                    id: `from.create.native.date`,
-                    key: `from.create.native.date`,
-                    label: this.lang.TITLES.INPUT.ID,
-                    name: `date`,
-                    placeholder: ``,
-                    required: true,
-                    type: `date`,
-                    value: data.date
-                }, {
-                    id: `from.create.native.date`,
-                    key: `from.create.native.date`,
-                    label: this.lang.TITLES.INPUT.ID,
-                    name: `date`,
-                    placeholder: ``,
-                    required: true,
-                    type: `date`,
-                    value: data.date,
-                    select: true,
-                    selectIn: `category`
                 },
                 
             ]

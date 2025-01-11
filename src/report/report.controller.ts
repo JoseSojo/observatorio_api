@@ -8,7 +8,6 @@ import ProjectModel from 'src/project/model/project.model';
 
 
 export interface ReportInterface {
-
     title: string;
     page: any[];
     history?: any[];
@@ -50,11 +49,23 @@ export class ReportController {
         }
 
         if (query.category && !query.program) {
-            // const programsFound = this.program.find({ filter:{ AND:[{categoryId:query.category},{deleteAt:null}] }, select:{id:true} });
-
             filter.push({ programRef: { categoryId: query.category } });
-
         }
+
+        if(query.dateStart && query.dateEnd) {
+            filter.push({
+                AND: [
+                    {date: { gt:new Date(query.dateStart) }},
+                    {date: { lt:new Date(query.dateEnd) }}
+                ]
+            })
+        }
+        else if(query.dateStart) {
+            filter.push({date: { gt:new Date(query.dateStart) }});
+        } else if(query.dateEnd) {
+            filter.push({date: { lt:new Date(query.dateEnd) }});
+        }
+
 
         const customFilter: Prisma.projectsWhereInput = filter.length > 0 ? { AND: [...filter, { deleteAt: null }] } : { deleteAt: null };
 
