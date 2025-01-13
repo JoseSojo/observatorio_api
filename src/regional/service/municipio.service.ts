@@ -241,7 +241,7 @@ export class ConfigMunicipioService {
         return [
             `name`,
             `stateReference.name`,
-            `createByReference.email`,
+            `createByRef.email`,
             `createAt`
         ];
     }

@@ -120,7 +120,7 @@ export class SelectController {
             const result = await this.municipioService.paginate({ skip: 0, take: 20, filter: { name:{ contains:query.param ? query.param : `` } }});
             const data: { id: string, label: string }[] = [];
             result.body.list.map((item: any) => {
-                data.push({ id: item.id, label: `${item.name}` });
+                data.push({ id: item.id, label: `${item.name} - ${item.stateReference.name}` });
             });
             list = data;
         }  else if (param.id == `parroquia` || param.id == `parroquiaId`) {
