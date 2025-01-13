@@ -231,6 +231,7 @@ export class ConfigMunicipioService {
     public getDataList() {
         return [
             `Nombre`,
+            `Estado`,
             `Creador`,
             `Creación`
         ];
@@ -239,7 +240,8 @@ export class ConfigMunicipioService {
     public getExtractList() {
         return [
             `name`,
-            `createByRef.email`,
+            `stateReference.name`,
+            `createByReference.email`,
             `createAt`
         ];
     }
