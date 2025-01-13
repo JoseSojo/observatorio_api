@@ -229,6 +229,7 @@ export class ConfigNucleoService {
             `Nombre`,
             `Parroquia`,
             `Municipio`,
+            `Estado`,
             `Creador`,
             `Creación`
         ];
@@ -239,6 +240,7 @@ export class ConfigNucleoService {
             `name`,
             `parroquiaReference.name`,
             `parroquiaReference.municipioReference.name`,
+            `parroquiaReference.municipioReference.stateReference.name`,
             `createByRef.email`,
             `createAt`
         ];
@@ -249,8 +251,8 @@ export class ConfigNucleoService {
             `Nombre`,
             `Parroquia`,
             `Municipio`,
+            `Estado`,
             `Creador`,
-            `Creación`
         ];
     }
 

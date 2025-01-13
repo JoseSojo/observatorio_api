@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put, Query, Req, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { LanguajeService } from "src/languaje/languaje.service";
 import { LanguajeInterface } from "src/languaje/guard/languaje.interface";
 import { Prisma } from "@prisma/client";
@@ -10,6 +10,8 @@ import { PermitService } from "src/permit/permit.service";
 import { HistoryCreate } from "src/history/guards/history.guard";
 import { HistoryService } from "src/history/history.service";
 import AppEvent from "src/AppEvent";
+import { FileInterceptor } from "@nestjs/platform-express";
+import * as fs from 'fs/promises';
 
 interface Contact_Data_Interface {
     phone?: string,
@@ -49,7 +51,7 @@ interface Perosnal_Data_Interface {
     sex?: string;
 }
 
-interface CUTSOM_INTERFACE_UPDATE extends Perosnal_Data_Interface  {
+interface CUTSOM_INTERFACE_UPDATE extends Perosnal_Data_Interface {
     phone?: string,
     phone2?: string,
     email?: string,
@@ -73,6 +75,28 @@ export class UserController {
         this.lang = this.languaje.GetTranslate();
     }
 
+    @UseInterceptors(FileInterceptor('file'))
+    @Post('upload')
+    @UseGuards(AuthGuard)
+    private async uploadProfile(@UploadedFile() file: Express.Multer.File, @Req() req: any) {
+        // variables
+        const ext = file.mimetype.split(`/`).pop();
+        const user = req.user as any;
+        const filePath = `${process.cwd()}/public/photo/${this.fileName()}.${ext}`; // Replace with your desired path
+        const downloadPath = `/public/photo/${this.fileName()}.${ext}`; // Replace with your desired path
+
+        // Write the file using the buffer
+        const whiteFilePromise = fs.writeFile(filePath, file.buffer);
+
+        // aquí actualiza la foto
+
+        await this.service.udpate({ id: user.id, data: { profilePath: downloadPath } })
+        await whiteFilePromise;
+        // permisos
+
+        return { file: downloadPath }
+    }
+
     @Post(`create`)
     @UseGuards(AuthGuard)
     private async create(@Req() req: any, @Body() body: UserCreate) {
@@ -82,6 +106,48 @@ export class UserController {
         // permisos
 
         // validaciones
+        if (!body.ci) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.ci, error: true }
+        if (!body.email) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.email, error: true }
+        if (!body.lastname) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.lastname, error: true }
+        if (!body.name) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.name, error: true }
+        if (!body.password) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.password, error: true }
+        if (!body.rolId) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.rol, error: true }
+        if (!body.username) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.username, error: true }
+
+        const emailFoundPromise = this.service.find({ filter: { email: body.email } });
+        const ciFoundPromise = this.service.find({ filter: { ci: body.ci } });
+        const usernameFoundPromise = this.service.find({ filter: { username: body.username } });
+
+        const emailFound = (await emailFoundPromise).body;
+        const ciFound = (await ciFoundPromise).body;
+        const usernameFound = (await usernameFoundPromise).body;
+
+        if (emailFound) {
+            return {
+                message: this.lang.ACTIONS.DANGER.VALIDATIONS.EMAIL_IN_USE,
+                error: true,
+                errorMessage: `email.in.use`,
+                body: null
+            }
+        }
+
+        if (usernameFound) {
+            return {
+                message: this.lang.ACTIONS.DANGER.VALIDATIONS.USERNAME_IN_USE,
+                error: true,
+                errorMessage: `username.in.use`,
+                body: null
+            }
+        }
+
+        if (ciFound) {
+            return {
+                message: this.lang.ACTIONS.DANGER.VALIDATIONS.CI_IN_USE,
+                error: true,
+                errorMessage: `ci.in.use`,
+                body: null
+            }
+        }
 
         // const studentResult = await this.permitService.find({ filter:{ name:this.permit.ESTUDIANTE } });
         // const student = studentResult.body;
@@ -182,7 +248,7 @@ export class UserController {
             phone: body.phone,
             phone2: body.phone2,
             sexo: body.sex === `M` ? `M` : `F`,
-            parroquiaReference: { connect:{ id:body.residence.parroquia.value } }
+            parroquiaReference: { connect: { id: body.residence.parroquia.value } }
         }
 
         const responseService = await this.service.udpate({ id, data: currentBody });
@@ -252,5 +318,10 @@ export class UserController {
 
     private async RegisterHistory(data: HistoryCreate) {
         await this.history.create({ data });
+    }
+
+    private fileName(): string {
+        const date = new Date();
+        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}_${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}:${date.getMilliseconds()}`;
     }
 }

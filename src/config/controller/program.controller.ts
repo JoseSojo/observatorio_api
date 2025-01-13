@@ -34,6 +34,10 @@ export default class ProgramController {
         // permisos
 
         // validaciones
+        const testName = this.service.find({ filter:{name:body.name} });
+        if(!body.name) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.name,error: true }
+        if((await testName).body) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.NAME_IN_USE,error: true }
+        if(!body.category) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.category,error: true }
 
         // lógica
         const currentBody: ProgramCreate = {
@@ -121,6 +125,10 @@ export default class ProgramController {
         // permisos
 
         // validaciones
+        const testName = this.service.find({ filter:{AND:[{name:body.name},{id:{not:param.id}}]} });
+        if(!body.name) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.name,error: true }
+        if((await testName).body) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.NAME_IN_USE,error: true }
+
 
         // lógica
         const id = param.id;

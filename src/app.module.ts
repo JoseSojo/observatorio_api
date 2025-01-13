@@ -51,6 +51,15 @@ import EstadoModel from './regional/model/estados.model';
 import MunicipioModel from './regional/model/municipio.model';
 import ParroquiaModel from './regional/model/parroquia.model';
 import NucleoModel from './regional/model/nucleo.model';
+import EducationModel from './education/model/education.model';
+import { EducationModule } from './education/education.module';
+import { EducationService } from './education/education.service';
+import { EducationController } from './education/education.controller';
+import WorkModel from './work/model/work.model';
+import { WorkController } from './work/work.controller';
+import { WorkService } from './work/work.service';
+import GuiPublicController from './gui/public.controller';
+import StaticticsController from './statictics/statictics.controller';
 
 @Module({
   imports: [
@@ -67,6 +76,7 @@ import NucleoModel from './regional/model/nucleo.model';
     UserModule,
     ProjectModule,
     RegionalModule,
+    // EducationModule,
   ],
   controllers: [
     // PermitController
@@ -75,7 +85,11 @@ import NucleoModel from './regional/model/nucleo.model';
     GuiController,
     SelectController,
     ReportController,
-    PublicController
+    PublicController,
+    EducationController,
+    WorkController,
+    GuiPublicController,
+    StaticticsController
   ],
   providers: [
     AppEvent,
@@ -104,6 +118,12 @@ import NucleoModel from './regional/model/nucleo.model';
     ConfigLineService,
     UserModel,
     PermitModel,
+
+    EducationModel,
+    EducationService,
+
+    WorkModel,
+    WorkService,
 
     ConfigService,
     CategoryModel,

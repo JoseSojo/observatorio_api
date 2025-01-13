@@ -35,6 +35,13 @@ export default class NucleoModel {
                         municipioReference: {
                             select: {
                                 name: true,
+                                id: true,
+                                stateReference: {
+                                    select: {
+                                        id:true,
+                                        name:true
+                                    }
+                                }
                             }
                         }
                     }

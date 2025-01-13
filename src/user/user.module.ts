@@ -13,6 +13,9 @@ import PermitModel from 'src/permit/module/permit.model';
 import AppEvent from 'src/AppEvent';
 import HistoryModel from 'src/history/model/history.model';
 import { HistoryService } from 'src/history/history.service';
+import EducationModel from 'src/education/model/education.model';
+import { EducationService } from 'src/education/education.service';
+import { StaticticsService } from 'src/statictics/statictics.service';
 
 @Module({
   controllers: [UserController],
@@ -29,7 +32,10 @@ import { HistoryService } from 'src/history/history.service';
     PermitService,
     PermitModel,
     HistoryModel,
-    HistoryService
+    HistoryService,
+    EducationModel,
+    EducationService,
+    StaticticsService
   ]
 })
 export class UserModule {}

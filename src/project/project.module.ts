@@ -15,6 +15,8 @@ import AppEvent from 'src/AppEvent';
 import HistoryModel from 'src/history/model/history.model';
 import { HistoryService } from 'src/history/history.service';
 import AppPermit from 'src/permit/module/app.permit';
+import { StaticticsService } from 'src/statictics/statictics.service';
+import ProgramModel from 'src/config/model/program.model';
 
 @Module({
   providers: [
@@ -32,7 +34,9 @@ import AppPermit from 'src/permit/module/app.permit';
     UserModel,
     ConfigDocumentModel,
     HistoryModel,
-    HistoryService
+    HistoryService,
+    StaticticsService,
+    ProgramModel,
   ],
   controllers: [ProjectController]
 })

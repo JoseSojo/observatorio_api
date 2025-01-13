@@ -90,13 +90,17 @@ export default class AuthService {
     public async register ({ data }: { data:AuthRegister }) {
         try {
             const emailFoundPromise = this.userService.find({ filter:{ email:data.email } });
+            const ciFoundPromise = this.userService.find({ filter:{ ci:data.ci } });
             const usernameFoundPromise = this.userService.find({ filter:{ username:data.username } });
 
-            const permitName = data.usertype === `ESTUDIANTE` ? this.permitApp.ESTUDIANTE : this.permitApp.OBRERO_ADMINISTRATIVO;
+            const permitName = data.usertype === `ESTUDIANTE` ? this.permitApp.ESTUDIANTE 
+                :  data.usertype === `DOCENTE` ? this.permitApp.DOCENTE 
+                : this.permitApp.OBRERO_ADMINISTRATIVO;
 
             const permitFound = this.permit.find({ filter:{ name:permitName } });
 
             const emailFound = (await emailFoundPromise).body; 
+            const ciFound = (await ciFoundPromise).body; 
             const usernameFound = (await usernameFoundPromise).body; 
             const permitStudent = (await permitFound).body;
 
@@ -114,6 +118,15 @@ export default class AuthService {
                     message: this.lang.ACTIONS.DANGER.VALIDATIONS.USERNAME_IN_USE,
                     error: true,
                     errorMessage: `username.in.use`,
+                    body: null
+                }
+            }
+
+            if(ciFound) {
+                return {
+                    message: this.lang.ACTIONS.DANGER.VALIDATIONS.CI_IN_USE,
+                    error: true,
+                    errorMessage: `ci.in.use`,
                     body: null
                 }
             }

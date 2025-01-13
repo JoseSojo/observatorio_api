@@ -42,7 +42,68 @@ interface ACTIONS_INTERFACE {
             USERNAME_IN_USE:        string; 
             EMAIL_IN_USE:           string; 
             PASSWORD_FREE:          string;
+            CI_IN_USE:              string;
+            NAME_IN_USE:            string;
+
+            TITLE_IN_USE:           string;
+            SUMARY_LONG_TEXT:       string;
+            SUMARY_IN_USE:       string;
             
+            FIELDS_REQUIERED: {
+                name: string;
+                lastname: string;
+                username: string;
+                email: string;
+                password: string;
+                ci: string;
+                rol: string;
+                author: string;
+                file: string;
+                title:string;
+                date:string;
+                keywords:string;
+                program: string;
+                sumary: string;
+                id: string;
+                category:string;
+                state: string;
+                municipio: string;
+                parroquia: string;
+
+                // educativo
+                education: {
+                    title: {
+                        nivel: string;
+                        profesion: string;
+                        yearEnd: string;
+                        country: string;
+                        institucion: string;
+                        area: string;
+                        subarea: string;
+                    },
+                    course: {
+                        tipe: string;
+                        hours: string;
+                        country: string;
+                        description: string;
+                        institucion: string;
+                        area: string;
+                        subarea: string;
+                    }
+                }
+
+                work: {
+                    type: string;
+                    institucion: string;
+                    ocupacion: string;
+                    cargo: string;
+                    dateStart: string;
+                    dateEnd: string;
+
+                    dateEndNotNow: string;
+                    IsNotNowRequeredDateEnd: string;
+                }
+            }             
         }
     }
 }

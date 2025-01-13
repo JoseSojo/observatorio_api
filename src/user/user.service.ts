@@ -7,6 +7,8 @@ import { UserCreate } from './guards/user.guard';
 
 import * as bcrypt from 'bcrypt';
 import { FORM } from 'src/validation/types/FromInterface';
+import { StaticticsService } from 'src/statictics/statictics.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UserService {
@@ -15,7 +17,9 @@ export class UserService {
 
     constructor (
         private model: UserModel,
-        private languajeService: LanguajeService
+        private prisma: PrismaService,
+        private languajeService: LanguajeService,
+        private statictics: StaticticsService,
     ) {
         this.lang = this.languajeService.GetTranslate();
     }    
@@ -26,6 +30,10 @@ export class UserService {
      */
     public async create ({ data }: { data:UserCreate }) {
         try {
+            const date = new Date();
+            const rol = await this.prisma.userGroup.findFirst({ where:{ id:data.rolId } });
+            const staticticsPromise = this.statictics.currentStaticticsUser({ day:date.getDate(),month:date.getMonth()+1,year:date.getFullYear() });
+            const staticticsRolPromise = this.statictics.currentStaticticsUser({ day:date.getDate(),month:date.getMonth()+1,year:date.getFullYear(), category:rol.name });
             const hastPassword = this.hashPassword({ password:data.password });
 
             // Inicio
@@ -46,6 +54,9 @@ export class UserService {
             const entity = await this.model.create({data:dataCreate});
 
             // estadistica
+            await staticticsPromise;
+            await staticticsRolPromise;
+
             // historial
 
             // FIN
@@ -387,6 +398,14 @@ export class UserService {
                     key: `from.create.user.lastname`,
                     label: this.lang.TITLES.INPUT.LASTNAME,
                     name: `lastname`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`,
+                }, {
+                    id: `from.create.user.ci`,
+                    key: `from.create.user.ci`,
+                    label: this.lang.TITLES.INPUT.CI,
+                    name: `ci`,
                     placeholder: ``,
                     required: true,
                     type: `text`,

@@ -28,7 +28,23 @@ export default class ProjectModel {
 
                 authos:     {
                     include: {
-                        createByRef: true,
+                        createByRef: {
+                            include: {
+                                parroquiaReference: {
+                                    include: {
+                                        municipioReference: {
+                                            include: {
+                                                stateReference: {
+                                                    select: {
+                                                        name: true
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
                     }
                 },
                 date:       true,                

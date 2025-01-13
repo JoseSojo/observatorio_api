@@ -229,6 +229,7 @@ export class ConfigParroquiaService {
         return [
             `Nombre`,
             `Municipio`,
+            `Estado`,
             `Creador`,
             `Creación`
         ];
@@ -238,6 +239,7 @@ export class ConfigParroquiaService {
         return [
             `name`,
             `municipioReference.name`,
+            `municipioReference.stateReference.name`,
             `createByRef.email`,
             `createAt`
         ];

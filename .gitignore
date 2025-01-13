@@ -2,7 +2,12 @@
 /dist
 /node_modules
 /build
-/public/projects/*
+/public/projects/*.pdf
+/public/photo/*.jpg
+/public/photo/*.png
+/public/photo/*.jpeg
+/public/photo/*.webp
+/public/photo/*.gif
 
 # Logs
 logs
