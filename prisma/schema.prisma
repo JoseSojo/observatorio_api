@@ -344,6 +344,14 @@ model configInvestigationLine {
   id                    String            @id                 @default(uuid())
 
   name                  String
+<<<<<<< HEAD
+=======
+  description           String?
+
+  parentId                String?
+  parentReference         configInvestigationLine?                     @relation("parent", fields: [parentId], references: [id])
+  childs                  configInvestigationLine[]                    @relation("parent")
+>>>>>>> b0a1d26 (add remote brnach)
 
   // PROYECTOS
   projects              projects[]

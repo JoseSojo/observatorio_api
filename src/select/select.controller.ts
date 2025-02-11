@@ -51,6 +51,8 @@ export class SelectController {
 
         let list: { id: string, label: string }[] = [];
 
+        console.log(param.id);
+
         if (param.id === `category`) {
             const result = await this.categoryService.paginate({ skip: 0, take: 20, filter: { OR: [{ ident: { contains: query.param ? query.param : `` } }, { name: { contains: query.param ? query.param : `` } }] } });
             const data: { id: string, label: string }[] = [];
@@ -123,11 +125,21 @@ export class SelectController {
                 data.push({ id: item.id, label: `${item.name} - ${item.stateReference.name}` });
             });
             list = data;
-        }  else if (param.id == `parroquia` || param.id == `parroquiaId`) {
+        } else if (param.id == `parroquia` || param.id == `parroquiaId`) {
             // const studentStruc = await this.permitService.find({ filter: { name: this.permit.ESTUDIANTE } });
             // const student = studentStruc.body;
 
             const result = await this.parroquiaService.paginate({ skip: 0, take: 20, filter: { name:{ contains:query.param ? query.param : `` } }});
+            const data: { id: string, label: string }[] = [];
+            result.body.list.map((item: any) => {
+                data.push({ id: item.id, label: `${item.name}` });
+            });
+            list = data;
+        } else if (param.id == `lineParent` || param.id == `lineParentId`) {
+            // const studentStruc = await this.permitService.find({ filter: { name: this.permit.ESTUDIANTE } });
+            // const student = studentStruc.body;
+
+            const result = await this.lineService.paginate({ skip: 0, take: 20, filter: { name:{ contains:query.param ? query.param : `` } }});
             const data: { id: string, label: string }[] = [];
             result.body.list.map((item: any) => {
                 data.push({ id: item.id, label: `${item.name}` });

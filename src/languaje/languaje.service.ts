@@ -108,6 +108,7 @@ export class LanguajeService {
             TITLES: {
                 DOWNLOAD: `Descargar`,
                 INPUT: {
+                    MATRIZ: `Matriz`,
                     MUNICIPIO: `Municipio`,
                     PARROQUIA: `Parroquia`,
                     STATE: `Estado`,

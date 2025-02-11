@@ -73,7 +73,6 @@ export default class ProgramController {
         const take = query.take ? Number(query.take) : 10;
 
         const filter: Prisma.configProgramWhereInput = {}
-
         const responseService = this.service.paginate({ filter, skip, take });
 
         return responseService;

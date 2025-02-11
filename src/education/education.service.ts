@@ -109,6 +109,7 @@ export class EducationService {
         try {
             // Inicio
             const dataCreate: Prisma.cursosProfileCreateInput = {
+<<<<<<< HEAD
                 area: data.area,
                 country: data.country,
                 institucion: data.institucion,
@@ -116,6 +117,15 @@ export class EducationService {
                 horas: data.horas,
                 subarea: data.subarea,
                 tipo: data.tipo,
+=======
+                area: data.area.toLocaleUpperCase(),
+                country: data.country.toLocaleUpperCase(),
+                institucion: data.institucion.toLocaleUpperCase(),
+                description: data.description.toLocaleUpperCase(),
+                horas: data.horas,
+                subarea: data.subarea.toLocaleUpperCase(),
+                tipo: data.tipo.toLocaleUpperCase(),
+>>>>>>> b0a1d26 (add remote brnach)
                 userRef: { connect:{id:data.userId} }
             }
             const entity = await this.model.createCurso({data:dataCreate});

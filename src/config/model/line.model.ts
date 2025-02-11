@@ -19,6 +19,7 @@ export default class LineModel {
         const result = this.prisma.configInvestigationLine.findMany({ 
             skip, 
             take, 
+            orderBy: { name:"desc" },
             where: { ...filter, deleteAt: null }, 
             select: {
                 id: true,
@@ -32,7 +33,8 @@ export default class LineModel {
                     select: {
                         projects: true
                     }
-                }
+                },
+                parentReference: true,
             }
         });
 
@@ -50,11 +52,18 @@ export default class LineModel {
                 deleteAt: true,
                 createByRef: true,
                 createById: true,
+                parentReference: true,
                 _count: {
                     select: {
                         projects: true
                     }
                 }
+            },
+            orderBy: {
+                name: `asc`,
+                parentReference: {
+                    name: "asc",
+                },
             }
         });
 

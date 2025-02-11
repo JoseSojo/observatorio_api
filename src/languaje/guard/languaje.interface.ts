@@ -112,6 +112,7 @@ interface ACTIONS_INTERFACE {
 interface TITLES_INTERFACE {
 
     INPUT: {
+        MATRIZ:     string;
         CATEGORY:   string;
         ID:         string;
         NAME:       string;

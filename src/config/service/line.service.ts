@@ -232,6 +232,7 @@ export class ConfigLineService {
         return [
             `Nombre`,
             `Creador`,
+            `Matriz`,
             `Creación`
         ];
     }
@@ -240,6 +241,7 @@ export class ConfigLineService {
         return [
             `name`,
             `createByRef.email`,
+            `parentReference.name`,
             `createAt`
         ];
     }
@@ -274,6 +276,17 @@ export class ConfigLineService {
                     placeholder: ``,
                     required: true,
                     type: `text`,
+                },
+                {
+                    id: `from.create.line.lineParent`,
+                    key: `from.create.line.lineParent`,
+                    label: this.lang.TITLES.INPUT.MATRIZ,
+                    name: `lineParent`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`,
+                    select: true,
+                    selectIn: `lineParent`
                 }
             ]
         }
@@ -295,6 +308,18 @@ export class ConfigLineService {
                     required: true,
                     type: `text`,
                     value: data.name
+                },
+                {
+                    id: `from.create.line.lineParent`,
+                    key: `from.create.line.lineParent`,
+                    label: this.lang.TITLES.INPUT.MATRIZ,
+                    name: `lineParent`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`,
+                    value: data.name,
+                    select: true,
+                    selectIn: `lineParent`
                 }
             ]
         }

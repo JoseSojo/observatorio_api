@@ -30,6 +30,7 @@ export class UserService {
      */
     public async create ({ data }: { data:UserCreate }) {
         try {
+            console.log(data);
             const date = new Date();
             const rol = await this.prisma.userGroup.findFirst({ where:{ id:data.rolId } });
             const staticticsPromise = this.statictics.currentStaticticsUser({ day:date.getDate(),month:date.getMonth()+1,year:date.getFullYear() });
@@ -38,10 +39,10 @@ export class UserService {
 
             // Inicio
             const dataCreate: Prisma.userCreateInput = {
-                name: data.name,
                 email: data.email,
-                username: data.username,
-                lastname: data.lastname,
+                name: data.name.toLocaleUpperCase(),
+                username: data.username.toLocaleUpperCase(),
+                lastname: data.lastname.toLocaleUpperCase(),
                 rolReference: { connect:{ id:data.rolId } },
                 password: ``,
             }
@@ -272,7 +273,8 @@ export class UserService {
             `Apellido`,
             `Correo`,
             `Permiso`,
-            `Creación`            
+            `Creación`,       
+            `Cédula`            
         ];
     }
 
@@ -283,6 +285,7 @@ export class UserService {
             `email`,
             `rolReference.name`,
             `createAt`,
+            `ci`,
         ];
     }
 
@@ -293,7 +296,8 @@ export class UserService {
             `Correo`,
             `Permiso`,
             `Creador`,
-            `Creación`            
+            `Creación`,            
+            `Cédula`            
         ];
     }
 
@@ -304,6 +308,7 @@ export class UserService {
             `email`,
             `rolReference.name`,
             `createAt`,
+            `ci`,
         ];
     }
 
