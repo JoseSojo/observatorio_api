@@ -30,6 +30,10 @@ export class UserService {
      */
     public async create ({ data }: { data:UserCreate }) {
         try {
+<<<<<<< HEAD
+=======
+            console.log(data);
+>>>>>>> b0a1d26 (add remote brnach)
             const date = new Date();
             const rol = await this.prisma.userGroup.findFirst({ where:{ id:data.rolId } });
             const staticticsPromise = this.statictics.currentStaticticsUser({ day:date.getDate(),month:date.getMonth()+1,year:date.getFullYear() });
@@ -38,10 +42,17 @@ export class UserService {
 
             // Inicio
             const dataCreate: Prisma.userCreateInput = {
+<<<<<<< HEAD
                 name: data.name,
                 email: data.email,
                 username: data.username,
                 lastname: data.lastname,
+=======
+                name: data.name.toLocaleUpperCase(),
+                email: data.email,
+                username: data.username.toLocaleUpperCase(),
+                lastname: data.lastname.toLocaleUpperCase(),
+>>>>>>> b0a1d26 (add remote brnach)
                 rolReference: { connect:{ id:data.rolId } },
                 password: ``,
             }
@@ -54,7 +65,10 @@ export class UserService {
             const entity = await this.model.create({data:dataCreate});
 
             // estadistica
+<<<<<<< HEAD
             await staticticsPromise;
+=======
+>>>>>>> b0a1d26 (add remote brnach)
             await staticticsRolPromise;
 
             // historial
@@ -272,7 +286,11 @@ export class UserService {
             `Apellido`,
             `Correo`,
             `Permiso`,
+<<<<<<< HEAD
             `Creación`            
+=======
+            `Cédula`            
+>>>>>>> b0a1d26 (add remote brnach)
         ];
     }
 
@@ -282,7 +300,11 @@ export class UserService {
             `lastname`,
             `email`,
             `rolReference.name`,
+<<<<<<< HEAD
             `createAt`,
+=======
+            `ci`,
+>>>>>>> b0a1d26 (add remote brnach)
         ];
     }
 
@@ -293,7 +315,11 @@ export class UserService {
             `Correo`,
             `Permiso`,
             `Creador`,
+<<<<<<< HEAD
             `Creación`            
+=======
+            `Cédula`            
+>>>>>>> b0a1d26 (add remote brnach)
         ];
     }
 
@@ -303,7 +329,11 @@ export class UserService {
             `lastname`,
             `email`,
             `rolReference.name`,
+<<<<<<< HEAD
             `createAt`,
+=======
+            `ci`,
+>>>>>>> b0a1d26 (add remote brnach)
         ];
     }
 

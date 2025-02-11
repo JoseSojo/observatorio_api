@@ -19,6 +19,10 @@ export default class ProgramModel {
         const result = this.prisma.configProgram.findMany({ 
             skip, 
             take, 
+<<<<<<< HEAD
+=======
+            orderBy: { categoryId:"desc" },
+>>>>>>> b0a1d26 (add remote brnach)
             where: { ...filter, deleteAt: null }, 
             select: {
                 id: true,

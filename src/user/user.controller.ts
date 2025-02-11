@@ -121,6 +121,7 @@ export class UserController {
         const emailFound = (await emailFoundPromise).body;
         const ciFound = (await ciFoundPromise).body;
         const usernameFound = (await usernameFoundPromise).body;
+        // if (!body.username) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.username, error: true }
 
         if (emailFound) {
             return {
@@ -139,6 +140,14 @@ export class UserController {
                 body: null
             }
         }
+        // if (usernameFound) {
+        //     return {
+        //         message: this.lang.ACTIONS.DANGER.VALIDATIONS.USERNAME_IN_USE,
+        //         error: true,
+        //         errorMessage: `username.in.use`,
+        //         body: null
+        //     }
+        // }
 
         if (ciFound) {
             return {

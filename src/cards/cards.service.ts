@@ -31,16 +31,34 @@ export class CardsService {
 
         const test = await this.prisma.configCategory.findMany({
             include: { configProgram: { include: { _count: true }}},
+<<<<<<< HEAD
             where: { configProgram:{every:{projects:{every:{deleteAt:``}}}} },
+=======
+            where: { configProgram:{every:{projects:{every:{AND:[{deleteAt:``}]}}}} },
+>>>>>>> b0a1d26 (add remote brnach)
             orderBy: { name: 'asc' },
             skip: 0,
             take: 4
         });
+<<<<<<< HEAD
+=======
+        let all = 0;
+>>>>>>> b0a1d26 (add remote brnach)
 
         test.forEach(item => {
             let sum = 0; 
             item.configProgram.forEach(pr => sum += pr._count.projects) 
             cards.push({ ico: ``, label: `${item.ident} - ${item.name}`, value: sum });
+<<<<<<< HEAD
+=======
+            all += sum;
+        })
+
+        cards.push({
+            ico: `all`,
+            label: `Todos`,
+            value: all
+>>>>>>> b0a1d26 (add remote brnach)
         })
 
 
@@ -66,6 +84,7 @@ export class CardsService {
         return {label,value};
     }
 
+<<<<<<< HEAD
     public async DistribucionEtario(): Promise<{label:string[], value:number[]}> {
         const label = [`0 - 14`,`15 - 24`,`25 - 34`,`35 - 44`,`45 - 54`,`55 - 64`,`65 - 74`, `75+`];
         const value: number[] = [];
@@ -78,6 +97,20 @@ export class CardsService {
         const de5564Promise = this.prisma.user.count({ where:{AND:[{ age:{gte:55} },{ age:{lte:64} }]} });
         const de6574Promise = this.prisma.user.count({ where:{AND:[{ age:{gte:65} },{ age:{lte:74} }]} });
         const de75Promise = this.prisma.user.count({ where:{AND:[{ age:{gte:75} }]} });
+=======
+    public async DistribucionEtario(findBy: string): Promise<{label:string[], value:number[]}> {
+        const label = [`0 - 14`,`15 - 24`,`25 - 34`,`35 - 44`,`45 - 54`,`55 - 64`,`65 - 74`, `75+`];
+        const value: number[] = [];
+
+        const de014Promise = this.prisma.user.count({ where:{AND:[{sexo:findBy},{ age:{gte:0} },{ age:{lte:14} }]} });
+        const de1524Promise = this.prisma.user.count({ where:{AND:[{sexo:findBy},{ age:{gte:15} },{ age:{lte:24} }]} });
+        const de2534Promise = this.prisma.user.count({ where:{AND:[{sexo:findBy},{ age:{gte:25} },{ age:{lte:34} }]} });
+        const de3544Promise = this.prisma.user.count({ where:{AND:[{sexo:findBy},{ age:{gte:35} },{ age:{lte:44} }]} });
+        const de4555Promise = this.prisma.user.count({ where:{AND:[{sexo:findBy},{ age:{gte:45} },{ age:{lte:55} }]} });
+        const de5564Promise = this.prisma.user.count({ where:{AND:[{sexo:findBy},{ age:{gte:55} },{ age:{lte:64} }]} });
+        const de6574Promise = this.prisma.user.count({ where:{AND:[{sexo:findBy},{ age:{gte:65} },{ age:{lte:74} }]} });
+        const de75Promise = this.prisma.user.count({ where:{AND:[{sexo:findBy},{ age:{gte:75} }]} });
+>>>>>>> b0a1d26 (add remote brnach)
 
         const de014 = await de014Promise;
         const de1524 = await de1524Promise;
@@ -192,6 +225,101 @@ export class CardsService {
         return {label,value};
     }
 
+<<<<<<< HEAD
     public async test() { }
+=======
+    public async StatesBY () {
+        const label = [];
+        const value: number[] = [];
+
+        // this.DistribucionAreaConocimiento();
+        // this.DistribucionEstudios();
+        // this.DistribucionEtario();
+
+        const resultPromise = this.prisma.configState.groupBy({
+            by: `name`,
+            orderBy: {
+                name: `asc`
+            }
+        });
+
+        let result = await resultPromise;
+
+        result.forEach((item) => label.push(item.name));
+
+        const todosPromise = this.FindToStates(label);
+        const hombrePromise = this.FindToStates(label, `M`);
+        const mujerPromise = this.FindToStates(label, `F`);
+
+        const todos = await todosPromise;
+        const hombre = await hombrePromise;
+        const mujer = await mujerPromise;
+
+        console.log(todos);
+        console.log(hombre);
+        console.log(mujer);
+
+        const customList = [
+            {
+                label: `Hombre`,
+                backgroundColor:`#0E46A3`,
+                data: hombre
+            },
+            {
+                label: `Mujeres`,
+                backgroundColor:`#0E46A3`,
+                data: mujer
+            },
+            {
+                label: `Todos`,
+                backgroundColor:`#0E46A3`,
+                data: todos
+            }
+        ]
+
+        /**
+        {
+            data:[1,4,3,2],
+            backgroundColor:`#0E46A3`,
+            label: `Todos`,
+        }
+         */
+
+        return {
+            data: customList,
+            label,
+        };
+    }
+
+    private async FindToStates (label: string[], sex?: string) {
+        const value = [];
+        label.forEach(async (item) => value.push(await this.findByEach(item, sex)));
+        return value;
+    }
+
+    private async findByEach(label: string, sex?: string) {
+        const result = this.prisma.user.count({
+            where: {
+                AND: [
+                    {
+                        parroquiaReference: {
+                            municipioReference: {
+                                stateReference: {
+                                    name: label
+                                }
+                            }
+                        }
+                    }, {
+                        sexo: sex ? sex : { contains:`` },
+                    }
+                ]
+            }
+        });
+
+        console.log({label,sexo: sex ? sex : { contains:`` }, total:await result})
+
+        return await result;
+    }
+>>>>>>> b0a1d26 (add remote brnach)
 
 }

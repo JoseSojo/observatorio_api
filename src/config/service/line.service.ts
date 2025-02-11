@@ -231,6 +231,10 @@ export class ConfigLineService {
     public getDataList() {
         return [
             `Nombre`,
+<<<<<<< HEAD
+=======
+            `Matriz`,
+>>>>>>> b0a1d26 (add remote brnach)
             `Creador`,
             `Creación`
         ];
@@ -239,6 +243,10 @@ export class ConfigLineService {
     public getExtractList() {
         return [
             `name`,
+<<<<<<< HEAD
+=======
+            `parentReference.name`,
+>>>>>>> b0a1d26 (add remote brnach)
             `createByRef.email`,
             `createAt`
         ];
@@ -247,6 +255,10 @@ export class ConfigLineService {
     public getDataUnique() {
         return [
             `Nombre`,
+<<<<<<< HEAD
+=======
+            `Descripción`,
+>>>>>>> b0a1d26 (add remote brnach)
             `Creador`,
             `Creación`
         ];
@@ -255,6 +267,10 @@ export class ConfigLineService {
     public getUniqueExtract() {
         return [
             `name`,
+<<<<<<< HEAD
+=======
+            `description`,
+>>>>>>> b0a1d26 (add remote brnach)
             `createByRef.email`,
             `createAt`
         ];
@@ -274,6 +290,19 @@ export class ConfigLineService {
                     placeholder: ``,
                     required: true,
                     type: `text`,
+<<<<<<< HEAD
+=======
+                }, {
+                    id: `from.create.line.parent`,
+                    key: `from.create.line.parent`,
+                    label: this.lang.TITLES.INPUT.MATRIZ,
+                    name: `lineParent`,
+                    placeholder: ``,
+                    required: false,
+                    type: `text`,
+                    select: true,
+                    selectIn: `lineParent`
+>>>>>>> b0a1d26 (add remote brnach)
                 }
             ]
         }

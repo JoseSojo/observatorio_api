@@ -24,6 +24,43 @@ export default class ProjectService {
         this.lang = this.languajeService.GetTranslate();
     }    
 
+<<<<<<< HEAD
+=======
+    public async customCreate ({ data,date, id }: { data:Prisma.projectsCreateInput, date:string, id: string }) {
+        try {
+            // Inicio
+            const programPromise = this.program.find({ filter:{id:id} });
+            const program = await programPromise;
+            const splitDate = date.split(`-`);
+
+            const staticticsPromise = this.statictics.currentStaticticsProject({ day:Number(splitDate[2]),month:Number(splitDate[1]), year:Number(splitDate[0]) })
+            const staticticsCategoryPromise = this.statictics.currentStaticticsProject({ day:Number(splitDate[2]),month:Number(splitDate[1]), year:Number(splitDate[0]), categoryName:program.categoryRef.name })
+
+            const entity = await this.model.create({data});
+
+            await staticticsPromise;
+            await staticticsCategoryPromise;
+
+            // // FIN
+            return {
+                message: this.lang.ACTIONS.SUCCESS.CREATE,
+                error: false,
+                body: entity
+            };
+        } catch (error) {
+            console.log(error);
+            // log
+            // log error
+            return {
+                message: this.lang.ACTIONS.DANGER.CREATE,
+                error: true,
+                errorMessage: error.message,
+                body: []
+            };
+        }
+    }
+
+>>>>>>> b0a1d26 (add remote brnach)
     /**
      * CREAR
      * 
@@ -55,8 +92,13 @@ export default class ProjectService {
                 keywords: data.keywords,
                 title: data.title,
                 resumen: data.resumen,
+<<<<<<< HEAD
                 downloader: data.downloader ? true : false,
                 public: data.public ? true : false,
+=======
+                downloader: data.downloader === `true` ? true : false,
+                public: data.public === `true` ? true : false,
+>>>>>>> b0a1d26 (add remote brnach)
 
                 programRef: { connect:{ id:data.programId } },
                 documentRef: { connect:{ id:data.documentId } }

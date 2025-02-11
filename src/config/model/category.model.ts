@@ -20,6 +20,10 @@ export default class CategoryModel {
         const result = this.prisma.configCategory.findMany({ 
             skip, 
             take, 
+<<<<<<< HEAD
+=======
+            orderBy: { name:"desc" },
+>>>>>>> b0a1d26 (add remote brnach)
             where: { ...filter, deleteAt: null }, 
             select: select ? select : {
                 id: true,

@@ -222,6 +222,33 @@ export class GuiController {
         return {}
     }
 
+<<<<<<< HEAD
+=======
+    @Get(`etario`)
+    @UseGuards(AuthGuard)
+    private async etario(@Req() req: any, @Query() query: {biblioteca?:string,logic:boolean|null|undefined}) {
+        const resultEtarioHombrePromise = this.cards.DistribucionEtario(`H`);
+        const resultEtarioMujerPromise = this.cards.DistribucionEtario(`F`);
+        
+        const resultEtarioHombre = await resultEtarioHombrePromise;
+        const resultEtarioMujer = await resultEtarioMujerPromise;
+
+        return {
+            hombre: resultEtarioHombre.value,
+            mujer: resultEtarioMujer.value,
+            label: resultEtarioHombre.label
+        }
+    }
+
+    @Get(`states`)
+    @UseGuards(AuthGuard)
+    private async states(@Req() req: any, @Query() query: {biblioteca?:string,logic:boolean|null|undefined}) {
+        const { label,data } = await this.cards.StatesBY();
+
+        return {label,data};
+    }
+
+>>>>>>> b0a1d26 (add remote brnach)
     @Get(`graphic`)
     @UseGuards(AuthGuard)
     private async graphic(@Req() req: any, @Query() query: {biblioteca?:string,logic:boolean|null|undefined}) {
@@ -268,6 +295,10 @@ export class GuiController {
 
             graphic.push({ cols:`col-span-4`,title:`Proyectos por categorías.`,label:header, value:values });
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> b0a1d26 (add remote brnach)
         if (permits.includes(this.permit.APP_PERMIT_STATICTIS_PROJECTS_IN_PROGRAM)) {
             const values: number[] = [];
             const header: string[] = [];
@@ -293,6 +324,10 @@ export class GuiController {
             });
             graphic.push({ cols:`col-span-4`, title:`Proyectos por programas`, label:header,value:values });
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> b0a1d26 (add remote brnach)
         if (permits.includes(this.permit.APP_PERMIT_STATICTIS_PROJECTS_IN_LINE)) {
             const values: number[] = [];
             const header: string[] = [];
@@ -318,25 +353,44 @@ export class GuiController {
             });
             graphic.push({ cols:`col-span-4`,title:`Distribución por Líneas de investigación.`, label:header,value:values });
         }
+<<<<<<< HEAD
         if(!query.biblioteca) {
 
         }
         if(query.logic) {
 
+=======
+
+        if(!query.biblioteca) {}
+
+        if(query.logic) {
+>>>>>>> b0a1d26 (add remote brnach)
             const resultPorEstudiosProsmie = this.cards.DistribucionEstudios();
             const resultDondeLaboralPersonalPromise = this.cards.DondeLaboral();
             const resultAreaConocimientoPromise = this.cards.DistribucionAreaConocimiento();
             const resultGeneroPromise = this.cards.Genero();
+<<<<<<< HEAD
             const resultEtarioPromise = this.cards.DistribucionEtario();
+=======
+            // const resultEtarioPromise = this.cards.DistribucionEtario();
+>>>>>>> b0a1d26 (add remote brnach)
 
             const resultDondeLaboralPersonal = await resultDondeLaboralPersonalPromise;
             const resultPorEstudios = await resultPorEstudiosProsmie;
             const resultGenero = await resultGeneroPromise;
+<<<<<<< HEAD
             const resultEtario = await resultEtarioPromise;
             const resultAreaConocimiento = await resultAreaConocimientoPromise;
 
             graphic.push({ title:`Distribución por genero`,label:resultGenero.label, value: resultGenero.value })
             graphic.push({ title:`Distribución etario`,label:resultEtario.label, value: resultEtario.value })
+=======
+            // const resultEtario = await resultEtarioPromise;
+            const resultAreaConocimiento = await resultAreaConocimientoPromise;
+
+            graphic.push({ title:`Distribución por genero`,label:resultGenero.label, value: resultGenero.value })
+            // graphic.push({ title:`Distribución etario`,label:resultEtario.label, value: resultEtario.value })
+>>>>>>> b0a1d26 (add remote brnach)
             graphic.push({ title:`Sector donde labora`,label:resultDondeLaboralPersonal.label, value: resultDondeLaboralPersonal.value })
             graphic.push({ title:`Distribución por estudios`,label:resultPorEstudios.label, value: resultPorEstudios.value })
             graphic.push({ title:`Distribución por área de conocimiento`,label:resultAreaConocimiento.label, value: resultAreaConocimiento.value })
@@ -844,7 +898,10 @@ export class GuiController {
 
 
         return {
+<<<<<<< HEAD
             report,
+=======
+>>>>>>> b0a1d26 (add remote brnach)
             title,
             body: item,
             dataList
@@ -1025,7 +1082,10 @@ export class GuiController {
 
         if (permit.includes(actions.list)) actionsResponse.push({ ico: `list`, label: this.lang.TITLES.LIST, path: `/dashboard/${crud}/`, use: 'page' });
         if (permit.includes(actions.create)) actionsResponse.push({ ico: `create`, label: this.lang.TITLES.CREATE, path: `/dashboard/${crud}/`, use: 'modal' });
+<<<<<<< HEAD
         if (permit.includes(actions.report)) actionsResponse.push({ ico: `report`, label: this.lang.TITLES.REPORT, path: `/dashboard/${crud}/`, use: 'download' });
+=======
+>>>>>>> b0a1d26 (add remote brnach)
 
         return actionsResponse
     }
@@ -1044,7 +1104,10 @@ export class GuiController {
         const actionsResponse: ActionCrudInterface[] = []
 
         if (permit.includes(actions.unique)) actionsResponse.push({ ico: `list`, label: this.lang.TITLES.LIST, path: `/dashboard/${crud}/`, use: 'page' });
+<<<<<<< HEAD
         if (permit.includes(actions.report)) actionsResponse.push({ ico: `report`, label: this.lang.TITLES.REPORT, path: `/dashboard/${crud}/${id}`, use: 'download' });
+=======
+>>>>>>> b0a1d26 (add remote brnach)
         if (permit.includes(actions.create)) actionsResponse.push({ ico: `create`, label: this.lang.TITLES.CREATE, path: `/dashboard/${crud}/${id}`, use: 'modal' });
         if (permit.includes(actions.delete)) actionsResponse.push({ ico: `delete`, label: this.lang.TITLES.DELETE, path: `/dashboard/${crud}/${id}`, use: 'modal' });
         if (permit.includes(actions.update)) actionsResponse.push({ ico: `update`, label: this.lang.TITLES.UPDATE, path: `/dashboard/${crud}/${id}`, use: 'modal' });

@@ -137,7 +137,25 @@ export class ProjectController {
 
         const customFilter: Prisma.projectsWhereInput = { AND:filter }
 
-        const responseService = await this.projectService.paginate({ filter:customFilter, skip, take });
+        const responseService = await this.projectService.paginate({ filter:{
+            ...customFilter,
+            OR: [
+                { title: {contains:query.param} },
+                { resumen: {contains:query.param} },
+                { keywords: {contains:query.param} },
+                { authos: {
+                    some: {
+                        createByRef: {
+                            OR: [
+                                { name: {contains:query.param} },
+                                { lastname: {contains:query.param} },
+                                { email: {contains:query.param} },
+                            ]
+                        }
+                    }
+                } },
+            ]
+        }, skip, take });
 
         return responseService;
     }

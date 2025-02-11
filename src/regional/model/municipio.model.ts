@@ -19,6 +19,14 @@ export default class MunicipioModel {
         const result = this.prisma.configMunicipio.findMany({ 
             skip, 
             take, 
+<<<<<<< HEAD
+=======
+            orderBy: {
+                stateReference: {
+                    name: "asc"
+                }
+            },
+>>>>>>> b0a1d26 (add remote brnach)
             where: { ...filter, deleteAt: null }, 
             select: {
                 id: true,

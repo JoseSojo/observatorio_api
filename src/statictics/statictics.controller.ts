@@ -64,6 +64,7 @@ export default class StaticticsController {
 
         const listResult = await this.statictics.getStaticsUser({ day,month,year });
 
+<<<<<<< HEAD
         if (query.key === `month`) {
             header = this.statictics.getHeaderDay();
             list = listResult.month;
@@ -74,6 +75,19 @@ export default class StaticticsController {
 
         }
         else if(query.key === `year`) {
+=======
+        console.log(query);
+
+        if (query.key === `month` || query.key === (`month`+`/`)) {
+            title = `Usuarios creados por mes.`;
+            header = this.statictics.getHeaderDay();
+            list = listResult.month;
+            filter = await this.statictics.fitlerMonthUser();
+            filterName = [`month`,`year`];
+            labelFilter = [`Mes`,`Año`];
+        }
+        else if(query.key === `year` || query.key === (`year`+`/`)) {
+>>>>>>> b0a1d26 (add remote brnach)
             header = this.statictics.getHeaderMonth();
             list = listResult.year;
             title = `Usuarios creados por año.`;
@@ -100,6 +114,11 @@ export default class StaticticsController {
         const month = query.month ? Number(query.month) : date.getMonth()+1;
         const year = query.year ? Number(query.year) : date.getFullYear();
 
+<<<<<<< HEAD
+=======
+        console.log(year);
+
+>>>>>>> b0a1d26 (add remote brnach)
         let header = [];
         let list = [];
         let title = `Gráfico no disponible`;
@@ -115,7 +134,11 @@ export default class StaticticsController {
             value: [],
         }
 
+<<<<<<< HEAD
         if (query.key === `month`) {
+=======
+        if (query.key === `month` || query.key === (`month`+`/`)) {
+>>>>>>> b0a1d26 (add remote brnach)
             header = this.statictics.getHeaderDay();
             list = listResult.month;
             title = `Proyectos creados por mes.`;
@@ -123,7 +146,11 @@ export default class StaticticsController {
             labelFilter = [`Mes`,`Año`];
             filterName = [`month`,`year`];
         }
+<<<<<<< HEAD
         else if(query.key === `year`) {
+=======
+        else if(query.key === `year` || query.key === (`year`+`/`)) {
+>>>>>>> b0a1d26 (add remote brnach)
             header = this.statictics.getHeaderMonth();
             list = listResult.year;
             title = `Proyectos creados por año.`;
@@ -165,5 +192,8 @@ export default class StaticticsController {
             value: list,
         }
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> b0a1d26 (add remote brnach)
 }

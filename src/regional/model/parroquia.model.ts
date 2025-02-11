@@ -19,6 +19,22 @@ export default class ParroquiaModel {
         const result = this.prisma.configParroquia.findMany({ 
             skip, 
             take, 
+<<<<<<< HEAD
+=======
+            orderBy: [
+                {
+                
+                    municipioReference: {
+                        stateReference: {
+                            name: "asc"
+                        }
+                    }
+                },
+                {
+                    municipioReference: { name:"asc" }
+                }
+            ],
+>>>>>>> b0a1d26 (add remote brnach)
             where: { ...filter, deleteAt: null }, 
             select: {
                 id: true,

@@ -19,6 +19,10 @@ export default class EstadoModel {
         const result = this.prisma.configState.findMany({ 
             skip, 
             take, 
+<<<<<<< HEAD
+=======
+            orderBy: {name:"asc"},
+>>>>>>> b0a1d26 (add remote brnach)
             where: { ...filter, deleteAt: null }, 
             select: select ? select : {
                 id: true,

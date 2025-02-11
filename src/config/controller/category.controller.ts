@@ -76,7 +76,6 @@ export default class CategoryController {
         const take = query.take ? Number(query.take) : 10;
 
         const filter: Prisma.configCategoryWhereInput = {}
-
         const responseServicePromise = this.service.paginate({ filter, skip, take });
         const responseService = await responseServicePromise;
 
