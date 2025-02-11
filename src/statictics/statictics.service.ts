@@ -16,20 +16,13 @@ export class StaticticsService {
      * STATICTiCS FOR USER 
      */
     public async currentStaticticsUser({ day, month, year,category }: { day: number, month: number, year: number, category?:string }) {
-<<<<<<< HEAD
         const object = category || this.event.STATICTICS_CREATE_USER;
 
-        const staticticsFoundMonthPromise = this.prisma.staticticsUserForMonth.findFirst({ where: { monthNumber: month } });
-        const staticticsFoundYearPromise = this.prisma.staticticsUserForYear.findFirst({ where: { year } });
-        const staticticsFoundCenturyPromise = this.prisma.staticticsUserForCentury.findFirst({ where: { year } });
-=======
         if(category === `SUPER_ADMIN`) return;
-        const object = category && category !== `SUPER_ADMIN` ? category : this.event.STATICTICS_CREATE_USER;
 
         const staticticsFoundMonthPromise = this.prisma.staticticsUserForMonth.findFirst({ where: { AND:[{monthNumber: month},{objectName:object}] } });
         const staticticsFoundYearPromise = this.prisma.staticticsUserForYear.findFirst({ where: { AND:[{year},{objectName:object}] } });
         const staticticsFoundCenturyPromise = this.prisma.staticticsUserForCentury.findFirst({ where: { AND:[{year},{objectName:object}] } });
->>>>>>> b0a1d26 (add remote brnach)
 
         const staticticsFoundMonth = await staticticsFoundMonthPromise;
         const staticticsFoundYear = await staticticsFoundYearPromise;
@@ -38,21 +31,13 @@ export class StaticticsService {
         if (staticticsFoundMonth) {
             await this.customUpdateMonthUser(day, staticticsFoundMonth.id);
         } else {
-<<<<<<< HEAD
-            await this.customCreateMonthUser(day, object)
-=======
             await this.customCreateMonthUser(day, object, year, month)
->>>>>>> b0a1d26 (add remote brnach)
         }
 
         if (staticticsFoundYear) {
             await this.customUpdateYearUser(month, staticticsFoundYear.id)
         } else {
-<<<<<<< HEAD
-            await this.customCreateYearUser(month, object);
-=======
             await this.customCreateYearUser(month, object, year);
->>>>>>> b0a1d26 (add remote brnach)
         }
 
         if (staticticsFoundCentury) {
@@ -119,20 +104,12 @@ export class StaticticsService {
         }
     }
 
-<<<<<<< HEAD
-    private async customCreateYearUser(month: number, object: string) {
-=======
     private async customCreateYearUser(month: number, object: string, year: number) {
->>>>>>> b0a1d26 (add remote brnach)
         try {
             await this.prisma.staticticsUserForYear.create({
                 data: {
                     objectName: object,
-<<<<<<< HEAD
-                    year: this.getYear(),
-=======
                     year: year ? year : this.getYear(),
->>>>>>> b0a1d26 (add remote brnach)
                     totalYear: 1,
                     totalMonth1: month === 1 ? 1 : 0,
                     totalMonth2: month === 2 ? 1 : 0,
@@ -176,28 +153,16 @@ export class StaticticsService {
 
     }
 
-<<<<<<< HEAD
-    private async customCreateMonthUser(day: number, object: string) {
-        const month = this.getMonth();
-=======
     private async customCreateMonthUser(day: number, object: string, year:number, month: number) {
         const monthAll = this.getAllMonth();
->>>>>>> b0a1d26 (add remote brnach)
         // const dayNow = this.getDay();
 
         await this.prisma.staticticsUserForMonth.create({
             data: {
-<<<<<<< HEAD
-                monthName: month.label,
-                objectName: object,
-                monthNumber: month.id,
-                year: this.getYear(),
-=======
                 monthName: monthAll[month].label,
                 objectName: object,
                 monthNumber: month,
                 year: year ? year : this.getYear(),
->>>>>>> b0a1d26 (add remote brnach)
                 totalMonth: 1,
                 totalDay1: day === 1 ? 1 : 0,
                 totalDay2: day === 2 ? 1 : 0,
@@ -310,11 +275,7 @@ export class StaticticsService {
     public async currentStaticticsProject({ day, month, year, categoryName }: { day: number, month: number, year: number, categoryName?: string }) {
         const object = categoryName || this.event.STATICTICS_CREATE_PROJECT;
 
-<<<<<<< HEAD
-        const staticticsFoundMonthPromise = this.prisma.staticticsProjectForMonth.findFirst({ where: { AND: [{ monthNumber: month }, { objectName: object }] } });
-=======
         const staticticsFoundMonthPromise = this.prisma.staticticsProjectForMonth.findFirst({ where: { AND: [{monthNumber: month}, {year}, { objectName: object }] } });
->>>>>>> b0a1d26 (add remote brnach)
         const staticticsFoundYearPromise = this.prisma.staticticsProjectForYear.findFirst({ where: { AND: [{ year }, { objectName: object }] } });
         const staticticsFoundCenturyPromise = this.prisma.staticticsProjectForCentury.findFirst({ where: { AND: [{ year }, { objectName: object }] } });
 
@@ -325,21 +286,13 @@ export class StaticticsService {
         if (staticticsFoundMonth) {
             await this.customUpdateMonthProject(day, staticticsFoundMonth.id);
         } else {
-<<<<<<< HEAD
-            await this.customCreateMonthProject(day, object)
-=======
             await this.customCreateMonthProject(day, object, month, year)
->>>>>>> b0a1d26 (add remote brnach)
         }
 
         if (staticticsFoundYear) {
             await this.customUpdateYearProject(month, staticticsFoundYear.id)
         } else {
-<<<<<<< HEAD
-            await this.customCreateYearProject(month, object);
-=======
             await this.customCreateYearProject(month, object, year);
->>>>>>> b0a1d26 (add remote brnach)
         }
 
         if (staticticsFoundCentury) {
@@ -351,11 +304,7 @@ export class StaticticsService {
 
     public async getStaticsProject({ day, month, year }: { day: number, month: number, year: number }) {
         const object = this.event.STATICTICS_CREATE_PROJECT;
-<<<<<<< HEAD
-        const projectMonthPromise = this.prisma.staticticsProjectForMonth.findMany({ where: { AND: [{ monthNumber: month }] } });
-=======
         const projectMonthPromise = this.prisma.staticticsProjectForMonth.findMany({ where: { AND: [{ monthNumber: month },{year}] } });
->>>>>>> b0a1d26 (add remote brnach)
         const projectYearPromise = this.prisma.staticticsProjectForYear.findMany({ where: { AND: [{ year: year }] } });
         // const projectCenturyPromise = this.prisma.staticticsProjectForCentury.findMany();
 
@@ -402,20 +351,12 @@ export class StaticticsService {
         }
     }
 
-<<<<<<< HEAD
-    private async customCreateYearProject(month: number, object: string) {
-=======
     private async customCreateYearProject(month: number, object: string, year:number) {
->>>>>>> b0a1d26 (add remote brnach)
         try {
             await this.prisma.staticticsProjectForYear.create({
                 data: {
                     objectName: object,
-<<<<<<< HEAD
-                    year: this.getYear(),
-=======
                     year: year ? year : this.getYear(),
->>>>>>> b0a1d26 (add remote brnach)
                     totalYear: 1,
                     totalMonth1: month === 1 ? 1 : 0,
                     totalMonth2: month === 2 ? 1 : 0,
@@ -459,18 +400,6 @@ export class StaticticsService {
 
     }
 
-<<<<<<< HEAD
-    private async customCreateMonthProject(day: number, object: string) {
-        const month = this.getMonth();
-        // const dayNow = this.getDay();
-
-        await this.prisma.staticticsProjectForMonth.create({
-            data: {
-                monthName: month.label,
-                objectName: object,
-                monthNumber: month.id,
-                year: this.getYear(),
-=======
     private async customCreateMonthProject(day: number, object: string, month: number, year?: number) {
         const monthAll = this.getAllMonth();
         // const dayNow = this.getDay();
@@ -481,7 +410,6 @@ export class StaticticsService {
                 objectName: object,
                 monthNumber: month,
                 year: year ? year : this.getYear(),
->>>>>>> b0a1d26 (add remote brnach)
                 totalMonth: 1,
                 totalDay1: day === 1 ? 1 : 0,
                 totalDay2: day === 2 ? 1 : 0,
@@ -790,13 +718,6 @@ export class StaticticsService {
     }
 
     private async getAllYear() {
-<<<<<<< HEAD
-        const years = this.prisma.staticticsForYear.groupBy({
-            by: 'year',
-            orderBy: { year: 'desc' }
-        })
-        return await years;
-=======
         const years = this.prisma.staticticsProjectForYear.groupBy({
             by: 'year',
             orderBy: { year: 'desc' }
@@ -812,7 +733,6 @@ export class StaticticsService {
         })
         const custom = await years
         return custom;
->>>>>>> b0a1d26 (add remote brnach)
     }
 
     public getHeaderDay() {
@@ -829,17 +749,11 @@ export class StaticticsService {
     }
 
     public async getHeaderYearUser() {
-<<<<<<< HEAD
-        const years = await this.getAllYear();
-        const list = [];
-        years.forEach((y) => {
-=======
         const years = await this.getAllYearUser();
         const list = [];
         const yearsMap = typeof years === 'object' ? years : [years];
 
         yearsMap.forEach((y) => {
->>>>>>> b0a1d26 (add remote brnach)
             list.push(({ id: y.year, label: y.year }));
         })
         return list;
@@ -859,11 +773,7 @@ export class StaticticsService {
     }
 
     public async fitlerMonthUser() {
-<<<<<<< HEAD
-        return this.getAllMonth()
-=======
         return [this.getAllMonth(), await this.filterYearUser()]
->>>>>>> b0a1d26 (add remote brnach)
     }
 
     public async filterYearUser() {

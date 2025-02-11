@@ -45,7 +45,8 @@ export default class LineController {
         // lógica
         const currentBody: LineCreate = {
             name: body.name,
-            userId: user.id
+            userId: user.id,
+            lineParent: body.lineParent
         }
 
         const responseService = await this.service.create({ data:currentBody }) as any;

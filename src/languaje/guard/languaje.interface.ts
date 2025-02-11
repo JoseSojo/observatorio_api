@@ -112,10 +112,7 @@ interface ACTIONS_INTERFACE {
 interface TITLES_INTERFACE {
 
     INPUT: {
-<<<<<<< HEAD
-=======
         MATRIZ:     string;
->>>>>>> b0a1d26 (add remote brnach)
         CATEGORY:   string;
         ID:         string;
         NAME:       string;

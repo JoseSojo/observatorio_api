@@ -231,11 +231,8 @@ export class ConfigLineService {
     public getDataList() {
         return [
             `Nombre`,
-<<<<<<< HEAD
-=======
-            `Matriz`,
->>>>>>> b0a1d26 (add remote brnach)
             `Creador`,
+            `Matriz`,
             `Creación`
         ];
     }
@@ -243,11 +240,8 @@ export class ConfigLineService {
     public getExtractList() {
         return [
             `name`,
-<<<<<<< HEAD
-=======
-            `parentReference.name`,
->>>>>>> b0a1d26 (add remote brnach)
             `createByRef.email`,
+            `parentReference.name`,
             `createAt`
         ];
     }
@@ -255,10 +249,6 @@ export class ConfigLineService {
     public getDataUnique() {
         return [
             `Nombre`,
-<<<<<<< HEAD
-=======
-            `Descripción`,
->>>>>>> b0a1d26 (add remote brnach)
             `Creador`,
             `Creación`
         ];
@@ -267,10 +257,6 @@ export class ConfigLineService {
     public getUniqueExtract() {
         return [
             `name`,
-<<<<<<< HEAD
-=======
-            `description`,
->>>>>>> b0a1d26 (add remote brnach)
             `createByRef.email`,
             `createAt`
         ];
@@ -290,19 +276,17 @@ export class ConfigLineService {
                     placeholder: ``,
                     required: true,
                     type: `text`,
-<<<<<<< HEAD
-=======
-                }, {
-                    id: `from.create.line.parent`,
-                    key: `from.create.line.parent`,
+                },
+                {
+                    id: `from.create.line.lineParent`,
+                    key: `from.create.line.lineParent`,
                     label: this.lang.TITLES.INPUT.MATRIZ,
                     name: `lineParent`,
                     placeholder: ``,
-                    required: false,
+                    required: true,
                     type: `text`,
                     select: true,
                     selectIn: `lineParent`
->>>>>>> b0a1d26 (add remote brnach)
                 }
             ]
         }
@@ -324,6 +308,18 @@ export class ConfigLineService {
                     required: true,
                     type: `text`,
                     value: data.name
+                },
+                {
+                    id: `from.create.line.lineParent`,
+                    key: `from.create.line.lineParent`,
+                    label: this.lang.TITLES.INPUT.MATRIZ,
+                    name: `lineParent`,
+                    placeholder: ``,
+                    required: true,
+                    type: `text`,
+                    value: data.name,
+                    select: true,
+                    selectIn: `lineParent`
                 }
             ]
         }

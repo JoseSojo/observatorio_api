@@ -19,10 +19,7 @@ export default class LineModel {
         const result = this.prisma.configInvestigationLine.findMany({ 
             skip, 
             take, 
-<<<<<<< HEAD
-=======
             orderBy: { name:"desc" },
->>>>>>> b0a1d26 (add remote brnach)
             where: { ...filter, deleteAt: null }, 
             select: {
                 id: true,
@@ -36,12 +33,8 @@ export default class LineModel {
                     select: {
                         projects: true
                     }
-<<<<<<< HEAD
-                }
-=======
                 },
                 parentReference: true,
->>>>>>> b0a1d26 (add remote brnach)
             }
         });
 
@@ -59,24 +52,18 @@ export default class LineModel {
                 deleteAt: true,
                 createByRef: true,
                 createById: true,
-<<<<<<< HEAD
-=======
                 parentReference: true,
->>>>>>> b0a1d26 (add remote brnach)
                 _count: {
                     select: {
                         projects: true
                     }
                 }
-<<<<<<< HEAD
-=======
             },
             orderBy: {
                 name: `asc`,
                 parentReference: {
                     name: "asc",
                 },
->>>>>>> b0a1d26 (add remote brnach)
             }
         });
 

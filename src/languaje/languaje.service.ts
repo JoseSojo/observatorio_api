@@ -108,10 +108,7 @@ export class LanguajeService {
             TITLES: {
                 DOWNLOAD: `Descargar`,
                 INPUT: {
-<<<<<<< HEAD
-=======
                     MATRIZ: `Matriz`,
->>>>>>> b0a1d26 (add remote brnach)
                     MUNICIPIO: `Municipio`,
                     PARROQUIA: `Parroquia`,
                     STATE: `Estado`,
