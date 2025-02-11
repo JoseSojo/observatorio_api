@@ -10,6 +10,8 @@ export interface Card {
 }
 
 export interface Graphic {
+    title?: string;
+    cols?: string;
     label:      string[];
     value:      number[];
 }

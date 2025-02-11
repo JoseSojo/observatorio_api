@@ -59,7 +59,8 @@ export default class StaticticsController {
         let list = [];
         let title = `Gráfico no disponible`;
         let filter: any|null = null;
-        let filterName: string | null = null;
+        let filterName: string[] | null = null;
+        let labelFilter: string[] | null = null;
 
         const listResult = await this.statictics.getStaticsUser({ day,month,year });
 
@@ -67,23 +68,26 @@ export default class StaticticsController {
             header = this.statictics.getHeaderDay();
             list = listResult.month;
             title = `Usuarios creados por mes.`;
-            filter = await this.statictics.fitlerMonthUser();
-            filterName = `month`;
+            filter = [await this.statictics.fitlerMonthUser(), await this.statictics.filterYearUser()];
+            filterName = [`month`,`year`];
+            labelFilter = [`Mes`,`Año`];
 
         }
         else if(query.key === `year`) {
             header = this.statictics.getHeaderMonth();
             list = listResult.year;
             title = `Usuarios creados por año.`;
-            filter = await this.statictics.filterYearUser();
-            filterName = `year`
+            filter = [await this.statictics.filterYearUser()];
+            labelFilter = [`Año`];
+            filterName = [`year`]
         }
 
         return {
             title,
             header,
             value: list,
-            filter
+            filter,
+            labelFilter
         }
     }
 
@@ -99,8 +103,9 @@ export default class StaticticsController {
         let header = [];
         let list = [];
         let title = `Gráfico no disponible`;
-        let filter: any | null = null;
-        let filterName: string | null = null;
+        let filter: any[] | null = null;
+        let filterName: string[] | null = null;
+        let labelFilter: string[] | null = null;
 
         const listResult = await this.statictics.getStaticsProject({ day,month,year });
 
@@ -114,15 +119,17 @@ export default class StaticticsController {
             header = this.statictics.getHeaderDay();
             list = listResult.month;
             title = `Proyectos creados por mes.`;
-            filter = await this.statictics.fitlerMonthProject();
-            filterName = `month`;
+            filter = [await this.statictics.fitlerMonthProject(),await this.statictics.filterYearProject()];
+            labelFilter = [`Mes`,`Año`];
+            filterName = [`month`,`year`];
         }
         else if(query.key === `year`) {
             header = this.statictics.getHeaderMonth();
             list = listResult.year;
             title = `Proyectos creados por año.`;
-            filter = await this.statictics.filterYearProject();
-            filterName = `year`;
+            filter = [await this.statictics.filterYearProject()];
+            labelFilter = [`Año`];
+            filterName = [`year`];
         }
 
         return {
@@ -130,7 +137,8 @@ export default class StaticticsController {
             header,
             value: list,
             filter,
-            filterName
+            filterName,
+            labelFilter
         }
     }
 
@@ -138,7 +146,6 @@ export default class StaticticsController {
     private async staticticsProjectCentury() {
         const projectCentury = await this.prisma.staticticsProjectForCentury.findMany();
         const projectGroupCentury = await this.prisma.staticticsProjectForCentury.groupBy({ by:`year` });
-
 
         let header = [];
         let list = [];
@@ -158,5 +165,4 @@ export default class StaticticsController {
             value: list,
         }
     }
-
 }

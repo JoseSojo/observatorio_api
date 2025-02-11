@@ -759,7 +759,7 @@ export class StaticticsService {
     }
 
     public async fitlerMonthUser() {
-        return this.getAllMonth()
+        return [this.getAllMonth(), await this.filterYearUser()]
     }
 
     public async filterYearUser() {
