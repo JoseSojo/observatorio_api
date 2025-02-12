@@ -9,11 +9,7 @@ export default class AppCategory {
     }
 
     public TE = {
-<<<<<<< HEAD
-        id: `TE`,
-=======
         id: `TG`,
->>>>>>> b0a1d26 (add remote brnach)
         name: `Trabajo de Grado`,
     }
 

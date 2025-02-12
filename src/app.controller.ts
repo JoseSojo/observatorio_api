@@ -14,8 +14,6 @@ export class AppController {
         return result;
     }
 
-<<<<<<< HEAD
-=======
     @Get(`start/project`)
     public async createProject () {
         const result = await this.fixtures.createProjectFixtures();
@@ -35,5 +33,4 @@ export class AppController {
     }
     
 
->>>>>>> b0a1d26 (add remote brnach)
 }

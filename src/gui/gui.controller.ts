@@ -222,8 +222,6 @@ export class GuiController {
         return {}
     }
 
-<<<<<<< HEAD
-=======
     @Get(`etario`)
     @UseGuards(AuthGuard)
     private async etario(@Req() req: any, @Query() query: {biblioteca?:string,logic:boolean|null|undefined}) {
@@ -248,7 +246,6 @@ export class GuiController {
         return {label,data};
     }
 
->>>>>>> b0a1d26 (add remote brnach)
     @Get(`graphic`)
     @UseGuards(AuthGuard)
     private async graphic(@Req() req: any, @Query() query: {biblioteca?:string,logic:boolean|null|undefined}) {
@@ -295,10 +292,6 @@ export class GuiController {
 
             graphic.push({ cols:`col-span-4`,title:`Proyectos por categorías.`,label:header, value:values });
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> b0a1d26 (add remote brnach)
         if (permits.includes(this.permit.APP_PERMIT_STATICTIS_PROJECTS_IN_PROGRAM)) {
             const values: number[] = [];
             const header: string[] = [];
@@ -324,10 +317,6 @@ export class GuiController {
             });
             graphic.push({ cols:`col-span-4`, title:`Proyectos por programas`, label:header,value:values });
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> b0a1d26 (add remote brnach)
         if (permits.includes(this.permit.APP_PERMIT_STATICTIS_PROJECTS_IN_LINE)) {
             const values: number[] = [];
             const header: string[] = [];
@@ -353,44 +342,24 @@ export class GuiController {
             });
             graphic.push({ cols:`col-span-4`,title:`Distribución por Líneas de investigación.`, label:header,value:values });
         }
-<<<<<<< HEAD
-        if(!query.biblioteca) {
-
-        }
-        if(query.logic) {
-
-=======
 
         if(!query.biblioteca) {}
 
         if(query.logic) {
->>>>>>> b0a1d26 (add remote brnach)
             const resultPorEstudiosProsmie = this.cards.DistribucionEstudios();
             const resultDondeLaboralPersonalPromise = this.cards.DondeLaboral();
             const resultAreaConocimientoPromise = this.cards.DistribucionAreaConocimiento();
             const resultGeneroPromise = this.cards.Genero();
-<<<<<<< HEAD
-            const resultEtarioPromise = this.cards.DistribucionEtario();
-=======
             // const resultEtarioPromise = this.cards.DistribucionEtario();
->>>>>>> b0a1d26 (add remote brnach)
 
             const resultDondeLaboralPersonal = await resultDondeLaboralPersonalPromise;
             const resultPorEstudios = await resultPorEstudiosProsmie;
             const resultGenero = await resultGeneroPromise;
-<<<<<<< HEAD
-            const resultEtario = await resultEtarioPromise;
-            const resultAreaConocimiento = await resultAreaConocimientoPromise;
-
-            graphic.push({ title:`Distribución por genero`,label:resultGenero.label, value: resultGenero.value })
-            graphic.push({ title:`Distribución etario`,label:resultEtario.label, value: resultEtario.value })
-=======
             // const resultEtario = await resultEtarioPromise;
             const resultAreaConocimiento = await resultAreaConocimientoPromise;
 
             graphic.push({ title:`Distribución por genero`,label:resultGenero.label, value: resultGenero.value })
             // graphic.push({ title:`Distribución etario`,label:resultEtario.label, value: resultEtario.value })
->>>>>>> b0a1d26 (add remote brnach)
             graphic.push({ title:`Sector donde labora`,label:resultDondeLaboralPersonal.label, value: resultDondeLaboralPersonal.value })
             graphic.push({ title:`Distribución por estudios`,label:resultPorEstudios.label, value: resultPorEstudios.value })
             graphic.push({ title:`Distribución por área de conocimiento`,label:resultAreaConocimiento.label, value: resultAreaConocimiento.value })

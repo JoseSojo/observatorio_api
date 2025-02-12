@@ -74,20 +74,6 @@ export class CardsService {
         return {label,value};
     }
 
-
-    public async DistribucionEtario(): Promise<{label:string[], value:number[]}> {
-        const label = [`0 - 14`,`15 - 24`,`25 - 34`,`35 - 44`,`45 - 54`,`55 - 64`,`65 - 74`, `75+`];
-        const value: number[] = [];
-
-        const de014Promise = this.prisma.user.count({ where:{AND:[{ age:{gte:0} },{ age:{lte:14} }]} });
-        const de1524Promise = this.prisma.user.count({ where:{AND:[{ age:{gte:15} },{ age:{lte:24} }]} });
-        const de2534Promise = this.prisma.user.count({ where:{AND:[{ age:{gte:25} },{ age:{lte:34} }]} });
-        const de3544Promise = this.prisma.user.count({ where:{AND:[{ age:{gte:35} },{ age:{lte:44} }]} });
-        const de4555Promise = this.prisma.user.count({ where:{AND:[{ age:{gte:45} },{ age:{lte:55} }]} });
-        const de5564Promise = this.prisma.user.count({ where:{AND:[{ age:{gte:55} },{ age:{lte:64} }]} });
-        const de6574Promise = this.prisma.user.count({ where:{AND:[{ age:{gte:65} },{ age:{lte:74} }]} });
-        const de75Promise = this.prisma.user.count({ where:{AND:[{ age:{gte:75} }]} });
-
     public async DistribucionEtario(findBy: string): Promise<{label:string[], value:number[]}> {
         const label = [`0 - 14`,`15 - 24`,`25 - 34`,`35 - 44`,`45 - 54`,`55 - 64`,`65 - 74`, `75+`];
         const value: number[] = [];

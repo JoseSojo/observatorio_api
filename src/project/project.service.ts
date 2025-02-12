@@ -24,8 +24,6 @@ export default class ProjectService {
         this.lang = this.languajeService.GetTranslate();
     }    
 
-<<<<<<< HEAD
-=======
     public async customCreate ({ data,date, id }: { data:Prisma.projectsCreateInput, date:string, id: string }) {
         try {
             // Inicio
@@ -60,7 +58,7 @@ export default class ProjectService {
         }
     }
 
->>>>>>> b0a1d26 (add remote brnach)
+
     /**
      * CREAR
      * 
@@ -92,13 +90,8 @@ export default class ProjectService {
                 keywords: data.keywords,
                 title: data.title,
                 resumen: data.resumen,
-<<<<<<< HEAD
-                downloader: data.downloader ? true : false,
-                public: data.public ? true : false,
-=======
                 downloader: data.downloader === `true` ? true : false,
                 public: data.public === `true` ? true : false,
->>>>>>> b0a1d26 (add remote brnach)
 
                 programRef: { connect:{ id:data.programId } },
                 documentRef: { connect:{ id:data.documentId } }

@@ -1,18 +1,11 @@
 import { Injectable } from "@nestjs/common";
-<<<<<<< HEAD
-=======
 import { Prisma } from "@prisma/client";
->>>>>>> b0a1d26 (add remote brnach)
 import AppCategory from "src/config/app/AppCategory";
 import { ConfigCategoryService } from "src/config/service/category.service";
 import { ConfigLineService } from "src/config/service/line.service";
 import { ConfigProgramService } from "src/config/service/program.service";
 import AppPermit from "src/permit/module/app.permit";
 import { PermitService } from "src/permit/permit.service";
-<<<<<<< HEAD
-import { UserCreate } from "src/user/guards/user.guard";
-import { UserService } from "src/user/user.service";
-=======
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserCreate } from "src/user/guards/user.guard";
 import { UserService } from "src/user/user.service";
@@ -20,16 +13,11 @@ import { TD_PROJECT } from "./TD";
 import { TG_PROJECT } from "./TG";
 import { TEG_PROJECT, UNIQUE_TEST } from "./TEG";
 import ProjectService from "src/project/project.service";
->>>>>>> b0a1d26 (add remote brnach)
 
 @Injectable()
 export default class TestFixture {
 
-<<<<<<< HEAD
-    constructor (
-=======
     constructor(
->>>>>>> b0a1d26 (add remote brnach)
         private permit: PermitService,
         private permitFound: AppPermit,
         private user: UserService,
@@ -37,11 +25,8 @@ export default class TestFixture {
         private categoryApp: AppCategory,
         private program: ConfigProgramService,
         private line: ConfigLineService,
-<<<<<<< HEAD
-=======
         private prisma: PrismaService,
         private project: ProjectService,
->>>>>>> b0a1d26 (add remote brnach)
     ) {
 
     }
@@ -67,70 +52,6 @@ export default class TestFixture {
             username: `admin.biblioteca`
         }
 
-<<<<<<< HEAD
-        const adminGroupFoundPromise = this.permit.find({ filter:{ name:this.permitFound.SUPER_ADMIN } });
-        const coordiandorGroupFoundPromise = this.permit.find({ filter:{ name:this.permitFound.COODINADOR } });
-        const estudianteGroupFoundPromise = this.permit.find({ filter:{ name:this.permitFound.ESTUDIANTE } });
-        const analistaGroupFoundPromise = this.permit.find({ filter:{ name:this.permitFound.ANALISTA } });
-        const obadmGroupFoundPromise = this.permit.find({ filter:{ name:this.permitFound.OBRERO_ADMINISTRATIVO } });
-        const docenteGroupFoundPromise = this.permit.find({ filter:{ name:this.permitFound.DOCENTE } });
-        
-        const adminGroupFound =  (await adminGroupFoundPromise).body;
-        const coordiandorGroupFound =  (await coordiandorGroupFoundPromise).body;
-        const estudianteGroupFound =  (await estudianteGroupFoundPromise).body;
-        const analistaGroupFound =  (await analistaGroupFoundPromise).body;
-        const obadmGroupFound =  (await obadmGroupFoundPromise).body;
-        const docenteGroupFound =  (await docenteGroupFoundPromise).body;
-
-        let adminId = adminGroupFound ? adminGroupFound.id : ``;
-
-        if(adminGroupFound) {
-            await this.permit.udpate({ data:{name:this.permitFound.SUPER_ADMIN, group:admin}, id:adminGroupFound.id });
-            jsonResponse.push(`${this.permitFound.SUPER_ADMIN} ya creado.`);
-        } else {
-            const result = await this.permit.create({ data:{ group:admin, name:this.permitFound.SUPER_ADMIN } });
-            jsonResponse.push(`${this.permitFound.SUPER_ADMIN}, creado exitosamente`);
-            if(result.body) adminId = result.body.id;
-        }
-
-        if(coordiandorGroupFound) {
-            await this.permit.udpate({ data:{name:this.permitFound.COODINADOR, group:coordinador}, id:coordiandorGroupFound.id });
-            jsonResponse.push(`${this.permitFound.COODINADOR} ya creado.`);
-        } else {
-            await this.permit.create({ data:{ group:coordinador, name:this.permitFound.COODINADOR } });
-            jsonResponse.push(`${this.permitFound.COODINADOR}, creado exitosamente`);
-        }
-
-        if(estudianteGroupFound) {
-            await this.permit.udpate({ data:{name:this.permitFound.ESTUDIANTE, group:student}, id:estudianteGroupFound.id });
-            jsonResponse.push(`${this.permitFound.ESTUDIANTE} ya creado.`);
-        } else {
-            await this.permit.create({ data:{ group:student, name:this.permitFound.ESTUDIANTE } });
-            jsonResponse.push(`${this.permitFound.ESTUDIANTE}, creado exitosamente`);
-        }
-
-        if(analistaGroupFound) {
-            await this.permit.udpate({ data:{name:this.permitFound.ANALISTA, group:analista}, id:analistaGroupFound.id });
-            jsonResponse.push(`${this.permitFound.ESTUDIANTE} ya creado.`);
-        } else {
-            await this.permit.create({ data:{ group:analista, name:this.permitFound.ANALISTA } });
-            jsonResponse.push(`${this.permitFound.ESTUDIANTE}, creado exitosamente`);
-        }
-
-        if(obadmGroupFound) {
-            await this.permit.udpate({ data:{name:this.permitFound.ANALISTA, group:analista}, id:obadmGroupFound.id });
-            jsonResponse.push(`${this.permitFound.OBRERO_ADMINISTRATIVO} ya creado.`);
-        } else {
-            await this.permit.create({ data:{ group:obadm, name:this.permitFound.OBRERO_ADMINISTRATIVO } });
-            jsonResponse.push(`${this.permitFound.OBRERO_ADMINISTRATIVO}, creado exitosamente`);
-        }
-
-        if(docenteGroupFound) {
-            await this.permit.udpate({ data:{name:this.permitFound.DOCENTE, group:docente}, id:docenteGroupFound.id });
-            jsonResponse.push(`${this.permitFound.DOCENTE} ya creado.`);
-        } else {
-            await this.permit.create({ data:{ group:docente, name:this.permitFound.DOCENTE } });
-=======
         const adminGroupFoundPromise = this.permit.find({ filter: { name: this.permitFound.SUPER_ADMIN } });
         const coordiandorGroupFoundPromise = this.permit.find({ filter: { name: this.permitFound.COODINADOR } });
         const estudianteGroupFoundPromise = this.permit.find({ filter: { name: this.permitFound.ESTUDIANTE } });
@@ -193,22 +114,10 @@ export default class TestFixture {
             jsonResponse.push(`${this.permitFound.DOCENTE} ya creado.`);
         } else {
             await this.permit.create({ data: { group: docente, name: this.permitFound.DOCENTE } });
->>>>>>> b0a1d26 (add remote brnach)
             jsonResponse.push(`${this.permitFound.DOCENTE}, creado exitosamente`);
         }
 
         let userId = ``;
-<<<<<<< HEAD
-        const userFoundPromise = this.user.find({ filter:{ email:user1.email } });
-        const userFound = (await userFoundPromise).body;
-        if(userFound) {
-            jsonResponse.push(`${user1.email} ya creado.`);
-            userId = userFound.id
-        } else {
-            const result = await this.user.create({ data:{...user1, rolId:adminGroupFound.id} });
-            jsonResponse.push(`${result.body.email} creado exitosamente.`);
-            if(result.body) {
-=======
         const userFoundPromise = this.user.find({ filter: { email: user1.email } });
         const userFound = (await userFoundPromise).body;
         if (userFound) {
@@ -218,47 +127,10 @@ export default class TestFixture {
             const result = await this.user.create({ data: { ...user1, rolId: adminGroupFound.id } });
             jsonResponse.push(`${result.body.email} creado exitosamente.`);
             if (result.body) {
->>>>>>> b0a1d26 (add remote brnach)
                 userId = result.body.id;
             }
         }
 
-<<<<<<< HEAD
-        const TDPromise = this.category.find({ filter:{ id:this.categoryApp.TD.id } });
-        const TEPromise = this.category.find({ filter:{ id:this.categoryApp.TE.id } });
-        const TEGPromise = this.category.find({ filter:{ id:this.categoryApp.TEG.id } });
-
-        const TD =  (await TDPromise).body;
-        const TE =  (await TEPromise).body;
-        const TEG =  (await TEGPromise).body;
-
-        if(TD) {
-            jsonResponse.push(`${this.categoryApp.TD.id} ya creado.`);
-        } else {
-            await this.category.create({ data:{ id:this.categoryApp.TD.id, name:this.categoryApp.TD.name, userId  } });
-            jsonResponse.push(`${this.categoryApp.TEG}, creado exitosamente`);
-        }
-
-        if(TE) {
-            jsonResponse.push(`${this.categoryApp.TE} ya creado.`);
-        } else {
-            await this.category.create({ data:{ id:this.categoryApp.TE.id, name:this.categoryApp.TE.name, userId } });
-            jsonResponse.push(`${this.categoryApp.TE}, creado exitosamente`);
-        }
-
-        if(TEG) {
-            jsonResponse.push(`${this.categoryApp.TEG} ya creado.`);
-        } else {
-            await this.category.create({ data:{ id:this.categoryApp.TEG.id, name:this.categoryApp.TEG.name, userId } });
-            jsonResponse.push(`${this.categoryApp.TEG}, creado exitosamente`);
-        }
-
-        return jsonResponse;
-
-    }
-
-    
-=======
         // this.getLine().forEach(async item => {
         //     const found = await this.line.find({ filter:{name:item.name} });
         //     console.log(item);
@@ -686,6 +558,5 @@ export default class TestFixture {
             }
         ];
     }
->>>>>>> b0a1d26 (add remote brnach)
 
 }

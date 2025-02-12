@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-        // registro de trabajos Especiales de grado
-=======
->>>>>>> b0a1d26 (add remote brnach)
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
