@@ -138,6 +138,7 @@ export class SelectController {
         } else if (param.id == `lineParent` || param.id == `lineParentId`) {
             // const studentStruc = await this.permitService.find({ filter: { name: this.permit.ESTUDIANTE } });
             // const student = studentStruc.body;
+            
 
             const result = await this.lineService.paginate({ skip: 0, take: 20, filter: { name:{ contains:query.param ? query.param : `` } }});
             const data: { id: string, label: string }[] = [];
