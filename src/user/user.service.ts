@@ -30,7 +30,6 @@ export class UserService {
      */
     public async create ({ data }: { data:UserCreate }) {
         try {
-            console.log(data);
             const date = new Date();
             const rol = await this.prisma.userGroup.findFirst({ where:{ id:data.rolId } });
             const staticticsPromise = this.statictics.currentStaticticsUser({ day:date.getDate(),month:date.getMonth()+1,year:date.getFullYear() });
@@ -41,6 +40,7 @@ export class UserService {
             const dataCreate: Prisma.userCreateInput = {
                 email: data.email,
                 name: data.name.toLocaleUpperCase(),
+                ci: data.ci,
                 username: data.username.toLocaleUpperCase(),
                 lastname: data.lastname.toLocaleUpperCase(),
                 rolReference: { connect:{ id:data.rolId } },

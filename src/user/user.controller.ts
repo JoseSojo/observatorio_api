@@ -169,7 +169,9 @@ export class UserController {
             password: body.password,
             rolId: body.rolId,
             username: body.username,
-            parentId: user.id
+            parentId: user.id,
+            ci: body.ci,
+
         }
 
         const responseService = await this.service.create({ data: currentBody }) as any;
