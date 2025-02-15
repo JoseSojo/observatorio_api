@@ -90,8 +90,16 @@ export class UserService {
             const listPromise = this.model.findAll({ skip, take, filter });
             const countPromise = this.model.count({ filter });
 
-            const list = await listPromise;
+            const list = (await listPromise).map((item) => {
+                const date = new Date(item.createAt);
+                return {
+                    ...item,
+                    createAt: `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`
+                }
+            });
             const count = await countPromise;
+
+
 
             const next    = skip+take > count ? false : true;
             const previous = count <= take ? false : true;
@@ -352,22 +360,6 @@ export class UserService {
                     placeholder: ``,
                     required: true,
                     type: `email`,
-                }, {
-                    id: `from.create.user.password`,
-                    key: `from.create.user.password`,
-                    label: this.lang.TITLES.INPUT.PASSWORD,
-                    name: `password`,
-                    placeholder: ``,
-                    required: true,
-                    type: `password`,
-                }, {
-                    id: `from.create.user.username`,
-                    key: `from.create.user.username`,
-                    label: this.lang.TITLES.INPUT.USERNAME,
-                    name: `username`,
-                    placeholder: ``,
-                    required: true,
-                    type: `text`,
                 }
             ]
         }

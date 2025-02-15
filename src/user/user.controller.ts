@@ -110,17 +110,13 @@ export class UserController {
         if (!body.email) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.email, error: true }
         if (!body.lastname) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.lastname, error: true }
         if (!body.name) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.name, error: true }
-        if (!body.password) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.password, error: true }
         if (!body.rolId) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.rol, error: true }
-        if (!body.username) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.username, error: true }
 
         const emailFoundPromise = this.service.find({ filter: { email: body.email } });
         const ciFoundPromise = this.service.find({ filter: { ci: body.ci } });
-        const usernameFoundPromise = this.service.find({ filter: { username: body.username } });
 
         const emailFound = (await emailFoundPromise).body;
         const ciFound = (await ciFoundPromise).body;
-        const usernameFound = (await usernameFoundPromise).body;
         // if (!body.username) return { message: this.lang.ACTIONS.DANGER.VALIDATIONS.FIELDS_REQUIERED.username, error: true }
 
         if (emailFound) {
@@ -132,14 +128,6 @@ export class UserController {
             }
         }
 
-        if (usernameFound) {
-            return {
-                message: this.lang.ACTIONS.DANGER.VALIDATIONS.USERNAME_IN_USE,
-                error: true,
-                errorMessage: `username.in.use`,
-                body: null
-            }
-        }
         // if (usernameFound) {
         //     return {
         //         message: this.lang.ACTIONS.DANGER.VALIDATIONS.USERNAME_IN_USE,
@@ -166,9 +154,9 @@ export class UserController {
             name: body.name,
             email: body.email,
             lastname: body.lastname,
-            password: body.password,
+            password: body.ci,
             rolId: body.rolId,
-            username: body.username,
+            username: ``,
             parentId: user.id,
             ci: body.ci,
 
@@ -202,15 +190,27 @@ export class UserController {
         const skip = query.skip ? Number(query.skip) : 0;
         const take = query.take ? Number(query.take) : 10;
 
-        let customFilter: Prisma.userWhereInput = { name: this.permit.ESTUDIANTE };
+        let customFilter: Prisma.userWhereInput[] = [];
 
-        if (user.rolReference.name === this.permit.SUPER_ADMIN) {
-            customFilter = { OR: [{ rolReference: { name: this.permit.COODINADOR } }, { rolReference: { name: this.permit.ESTUDIANTE } }, { rolReference: { name: this.permit.ANALISTA } }] }
-        } else if (user.rolReference.name === this.permit.COODINADOR) {
-            customFilter = { rolReference: { name: this.permit.ESTUDIANTE } };
+        if (query.param) {
+            customFilter.push({
+                OR: [
+                    { name: { contains: query.param } },
+                    { lastname: { contains: query.param } },
+                    { ci: { contains: query.param } },
+                    { email: { contains: query.param } }
+                ]
+            });
         }
 
-        const responseService = await this.service.paginate({ filter: customFilter, skip, take });
+        if (user.rolReference.name === this.permit.SUPER_ADMIN) {
+            customFilter.push({ rolReference: { name: {not:this.permit.SUPER_ADMIN} }})
+        } else if (user.rolReference.name === this.permit.COODINADOR) {
+            customFilter.push({ rolReference: { name: this.permit.ESTUDIANTE } });
+        }
+
+        console.log(customFilter);
+        const responseService = await this.service.paginate({ filter: { AND: customFilter }, skip, take });
 
         return responseService;
     }

@@ -80,22 +80,38 @@ export class SelectController {
             const studentStruc = await this.permitService.find({ filter: { name: this.permit.ESTUDIANTE } });
             const student = studentStruc.body;
 
-            const result = await this.userService.paginate({ skip: 0, take: 20, filter: { AND: [{ rolId: student.id }, { name: { contains: query.param ? query.param : `` } }, { lastname: { contains: query.param ? query.param : `` } }, { email: { contains: query.param ? query.param : `` } }, { username: { contains: query.param ? query.param : `` } }] } });
+            const result = await this.userService.paginate({
+                skip: 0,
+                take: 20,
+                filter: {
+                    AND: [
+                        { rolId: student.id },
+                        {
+                            OR: [
+                                { name: { contains: query.param ? query.param : `` } },
+                                { lastname: { contains: query.param ? query.param : `` } },
+                                { email: { contains: query.param ? query.param : `` } },
+                                { username: { contains: query.param ? query.param : `` } }
+                            ]
+                        }
+                    ]
+                }
+            });
             const data: { id: string, label: string }[] = [];
             result.body.list.map((item: any) => {
                 data.push({ id: item.id, label: `${item.ci ? `${item.ci} -` : ``} ${item.name} ${item.lastname}` });
             });
             list = data;
         } else if (param.id == `rolId`) {
-            let customFilter: Prisma.userGroupWhereInput = {name: this.permit.ESTUDIANTE};
+            let customFilter: Prisma.userGroupWhereInput = { name: this.permit.ESTUDIANTE };
 
-            if(user.rolReference.name === this.permit.SUPER_ADMIN) {
-                customFilter = { OR:[{name: this.permit.ESTUDIANTE},{name: this.permit.COODINADOR},{name:this.permit.ANALISTA}] }
-            } else if(user.rolReference.name === this.permit.COODINADOR) {
-                customFilter = {name: this.permit.ESTUDIANTE};
+            if (user.rolReference.name === this.permit.SUPER_ADMIN) {
+                customFilter = { OR: [{ name: this.permit.ESTUDIANTE }, { name: this.permit.COODINADOR }, { name: this.permit.ANALISTA }] }
+            } else if (user.rolReference.name === this.permit.COODINADOR) {
+                customFilter = { name: this.permit.ESTUDIANTE };
             }
 
-            const permitStruc = await this.permitService.paginate({ filter:customFilter,skip:0,take:5 });
+            const permitStruc = await this.permitService.paginate({ filter: customFilter, skip: 0, take: 5 });
             const permitss = permitStruc.body.list;
 
             const data: { id: string, label: string }[] = [];
@@ -107,7 +123,7 @@ export class SelectController {
             // const studentStruc = await this.permitService.find({ filter: { name: this.permit.ESTUDIANTE } });
             // const student = studentStruc.body;
 
-            const result = await this.stateService.paginate({ skip: 0, take: 20, filter: { name:{ contains:query.param ? query.param : `` } }});
+            const result = await this.stateService.paginate({ skip: 0, take: 20, filter: { name: { contains: query.param ? query.param : `` } } });
             const data: { id: string, label: string }[] = [];
             result.body.list.map((item: any) => {
                 data.push({ id: item.id, label: `${item.name}` });
@@ -117,7 +133,7 @@ export class SelectController {
             // const studentStruc = await this.permitService.find({ filter: { name: this.permit.ESTUDIANTE } });
             // const student = studentStruc.body;
 
-            const result = await this.municipioService.paginate({ skip: 0, take: 20, filter: { name:{ contains:query.param ? query.param : `` } }});
+            const result = await this.municipioService.paginate({ skip: 0, take: 20, filter: { name: { contains: query.param ? query.param : `` } } });
             const data: { id: string, label: string }[] = [];
             result.body.list.map((item: any) => {
                 data.push({ id: item.id, label: `${item.name} - ${item.stateReference.name}` });
@@ -127,7 +143,7 @@ export class SelectController {
             // const studentStruc = await this.permitService.find({ filter: { name: this.permit.ESTUDIANTE } });
             // const student = studentStruc.body;
 
-            const result = await this.parroquiaService.paginate({ skip: 0, take: 20, filter: { name:{ contains:query.param ? query.param : `` } }});
+            const result = await this.parroquiaService.paginate({ skip: 0, take: 20, filter: { name: { contains: query.param ? query.param : `` } } });
             const data: { id: string, label: string }[] = [];
             result.body.list.map((item: any) => {
                 data.push({ id: item.id, label: `${item.name}` });
@@ -136,9 +152,9 @@ export class SelectController {
         } else if (param.id == `lineParent` || param.id == `lineParentId`) {
             // const studentStruc = await this.permitService.find({ filter: { name: this.permit.ESTUDIANTE } });
             // const student = studentStruc.body;
-            
 
-            const result = await this.lineService.paginate({ skip: 0, take: 20, filter: { AND:[{name:{ contains:query.param ? query.param : `` }},{ childs:{some:{}} }] }});
+
+            const result = await this.lineService.paginate({ skip: 0, take: 20, filter: { AND: [{ name: { contains: query.param ? query.param : `` } }, { childs: { some: {} } }] } });
             const data: { id: string, label: string }[] = [];
             result.body.list.map((item: any) => {
                 data.push({ id: item.id, label: `${item.name}` });

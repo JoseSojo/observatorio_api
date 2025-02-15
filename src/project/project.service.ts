@@ -46,7 +46,6 @@ export default class ProjectService {
                 body: entity
             };
         } catch (error) {
-            console.log(error);
             // log
             // log error
             return {
@@ -138,7 +137,13 @@ export default class ProjectService {
             const listPromise = this.model.findAll({ skip, take, filter });
             const countPromise = this.model.count({ filter });
 
-            const list = await listPromise;
+            const list = (await listPromise).map((item) => {
+                const date = new Date(item.date);
+                return {
+                    ...item,
+                    date: `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`
+                }
+            });
             const count = await countPromise;
 
             const next    = skip+take > count ? false : true;

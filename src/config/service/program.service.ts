@@ -63,7 +63,13 @@ export class ConfigProgramService {
             const listPromise = this.model.findAll({ skip, take, filter });
             const countPromise = this.model.count({ filter });
 
-            const list = await listPromise;
+            const list = (await listPromise).map((item) => {
+                const date = new Date(item.createAt);
+                return {
+                    ...item,
+                    createAt: `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`
+                }
+            });;
             const count = await countPromise;
 
             const next    = skip+take > count ? false : true;

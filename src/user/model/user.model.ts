@@ -29,6 +29,7 @@ export default class UserModel {
                 createAt: true,
                 updateAt: true,
                 deleteAt: true,
+                ci: true,
                 userGroup: {
                     select: {
                         name: true,

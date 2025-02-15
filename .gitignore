@@ -8,6 +8,10 @@
 /public/photo/*.jpeg
 /public/photo/*.webp
 /public/photo/*.gif
+/public/photo/*.svg
+/public/photo/*.xml
+/public/photo/*.xhtml
+/public/photo/*.document
 
 # Logs
 logs
